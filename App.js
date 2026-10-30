@@ -1,20 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { initLocalDatabase } from './src/db';
+import SplashScreen from './src/screens/SplashScreen';
+import AuthScreen from './src/screens/AuthScreen';
+import BuyerScreen from './src/screens/BuyerScreen';
+import AdminScreen from './src/screens/AdminScreen';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [screen, setScreen] = useState('SPLASH'); // SPLASH | AUTH | BUYER | ADMIN
+  const [currentUser, setCurrentUser] = useState(null);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  useEffect(() => {
+    initLocalDatabase();
+    const timer = setTimeout(() => {
+      setScreen('AUTH');
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setScreen(user.role === 'ADMIN' ? 'ADMIN' : 'BUYER');
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setScreen('AUTH');
+  };
+
+  if (screen === 'SPLASH') return <SplashScreen />;
+  if (screen === 'AUTH') return <AuthScreen onLoginSuccess={handleLoginSuccess} />;
+  if (screen === 'ADMIN') return <AdminScreen user={currentUser} onLogout={handleLogout} />;
+  return <BuyerScreen user={currentUser} onLogout={handleLogout} />;
+}
