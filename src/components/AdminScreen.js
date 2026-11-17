@@ -13,6 +13,7 @@ import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import AdminTopBar from '../components/AdminTopBar';
 import AdminBottomTabBar from '../components/AdminBottomTabBar';
+import AdminCheckinScreen from './AdminCheckinScreen';
 
 const PANS_STATUS = [
   {
@@ -78,7 +79,8 @@ const RECENT_PICKUPS = [
 ];
 
 export default function AdminScreen({ user, onLogout }) {
-  const [activeTab, setActiveTab] = useState('DASHBOARD');
+  const initialTab = user?.role === 'VOLUNTEER' ? 'CHECKIN' : 'DASHBOARD';
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -86,6 +88,7 @@ export default function AdminScreen({ user, onLogout }) {
 
       <AdminTopBar user={user} onLogout={onLogout} />
 
+      {activeTab === 'CHECKIN' && <AdminCheckinScreen onBack={() => setActiveTab('DASHBOARD')} />}
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
