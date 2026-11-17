@@ -14,6 +14,7 @@ import { COLORS } from '../theme/colors';
 import AdminTopBar from '../components/AdminTopBar';
 import AdminBottomTabBar from '../components/AdminBottomTabBar';
 import AdminCheckinScreen from './AdminCheckinScreen';
+import AdminOrdersScreen from './AdminOrdersScreen';
 
 const PANS_STATUS = [
   {
@@ -88,7 +89,16 @@ export default function AdminScreen({ user, onLogout }) {
 
       <AdminTopBar user={user} onLogout={onLogout} />
 
-      {activeTab === 'CHECKIN' && <AdminCheckinScreen onBack={() => setActiveTab('DASHBOARD')} />}
+      {activeTab === 'CHECKIN' && <AdminCheckinScreen />}
+      {activeTab === 'ORDERS' && <AdminOrdersScreen />}
+
+      {activeTab === 'DASHBOARD' && (
+        <View style={{ flex: 1 }}>
+          <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 16, fontWeight: '700' }}>
+            Dashboard Administrativo
+          </Text>
+        </View>
+      )}
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
