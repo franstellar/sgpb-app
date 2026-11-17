@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Alert,
 } from 'react-native';
 import { COLORS } from '../theme/colors';
 import TopBar from '../components/TopBar';
@@ -15,6 +14,8 @@ import CampaignHero from '../components/CampaignHero';
 import ProductCard from '../components/ProductCard';
 import HowItWorksSteps from '../components/HowItWorksSteps';
 import BottomTabBar from '../components/BottomTabBar';
+import CatalogCheckoutScreen from './CatalogCheckoutScreen';
+import MyOrdersScreen from './MyOrdersScreen';
 
 const INITIAL_PRODUCTS = [
   {
@@ -62,80 +63,148 @@ const INITIAL_PRODUCTS = [
   },
 ];
 
+const INITIAL_ORDERS = [
+  {
+    id: 8429,
+    orderNumber: 'PAE-8429',
+    status: 'PAID',
+    totalAmount: 102.0,
+    createdAt: 'Hoje, 14:32',
+    paidAt: '14:35',
+    receiptNumber: '92813',
+    customerName: 'Maria Clara Silveira',
+    customerPhone: '(48) 99842-1082',
+    validationCode: 'VAL-8429-CRICIUMA-OK',
+    items: [
+      { name: 'Paella Tradicional Individual (450g)', quantity: 1, subtotal: 55.0 },
+      { name: 'Combo Paelito + Suco Natural', quantity: 1, subtotal: 42.0 },
+    ],
+    donation: 5.0,
+  },
+  {
+    id: 8435,
+    orderNumber: 'PAE-8435',
+    status: 'PENDING',
+    totalAmount: 120.0,
+    createdAt: 'Hoje, 14:48',
+    expiresIn: 'Expira em 12:40',
+    customerName: 'Maria Clara Silveira',
+    customerPhone: '(48) 99842-1082',
+    items: [
+      {
+        name: 'Paella Nobre Familiar (1,2kg)',
+        subtitle: 'Serve até 4 pessoas',
+        quantity: 1,
+        subtotal: 120.0,
+      },
+    ],
+    donation: 0,
+  },
+];
+
 const FILTERS = ['Todos', 'Paellas', 'Combos Família', 'Bebidas'];
 
 export default function BuyerScreen({ user, onLogout }) {
   const [selectedFilter, setSelectedFilter] = useState('Todos');
   const [activeTab, setActiveTab] = useState('HOME');
-  const [cart, setCart] = useState([]);
+  const [quantities, setQuantities] = useState({ 1: 1, 3: 1 });
+  const [orders, setOrders] = useState(INITIAL_ORDERS);
+
+  const totalCartItems = Object.values(quantities).reduce((sum, q) => sum + q, 0);
+
+  const handleUpdateQty = (productId, newQty) => {
+    setQuantities((prev) => ({ ...prev, [productId]: newQty }));
+  };
+
+  const handleAddAndGoToCheckout = (product) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [product.id]: (prev[product.id] || 0) + 1,
+    }));
+    setActiveTab('MENU');
+  };
+
+  const handleOrderCreated = (newOrder) => {
+    setOrders((prev) => [newOrder, ...prev]);
+    setActiveTab('ORDERS');
+  };
+
+  const handleSimulatePay = (orderId) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, status: 'PAID', paidAt: 'Agora' } : o))
+    );
+  };
 
   const filteredProducts =
     selectedFilter === 'Todos'
       ? INITIAL_PRODUCTS
       : INITIAL_PRODUCTS.filter((p) => p.category === selectedFilter);
 
-  const handleAddToCart = (product) => {
-    setCart((prev) => [...prev, product]);
-    Alert.alert('Adicionado! 🥘', `${product.name} foi para a sua sacola.`);
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.creme} />
 
       <TopBar
-        cartCount={cart.length}
-        onOpenCart={() => Alert.alert('Sacola', `Você tem ${cart.length} item(ns) na sacola.`)}
+        cartCount={totalCartItems}
+        onOpenCart={() => setActiveTab('MENU')}
         onLogout={onLogout}
       />
 
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <CampaignHero onOrderPress={() => handleAddToCart(INITIAL_PRODUCTS[0])} />
-
-        {/* Cabeçalho do Cardápio */}
-        <View style={styles.menuHeaderWrap}>
-          <View>
-            <Text style={styles.menuOverline}>CARDÁPIO DO AMOR</Text>
-            <Text style={styles.sectionTitle}>Escolha sua Porção</Text>
-          </View>
-          <Text style={styles.readyDeliveryText}>Pronta entrega</Text>
-        </View>
-
-        {/* Pílulas de Filtro */}
+      {activeTab === 'MENU' ? (
+        <CatalogCheckoutScreen
+          user={user}
+          quantities={quantities}
+          onUpdateQty={handleUpdateQty}
+          onBack={() => setActiveTab('HOME')}
+          onOrderCreated={handleOrderCreated}
+        />
+      ) : activeTab === 'ORDERS' ? (
+        <MyOrdersScreen orders={orders} onSimulatePay={handleSimulatePay} />
+      ) : (
         <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.filtersScroll}
-          contentContainerStyle={{ paddingRight: 16 }}
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          {FILTERS.map((filter) => {
-            const active = selectedFilter === filter;
-            return (
-              <TouchableOpacity
-                key={filter}
-                style={[styles.filterPill, active && styles.filterPillActive]}
-                onPress={() => setSelectedFilter(filter)}
-              >
-                <Text style={[styles.filterPillText, active && styles.filterPillTextActive]}>
-                  {filter}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+          <CampaignHero onOrderPress={() => setActiveTab('MENU')} />
+
+          <View style={styles.menuHeaderWrap}>
+            <View>
+              <Text style={styles.menuOverline}>CARDÁPIO DO AMOR</Text>
+              <Text style={styles.sectionTitle}>Escolha sua Porção</Text>
+            </View>
+            <Text style={styles.readyDeliveryText}>Pronta entrega</Text>
+          </View>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.filtersScroll}
+            contentContainerStyle={{ paddingRight: 16 }}
+          >
+            {FILTERS.map((filter) => {
+              const active = selectedFilter === filter;
+              return (
+                <TouchableOpacity
+                  key={filter}
+                  style={[styles.filterPill, active && styles.filterPillActive]}
+                  onPress={() => setSelectedFilter(filter)}
+                >
+                  <Text style={[styles.filterPillText, active && styles.filterPillTextActive]}>
+                    {filter}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+
+          {filteredProducts.map((item) => (
+            <ProductCard key={item.id} item={item} onAdd={handleAddAndGoToCheckout} />
+          ))}
+
+          <HowItWorksSteps />
         </ScrollView>
-
-        {/* Cards de Produtos */}
-        {filteredProducts.map((item) => (
-          <ProductCard key={item.id} item={item} onAdd={handleAddToCart} />
-        ))}
-
-        {/* Como Funciona em 4 Passos */}
-        <HowItWorksSteps />
-      </ScrollView>
+      )}
 
       <BottomTabBar activeTab={activeTab} onChangeTab={setActiveTab} />
     </SafeAreaView>
