@@ -4,9 +4,10 @@ import SplashScreen from './src/screens/SplashScreen';
 import AuthScreen from './src/screens/AuthScreen';
 import BuyerScreen from './src/screens/BuyerScreen';
 import AdminScreen from './src/screens/AdminScreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
-  const [screen, setScreen] = useState('SPLASH'); // SPLASH | AUTH | BUYER | ADMIN
+  const [screen, setScreen] = useState('SPLASH'); // SPLASH | AUTH | BUYER | ADMIN | VOLUNTEER | PARTNER
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -15,11 +16,26 @@ export default function App() {
       setScreen('AUTH');
     }, 2000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [], );
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
-    setScreen(user.role === 'ADMIN' ? 'ADMIN' : 'BUYER');
+    const role = user.role ? user.role.toUpperCase() : 'BUYER';
+
+    switch (role) {
+      case 'ADMIN':
+        setScreen('ADMIN');
+        break;
+      case 'VOLUNTEER':
+        setScreen('VOLUNTEER');
+        break;
+      case 'PARTNER':
+        setScreen('PARTNER');
+        break;
+      default:
+        setScreen('BUYER');
+        break;
+    }
   };
 
   const handleLogout = () => {
@@ -27,8 +43,16 @@ export default function App() {
     setScreen('AUTH');
   };
 
-  if (screen === 'SPLASH') return <SplashScreen />;
-  if (screen === 'AUTH') return <AuthScreen onLoginSuccess={handleLoginSuccess} />;
-  if (screen === 'ADMIN') return <AdminScreen user={currentUser} onLogout={handleLogout} />;
-  return <BuyerScreen user={currentUser} onLogout={handleLogout} />;
+  return (
+    <SafeAreaProvider>
+      {screen === 'SPLASH' && <SplashScreen />}
+      {screen === 'AUTH' && <AuthScreen onLoginSuccess={handleLoginSuccess} />}
+      {screen === 'ADMIN' && <AdminScreen user={currentUser} onLogout={handleLogout} />}
+      {screen === 'VOLUNTEER' && <AdminScreen user={currentUser} onLogout={handleLogout} />} 
+      {screen === 'PARTNER' && <AdminScreen user={currentUser} onLogout={handleLogout} />} 
+      {screen !== 'SPLASH' && screen !== 'AUTH' && screen !== 'ADMIN' && screen !== 'VOLUNTEER' && screen !== 'PARTNER' && (
+        <BuyerScreen user={currentUser} onLogout={handleLogout} />
+      )}
+    </SafeAreaProvider>
+  );
 }

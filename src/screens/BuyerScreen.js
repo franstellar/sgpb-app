@@ -5,9 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import TopBar from '../components/TopBar';
 import CampaignHero from '../components/CampaignHero';
@@ -16,6 +16,7 @@ import HowItWorksSteps from '../components/HowItWorksSteps';
 import BottomTabBar from '../components/BottomTabBar';
 import CatalogCheckoutScreen from './CatalogCheckoutScreen';
 import MyOrdersScreen from './MyOrdersScreen';
+import EventInfoScreen from './EventInfoScreen';
 
 const INITIAL_PRODUCTS = [
   {
@@ -160,6 +161,8 @@ export default function BuyerScreen({ user, onLogout }) {
         />
       ) : activeTab === 'ORDERS' ? (
         <MyOrdersScreen orders={orders} onSimulatePay={handleSimulatePay} />
+      ) : activeTab === 'EVENT' ? (
+        <EventInfoScreen onOrderNow={() => setActiveTab('MENU')} />
       ) : (
         <ScrollView
           style={styles.container}
