@@ -15,6 +15,7 @@ import AdminTopBar from '../components/AdminTopBar';
 import AdminBottomTabBar from '../components/AdminBottomTabBar';
 import AdminCheckinScreen from './AdminCheckinScreen';
 import AdminOrdersScreen from './AdminOrdersScreen';
+import AdminStockScreen from './AdminStockScreen';
 
 const PANS_STATUS = [
   {
@@ -91,6 +92,7 @@ export default function AdminScreen({ user, onLogout }) {
 
       {activeTab === 'CHECKIN' && <AdminCheckinScreen />}
       {activeTab === 'ORDERS' && <AdminOrdersScreen />}
+      {activeTab === 'STOCK' && <AdminStockScreen />}
 
       {activeTab === 'DASHBOARD' && (
         <View style={{ flex: 1 }}>
