@@ -21,12 +21,12 @@ const DEFAULT_TICKET = {
   items: [
     {
       qty: '1x',
-      name: 'Paella Tradicional Individual (450g)',
-      instruction: 'Embalagem Térmica Vermelha',
+      name: 'Paella tradicional individual (450g)',
+      instruction: 'Embalagem térmica vermelha',
     },
     {
       qty: '1x',
-      name: 'Combo Bebida: Suco Natural Laranja',
+      name: 'Combo bebida: Suco natural laranja',
       instruction: 'Garrafinha 300ml gelada',
     },
     {
@@ -48,7 +48,7 @@ export default function AdminCheckinScreen({ user }) {
   const handleManualValidate = () => {
     const formatted = manualQuery.trim().toUpperCase();
     if (!formatted) {
-      Alert.alert('Digite um código', 'Informe o número do pedido (ex: #PAE-8429) ou telefone.');
+      Alert.alert('Digite um código', 'Informe o número do pedido (ex: #PAE-8429) ou telefone');
       return;
     }
 
@@ -63,15 +63,15 @@ export default function AdminCheckinScreen({ user }) {
   const handleConfirmDelivery = () => {
     setDeliveredCount((prev) => prev + 1);
     Alert.alert(
-      'Entrega Confirmada! ✅',
+      'Entrega confirmada!',
       `Recibo REC-${currentTicket.code.replace('#', '')} emitido com sucesso. Próximo veículo da fila!`
     );
   };
 
   const handleReportIssue = () => {
     Alert.alert(
-      'Chamar Suporte 🚨',
-      'Um alerta foi enviado para a Coordenação ABADEUS vir até o Posto 01: Drive-Thru Pista A.'
+      'Chamar suporte',
+      'Um alerta foi enviado para a Coordenação ABADEUS vir até o Posto 01: Drive-Thru Pista A'
     );
   };
 
@@ -89,7 +89,7 @@ export default function AdminCheckinScreen({ user }) {
           </View>
           <View>
             <Text style={styles.stationOverline}>POSTO DE ATENDIMENTO</Text>
-            <Text style={styles.stationTitle}>Posto 01: Drive-Thru Pista A</Text>
+            <Text style={styles.stationTitle}>Posto 01: Drive-Thru pista A</Text>
           </View>
         </View>
 
@@ -104,7 +104,7 @@ export default function AdminCheckinScreen({ user }) {
         <View style={styles.scannerTopRow}>
           <View style={styles.cameraActiveBadge}>
             <View style={styles.greenDot} />
-            <Text style={styles.cameraActiveText}>Câmera Ativa</Text>
+            <Text style={styles.cameraActiveText}>Câmera ativa</Text>
           </View>
 
           <TouchableOpacity
@@ -137,7 +137,7 @@ export default function AdminCheckinScreen({ user }) {
       {/* 3. VALIDAÇÃO MANUAL POR CÓDIGO OU TELEFONE */}
       <View style={styles.manualCard}>
         <Text style={styles.manualTitle}>Ou valide digitando o código</Text>
-        <Text style={styles.manualLabel}>Código ou Telefone</Text>
+        <Text style={styles.manualLabel}>Código ou telefone</Text>
 
         <View style={styles.manualInputRow}>
           <TextInput
