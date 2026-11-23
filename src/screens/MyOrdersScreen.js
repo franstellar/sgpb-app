@@ -41,19 +41,19 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* Título e Subtítulo */}
-      <Text style={styles.pageTitle}>Meus Ingressos & Pedidos</Text>
+      {/* Título e subtítulo */}
+      <Text style={styles.pageTitle}>Meus ingressos e pedidos</Text>
       <Text style={styles.pageSubtitle}>
-        Apresente o QR Code no drive-thru ou salão no dia 28/Nov.
+        Apresente o QR Code no drive-thru ou salão no dia 28 de novembro
       </Text>
 
-      {/* Barra de Busca */}
+      {/* Barra de busca */}
       <View style={styles.searchRow}>
         <View style={styles.searchInputWrap}>
           <Feather name="search" size={16} color={COLORS.cinzaTexto} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Nº do pedido (#PAE-8429) ou cel"
+            placeholder="Nº do pedido (#PAE-8429) ou celular"
             placeholderTextColor={COLORS.cinzaTexto}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -64,7 +64,7 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
         </TouchableOpacity>
       </View>
 
-      {/* Pílulas de Filtro de Status */}
+      {/* Pílulas de filtro de status */}
       <View style={styles.tabsRow}>
         <TouchableOpacity
           style={[styles.tabPill, statusFilter === 'ALL' && styles.tabPillActive]}
@@ -80,7 +80,7 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
           onPress={() => setStatusFilter('PAID')}
         >
           <Text style={[styles.tabPillText, statusFilter === 'PAID' && styles.tabPillTextActive]}>
-            Pagos / Liberados ({paidCount})
+            Pagos e liberados ({paidCount})
           </Text>
         </TouchableOpacity>
 
@@ -96,7 +96,7 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
         </TouchableOpacity>
       </View>
 
-      {/* Lista de Pedidos */}
+      {/* Lista de pedidos */}
       {filteredOrders.map((order) =>
         order.status === 'PENDING' ? (
           <PendingOrderCard key={order.id} order={order} onSimulatePay={onSimulatePay} />
@@ -105,34 +105,33 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
         )
       )}
 
-      {/* Bloco de Ajuda / Atendimento ABADEUS */}
+      {/* Bloco de ajuda / atendimento ABADEUS */}
       <View style={styles.helpCard}>
         <View style={styles.helpIconCircle}>
           <Ionicons name="chatbubbles-outline" size={22} color={COLORS.mediterraneo} />
         </View>
         <Text style={styles.helpTitle}>Não encontrou seu pedido?</Text>
         <Text style={styles.helpDesc}>
-          Digite o WhatsApp utilizado na compra ou fale com a nossa equipe de voluntários da
-          Associação ABADEUS.
+          Digite o WhatsApp utilizado na compra ou fale com nossa equipe de voluntários da ABADEUS
         </Text>
         <TouchableOpacity
           style={styles.helpBtn}
           onPress={() =>
-            Alert.alert('Suporte ABADEUS 💬', 'Redirecionando para o WhatsApp da equipe...')
+            Alert.alert('Suporte ABADEUS', 'Redirecionando para o WhatsApp da equipe')
           }
         >
           <Ionicons name="logo-whatsapp" size={16} color={COLORS.mediterraneo} />
-          <Text style={styles.helpBtnText}>Falar com Atendimento</Text>
+          <Text style={styles.helpBtnText}>Falar com atendimento</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Rodapé Solidário */}
+      {/* Rodapé solidário */}
       <View style={styles.solidaryFooter}>
         <Text style={styles.solidaryTitle}>
           ❤️ 100% da renda revertida para as oficinas da ABADEUS
         </Text>
         <Text style={styles.solidarySub}>
-          Obrigado por temperar esta causa com amor e solidariedade!
+          Obrigado por apoiar esta causa solidária!
         </Text>
       </View>
     </ScrollView>

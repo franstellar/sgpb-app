@@ -15,9 +15,9 @@ import ValidatedTicketCard from '../components/ValidatedTicketCard';
 const DEFAULT_TICKET = {
   code: '#PAE-8429',
   validatedTime: 'Hoje, 12:44',
-  customerName: 'Maria Clara Silveira',
+  customerName: 'Cliente',
   customerPhone: '(48) 99842-1082',
-  vehicle: 'Drive-Thru • Creta Prata (ABC-1D23)',
+  vehicle: 'Drive-thru • Creta prata (ABC-1D23)',
   items: [
     {
       qty: '1x',
@@ -26,12 +26,12 @@ const DEFAULT_TICKET = {
     },
     {
       qty: '1x',
-      name: 'Combo bebida: Suco natural laranja',
-      instruction: 'Garrafinha 300ml gelada',
+      name: 'Suco integral',
+      instruction: 'Garrafa 300mL',
     },
     {
       qty: '1x',
-      name: 'Kit Pedagógico ABADEUS',
+      name: 'Kit pedagógico ABADEUS',
       instruction: 'Entregar brinde adesivo comemorativo',
     },
   ],

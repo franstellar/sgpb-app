@@ -14,41 +14,167 @@ import CatalogGridItem from '../components/CatalogGridItem';
 import PixPaymentBox from '../components/PixPaymentBox';
 
 export const CHECKOUT_CATALOG = [
+  // Paellas de frutos do mar
   {
     id: 1,
-    shortName: 'Porção Individual',
+    shortName: 'Paella de frutos do mar (individual)',
     weight: '450g',
-    price: 45.0,
-    shortDesc: 'Camarões selecionados, lula, mariscos, frango e o autêntico...',
+    price: 50.0,
+    shortDesc: 'Camarão, lula e mexilhão',
     image: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800',
-    badge: { text: 'Mais Vendido', bg: COLORS.tomate, color: COLORS.branco },
+    badge: { text: 'Mais pedido', bg: COLORS.tomate, color: COLORS.branco },
   },
   {
     id: 2,
-    shortName: 'Porção Familiar',
-    weight: '1,2kg',
-    price: 120.0,
-    shortDesc: 'Serve até 4 pessoas fartamente. Acompanha fatias...',
-    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
-    badge: { text: 'Ideal Família', bg: COLORS.acafrao, color: COLORS.preto },
+    shortName: 'Paella de frutos do mar (2 pessoas)',
+    weight: '900g',
+    price: 95.0,
+    shortDesc: 'Camarão, lula e mexilhão',
+    image: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800',
+    badge: { text: '2 pessoas', bg: COLORS.acafrao, color: COLORS.preto },
   },
   {
     id: 3,
-    shortName: 'Combo Paelito Completo',
-    weight: '',
-    price: 65.0,
-    shortDesc: '1 Paella Individual + Bebida gelada 350ml + Doce típico...',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Combo completo', bg: COLORS.mediterraneo, color: COLORS.branco },
+    shortName: 'Paella de frutos do mar (4 pessoas)',
+    weight: '1,8kg',
+    price: 180.0,
+    shortDesc: 'Camarão, lula e mexilhão',
+    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
+    badge: { text: 'Ideal família', bg: COLORS.acafrao, color: COLORS.preto },
   },
+
+  // Paellas de carnes
   {
     id: 4,
-    shortName: 'Paella Veggie',
+    shortName: 'Paella de carnes (individual)',
+    weight: '450g',
+    price: 45.0,
+    shortDesc: 'Frango, lombo suíno e linguiça',
+    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
+    badge: { text: 'Individual', bg: COLORS.tomate, color: COLORS.branco },
+  },
+  {
+    id: 5,
+    shortName: 'Paella de carnes (2 pessoas)',
+    weight: '900g',
+    price: 85.0,
+    shortDesc: 'Frango, lombo suíno e linguiça',
+    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
+    badge: { text: '2 pessoas', bg: COLORS.acafrao, color: COLORS.preto },
+  },
+  {
+    id: 6,
+    shortName: 'Paella de carnes (4 pessoas)',
+    weight: '1,8kg',
+    price: 160.0,
+    shortDesc: 'Frango, lombo suíno e linguiça',
+    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
+    badge: { text: 'Ideal família', bg: COLORS.acafrao, color: COLORS.preto },
+  },
+
+  // Paellas veggie
+  {
+    id: 7,
+    shortName: 'Paella veggie (individual)',
     weight: '450g',
     price: 40.0,
-    shortDesc: 'Mix de cogumelos frescos, alcachofras, pimentões...',
+    shortDesc: 'Cogumelos frescos, alcachofras e pimentões',
     image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
     badge: { text: 'Vegetariana', bg: '#2E7D32', color: COLORS.branco },
+  },
+  {
+    id: 8,
+    shortName: 'Paella veggie (2 pessoas)',
+    weight: '900g',
+    price: 75.0,
+    shortDesc: 'Cogumelos frescos, alcachofras e pimentões',
+    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
+    badge: { text: 'Vegetariana', bg: '#2E7D32', color: COLORS.branco },
+  },
+  {
+    id: 9,
+    shortName: 'Paella veggie (4 pessoas)',
+    weight: '1,8kg',
+    price: 140.0,
+    shortDesc: 'Cogumelos frescos, alcachofras e pimentões',
+    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
+    badge: { text: 'Vegetariana', bg: '#2E7D32', color: COLORS.branco },
+  },
+
+  // Combos Paelito
+  {
+    id: 10,
+    shortName: 'Combo Paelito frutos do mar',
+    weight: '',
+    price: 65.0,
+    shortDesc: 'Individual + 4 minichurros + refri lata grátis',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Combo + refri', bg: COLORS.mediterraneo, color: COLORS.branco },
+  },
+  {
+    id: 11,
+    shortName: 'Combo Paelito carnes',
+    weight: '',
+    price: 60.0,
+    shortDesc: 'Individual + 4 minichurros + refri lata grátis',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Combo + refri', bg: COLORS.mediterraneo, color: COLORS.branco },
+  },
+  {
+    id: 12,
+    shortName: 'Combo Paelito veggie',
+    weight: '',
+    price: 55.0,
+    shortDesc: 'Individual + 4 minichurros + refri lata grátis',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Combo + refri', bg: COLORS.mediterraneo, color: COLORS.branco },
+  },
+
+  // Bebidas
+  {
+    id: 13,
+    shortName: 'Refrigerante lata',
+    weight: '350mL',
+    price: 6.0,
+    shortDesc: 'Coca-Cola, Pepsi ou Guaraná',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
+  },
+  {
+    id: 14,
+    shortName: 'Refrigerante 600mL',
+    weight: '600mL',
+    price: 9.0,
+    shortDesc: 'Coca-Cola, Pepsi ou Guaraná',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
+  },
+  {
+    id: 15,
+    shortName: 'Refrigerante 2L',
+    weight: '2L',
+    price: 14.0,
+    shortDesc: 'Coca-Cola, Pepsi ou Guaraná',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
+  },
+  {
+    id: 16,
+    shortName: 'Água mineral',
+    weight: '500mL',
+    price: 4.0,
+    shortDesc: 'Com/sem gás',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
+  },
+  {
+    id: 17,
+    shortName: 'Suco integral',
+    weight: '300mL',
+    price: 8.0,
+    shortDesc: 'Garrafa 300mL',
+    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
   },
 ];
 
@@ -60,8 +186,8 @@ export default function CatalogCheckoutScreen({
   onOrderCreated,
 }) {
   const [includeDonation, setIncludeDonation] = useState(true);
-  const [fullName, setFullName] = useState(user?.name || 'Maria Clara Silveira');
-  const [email, setEmail] = useState(user?.email || 'mariaclara.silveira@email.com');
+  const [fullName, setFullName] = useState(user?.name || 'Cliente');
+  const [email, setEmail] = useState(user?.email || 'cliente@email.com');
   const [whatsapp, setWhatsapp] = useState(user?.phone || '(48) 99842-1082');
   const [loading, setLoading] = useState(false);
 
@@ -76,11 +202,11 @@ export default function CatalogCheckoutScreen({
 
   const handleConfirmOrder = () => {
     if (selectedItems.length === 0) {
-      Alert.alert('Sacola vazia', 'Selecione pelo menos 1 porção de Paella para continuar.');
+      Alert.alert('Sacola vazia', 'Selecione pelo menos 1 item para continuar');
       return;
     }
     if (!fullName.trim() || !whatsapp.trim()) {
-      Alert.alert('Dados incompletos', 'Preencha seu nome e WhatsApp para retirada.');
+      Alert.alert('Dados incompletos', 'Preencha seu nome e WhatsApp para retirada');
       return;
     }
 
@@ -103,9 +229,9 @@ export default function CatalogCheckoutScreen({
       };
 
       Alert.alert(
-        'Pedido Confirmado! 🎉',
-        `Código de Retirada: ${newOrder.orderNumber}\nSeu QR Code já está disponível na aba "Pedidos".`,
-        [{ text: 'Ver Meu QR Code', onPress: () => onOrderCreated && onOrderCreated(newOrder) }]
+        'Pedido confirmado',
+        `Código de retirada: ${newOrder.orderNumber}\nSeu QR Code já está disponível na aba "Pedidos"`,
+        [{ text: 'Ver meu QR Code', onPress: () => onOrderCreated && onOrderCreated(newOrder) }]
       );
     }, 600);
   };
@@ -116,7 +242,7 @@ export default function CatalogCheckoutScreen({
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* Sub-header da tela de Catálogo & Checkout */}
+      {/* Sub-header da tela de catálogo e checkout */}
       <View style={styles.subHeader}>
         <TouchableOpacity style={styles.backBtn} onPress={onBack}>
           <Feather name="chevron-left" size={20} color={COLORS.preto} />
@@ -127,18 +253,18 @@ export default function CatalogCheckoutScreen({
         </View>
       </View>
 
-      {/* 1. ESCOLHA SUA PAELLA */}
+      {/* 1. Escolha sua paella */}
       <View style={styles.titleRow}>
-        <Text style={styles.mainTitle}>Escolha sua Paella</Text>
+        <Text style={styles.mainTitle}>Escolha sua paella</Text>
         <View style={styles.editionBadge}>
           <Text style={styles.editionBadgeText}>Edição 2026</Text>
         </View>
       </View>
       <Text style={styles.subtitle}>
-        Ingredientes frescos preparados com amor pelos mestres paelleiros voluntários.
+        Ingredientes frescos preparados pelos voluntários da cozinha solidária
       </Text>
 
-      {/* Grelha 2x2 de Produtos */}
+      {/* Grade 2x2 de produtos */}
       <View style={styles.grid}>
         {CHECKOUT_CATALOG.map((item) => (
           <CatalogGridItem
@@ -153,7 +279,7 @@ export default function CatalogCheckoutScreen({
         ))}
       </View>
 
-      {/* 2. DOAÇÃO PEDAGÓGICA ABADEUS */}
+      {/* 2. Doação pedagógica ABADEUS */}
       <TouchableOpacity
         style={[styles.donationCard, includeDonation && styles.donationCardActive]}
         onPress={() => setIncludeDonation(!includeDonation)}
@@ -163,7 +289,7 @@ export default function CatalogCheckoutScreen({
           <Ionicons name="school" size={20} color="#8B5E08" />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.donationTitle}>Doação Pedagógica ABADEUS</Text>
+          <Text style={styles.donationTitle}>Doação pedagógica ABADEUS</Text>
           <Text style={styles.donationSub}>Apoie com 1 kit escolar infantil (+ R$ 5,00)</Text>
         </View>
         <View style={[styles.donationPill, !includeDonation && styles.donationPillOff]}>
@@ -183,14 +309,14 @@ export default function CatalogCheckoutScreen({
         </View>
       </TouchableOpacity>
 
-      {/* 3. DADOS PARA RETIRADA */}
+      {/* 3. Dados para retirada */}
       <View style={styles.sectionCard}>
         <View style={styles.sectionTitleRow}>
           <Feather name="user-check" size={18} color={COLORS.tomate} />
-          <Text style={styles.sectionTitle}>Dados para Retirada</Text>
+          <Text style={styles.sectionTitle}>Dados para retirada</Text>
         </View>
 
-        <Text style={styles.inputLabel}>Nome Completo</Text>
+        <Text style={styles.inputLabel}>Nome completo</Text>
         <TextInput
           style={styles.input}
           value={fullName}
@@ -198,7 +324,7 @@ export default function CatalogCheckoutScreen({
           placeholder="Seu nome completo"
         />
 
-        <Text style={styles.inputLabel}>E-mail para Recibo e QR Code</Text>
+        <Text style={styles.inputLabel}>E-mail para recibo e QR Code</Text>
         <TextInput
           style={styles.input}
           value={email}
@@ -208,7 +334,7 @@ export default function CatalogCheckoutScreen({
           placeholder="seu@email.com"
         />
 
-        <Text style={styles.inputLabel}>WhatsApp para Notificação de Pronto</Text>
+        <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
         <TextInput
           style={styles.input}
           value={whatsapp}
@@ -218,31 +344,31 @@ export default function CatalogCheckoutScreen({
         />
       </View>
 
-      {/* 4. FORMA DE PAGAMENTO */}
+      {/* 4. Forma de pagamento */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Forma de Pagamento</Text>
+        <Text style={styles.sectionTitle}>Forma de pagamento</Text>
 
         <View style={styles.pixMethodRow}>
           <View style={styles.pixMethodCardActive}>
             <Ionicons name="flash" size={18} color={COLORS.mediterraneo} />
-            <Text style={styles.pixMethodTitle}>PIX Instantâneo</Text>
+            <Text style={styles.pixMethodTitle}>Pix instantâneo</Text>
             <Text style={styles.pixMethodSub}>Sem taxas extras</Text>
           </View>
 
           <View style={styles.pixMethodCardInfo}>
             <Feather name="zap" size={18} color="#2E7D32" />
-            <Text style={styles.pixMethodTitle}>Aprovação Imediata</Text>
+            <Text style={styles.pixMethodTitle}>Aprovação imediata</Text>
             <Text style={styles.pixMethodSub}>Liberação do ticket em menos de 10 segundos</Text>
           </View>
         </View>
       </View>
 
-      {/* 5. RESUMO DO PEDIDO */}
+      {/* 5. Resumo do pedido */}
       <View style={styles.summaryCard}>
         <View style={styles.summaryHeader}>
-          <Text style={styles.sectionTitle}>Resumo do Pedido</Text>
+          <Text style={styles.sectionTitle}>Resumo do pedido</Text>
           <View style={styles.pavilionBadge}>
-            <Text style={styles.pavilionBadgeText}>Retirada no Pavilhão</Text>
+            <Text style={styles.pavilionBadgeText}>Retirada no pavilhão</Text>
           </View>
         </View>
 
@@ -263,7 +389,7 @@ export default function CatalogCheckoutScreen({
 
         {includeDonation && (
           <View style={styles.summaryLine}>
-            <Text style={styles.summaryItemText}>Doação Pedagógica ABADEUS</Text>
+            <Text style={styles.summaryItemText}>Doação pedagógica ABADEUS</Text>
             <Text style={styles.summaryItemValue}>R$ 5,00</Text>
           </View>
         )}
@@ -272,9 +398,9 @@ export default function CatalogCheckoutScreen({
 
         <View style={styles.totalRow}>
           <View>
-            <Text style={styles.totalLabel}>TOTAL GERAL SOLIDÁRIO</Text>
+            <Text style={styles.totalLabel}>Total geral solidário</Text>
             <View style={styles.hundredDonationBadge}>
-              <Text style={styles.hundredDonationText}>100% Doação</Text>
+              <Text style={styles.hundredDonationText}>100% doação</Text>
             </View>
           </View>
           <Text style={styles.totalValue}>
@@ -283,22 +409,22 @@ export default function CatalogCheckoutScreen({
         </View>
       </View>
 
-      {/* 6. BLOCO PIX E QR CODE */}
+      {/* 6. Bloco Pix e QR Code */}
       <PixPaymentBox
         totalAmount={grandTotal}
         onConfirmOrder={handleConfirmOrder}
         loading={loading}
       />
 
-      {/* 7. CARD FINAL DE LOCAL DE RETIRADA */}
+      {/* 7. Card final de local de retirada */}
       <View style={styles.pickupLocationCard}>
         <View style={styles.pickupIconBox}>
           <Feather name="map-pin" size={20} color={COLORS.tomate} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.pickupCardOverline}>Local de Retirada (Drive-Thru & Salão)</Text>
+          <Text style={styles.pickupCardOverline}>Local de retirada (drive-thru e salão)</Text>
           <Text style={styles.pickupCardTitle}>
-            Centro Comunitário ABADEUS - Bairro Cristo Redentor, Criciúma/SC
+            Centro Comunitário ABADEUS • Bairro Cristo Redentor, Criciúma/SC
           </Text>
           <Text style={styles.pickupCardTime}>🕒 Sábado, das 11h30 às 14h30</Text>
         </View>

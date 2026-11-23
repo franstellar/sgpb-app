@@ -19,11 +19,11 @@ const INITIAL_ADMIN_ORDERS = [
     status: 'PAID_WAITING',
     amount: 90.0,
     timeLabel: 'Há 4 min',
-    customer: 'Roberto Alcantara',
+    customer: 'Cliente',
     phone: '(48) 99124-5511',
-    itemsSummary: '2x Paella Tradicional 450g',
+    itemsSummary: '2x Paella tradicional (450g)',
     unitPriceNote: 'R$ 45,00 un',
-    channelTag: 'Drive-Thru Pista A • Sem fila atual',
+    channelTag: 'Drive-thru pista A • Sem fila',
     channelIcon: 'car-sport-outline',
   },
   {
@@ -32,12 +32,12 @@ const INITIAL_ADMIN_ORDERS = [
     status: 'DELIVERED_DRIVE',
     amount: 102.0,
     timeLabel: 'Hoje, 12:44',
-    customer: 'Maria Clara Silveira',
+    customer: 'Cliente',
     phone: '(48) 99842-1082',
-    itemsSummary: '1x Tradicional + 1x Combo Família + Kit Pedagógico ABADEUS',
-    channelTag: 'Drive-Thru • Creta Prata (QIX-4920)',
+    itemsSummary: 'Paella tradicional individual + Combo Paelito + Kit pedagógico ABADEUS',
+    channelTag: 'Drive-thru • Creta prata (QIX-4920)',
     channelIcon: 'car-sport-outline',
-    validatedBy: 'Validado por Carlos (Posto 01)',
+    validatedBy: 'Validado no posto 01',
     pixId: 'Pix ID: e81b...902a',
   },
   {
@@ -46,10 +46,10 @@ const INITIAL_ADMIN_ORDERS = [
     status: 'PENDING_PIX',
     amount: 120.0,
     timeLabel: 'Expira em 08:35 min',
-    customer: 'João Pedro Santos',
+    customer: 'Cliente',
     phone: '(48) 98811-2049',
-    itemsSummary: '1x Paella Nobre Familiar (Frutos do Mar Especial)',
-    channelTag: 'Retirada Balcão Geral',
+    itemsSummary: 'Paella tradicional para compartilhar',
+    channelTag: 'Retirada balcão geral',
     channelIcon: 'storefront-outline',
   },
   {
@@ -58,19 +58,19 @@ const INITIAL_ADMIN_ORDERS = [
     status: 'DELIVERED_SALON',
     amount: 138.0,
     timeLabel: 'Hoje, 12:15',
-    customer: 'Ana Paula Zanette',
+    customer: 'Cliente',
     phone: '(48) 99650-3321',
-    itemsSummary: '2x Combo Paella + 2x Churros Gourmet + Doação Extra R$ 10',
-    channelTag: 'Mesa 12 • Salão Principal',
+    itemsSummary: '2x Combo Paelito + Churros artesanais + Doação extra R$ 10',
+    channelTag: 'Mesa 12 • Salão principal',
     channelIcon: 'restaurant-outline',
     extraBadge: '+ R$ 10,00 Robótica ABADEUS',
-    validatedBy: 'Validado por Juliana (Posto Salão)',
+    validatedBy: 'Validado no posto salão',
   },
 ];
 
 const FILTER_TABS = [
   { key: 'ALL', label: 'Todos 712' },
-  { key: 'PAID', label: 'Pagos / Liberados 589' },
+  { key: 'PAID', label: 'Pagos e liberados 589' },
   { key: 'PENDING', label: 'Aguardando Pix 42' },
 ];
 
@@ -87,29 +87,29 @@ export default function AdminOrdersScreen() {
               ...o,
               status: 'DELIVERED_DRIVE',
               timeLabel: 'Agora mesmo',
-              validatedBy: 'Validado pela Coordenação',
+              validatedBy: 'Validado pela coordenação',
               pixId: 'Pix ID: a94f...331c',
             }
           : o
       )
     );
-    Alert.alert('Entrega Registrada! ✅', 'O pedido foi marcado como entregue e o recibo emitido.');
+    Alert.alert('Entrega registrada', 'Pedido marcado como entregue e recibo emitido');
   };
 
   const handleCancelOrder = (orderId) => {
     Alert.alert(
-      'Cancelar Pedido Pendente?',
-      'As porções reservadas voltarão imediatamente para o estoque disponível.',
+      'Cancelar pedido pendente?',
+      'As porções reservadas voltam para o estoque disponível',
       [
         { text: 'Voltar', style: 'cancel' },
         {
-          text: 'Confirmar Cancelamento',
+          text: 'Confirmar cancelamento',
           style: 'destructive',
           onPress: () => {
             setOrders((prev) =>
               prev.map((o) =>
                 o.id === orderId
-                  ? { ...o, status: 'CANCELLED', timeLabel: 'Cancelado pelo Admin' }
+                  ? { ...o, status: 'CANCELLED', timeLabel: 'Cancelado pelo admin' }
                   : o
               )
             );
@@ -121,18 +121,18 @@ export default function AdminOrdersScreen() {
 
   const handleRefundOrder = (orderId) => {
     Alert.alert(
-      'Reembolsar Pedido Pago',
-      'Confirma o estorno via Pix com justificativa obrigatória e devolução ao estoque?',
+      'Reembolsar pedido pago',
+      'Confirma o estorno via Pix com justificativa e devolução ao estoque?',
       [
         { text: 'Voltar', style: 'cancel' },
         {
-          text: 'Confirmar Reembolso',
+          text: 'Confirmar reembolso',
           style: 'destructive',
           onPress: () => {
             setOrders((prev) =>
               prev.map((o) =>
                 o.id === orderId
-                  ? { ...o, status: 'REFUNDED', timeLabel: 'Reembolsado pelo Admin' }
+                  ? { ...o, status: 'REFUNDED', timeLabel: 'Reembolsado pelo admin' }
                   : o
               )
             );
@@ -164,24 +164,24 @@ export default function AdminOrdersScreen() {
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* 1. CABEÇALHO DA PÁGINA */}
+      {/* 1. Cabeçalho da página */}
       <View style={styles.headerRow}>
         <View>
-          <Text style={styles.pageTitle}>Gestão de Pedidos</Text>
+          <Text style={styles.pageTitle}>Gestão de pedidos</Text>
           <Text style={styles.pageSub}>Festival Solidário ABADEUS 2026</Text>
         </View>
         <View style={styles.pixDirectBadge}>
           <Ionicons name="flash" size={12} color={COLORS.mediterraneo} />
-          <Text style={styles.pixDirectText}>100% Pix Direto</Text>
+          <Text style={styles.pixDirectText}>100% Pix direto</Text>
         </View>
       </View>
 
-      {/* 2. MINI CARDS FINANCEIROS DO TOPO */}
+      {/* 2. Mini cards financeiros do topo */}
       <View style={styles.topStatsRow}>
         <View style={[styles.statBox, styles.statBoxPrimary]}>
-          <Text style={styles.statOverlineLight}>Arrecadação Total</Text>
+          <Text style={styles.statOverlineLight}>Arrecadação total</Text>
           <Text style={styles.statBigValueLight}>R$ 48.650,00</Text>
-          <Text style={styles.statFootLight}>Meta: R$ 50k • 97.3% concluído</Text>
+          <Text style={styles.statFootLight}>Meta: R$ 50k • 97,3% concluído</Text>
         </View>
 
         <View style={styles.statSideCol}>
@@ -195,7 +195,7 @@ export default function AdminOrdersScreen() {
 
           <View style={styles.statSmallBox}>
             <View style={styles.statSmallHeader}>
-              <Text style={styles.statSmallLabel}>Ticket Médio</Text>
+              <Text style={styles.statSmallLabel}>Ticket médio</Text>
               <Text style={styles.statSmallGain}>+14% vs meta</Text>
             </View>
             <Text style={[styles.statSmallValue, { color: COLORS.mediterraneo }]}>
@@ -205,12 +205,12 @@ export default function AdminOrdersScreen() {
         </View>
       </View>
 
-      {/* 3. BARRA EXPORTAR CSV & FILTRO DE DATA */}
+      {/* 3. Barra exportar CSV e filtro de data */}
       <View style={styles.toolbarRow}>
         <TouchableOpacity
           style={styles.csvBtn}
           onPress={() =>
-            Alert.alert('Exportar CSV 📊', 'Planilha de pedidos e conciliação Pix gerada!')
+            Alert.alert('Exportar CSV', 'Planilha de pedidos e conciliação Pix gerada')
           }
         >
           <Feather name="download" size={14} color={COLORS.preto} />
@@ -219,23 +219,23 @@ export default function AdminOrdersScreen() {
 
         <View style={styles.liveDayPill}>
           <View style={styles.greenDot} />
-          <Text style={styles.liveDayText}>Hoje (Ao vivo)</Text>
+          <Text style={styles.liveDayText}>Hoje (ao vivo)</Text>
         </View>
       </View>
 
-      {/* 4. CAMPO DE BUSCA */}
+      {/* 4. Campo de busca */}
       <View style={styles.searchWrap}>
         <Feather name="search" size={16} color={COLORS.cinzaTexto} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar por #PAE-, comprador ou telefone..."
+          placeholder="Buscar por #PAE-, comprador ou telefone"
           placeholderTextColor={COLORS.cinzaTexto}
           value={search}
           onChangeText={setSearch}
         />
       </View>
 
-      {/* 5. PÍLULAS DE FILTRO */}
+      {/* 5. Pílulas de filtro */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -260,10 +260,10 @@ export default function AdminOrdersScreen() {
 
       <View style={styles.syncStatusRow}>
         <View style={styles.syncDot} />
-        <Text style={styles.syncStatusText}>Fluxo em Tempo Real • Sincronizado agora</Text>
+        <Text style={styles.syncStatusText}>Fluxo em tempo real • Sincronizado agora</Text>
       </View>
 
-      {/* 6. LISTA DE CARDS DE PEDIDOS */}
+      {/* 6. Lista de cards de pedidos */}
       {filteredOrders.map((order) => (
         <AdminOrderCard
           key={order.id}
@@ -274,21 +274,21 @@ export default function AdminOrdersScreen() {
         />
       ))}
 
-      {/* Botão Carregar Mais */}
+      {/* Botão carregar mais */}
       <TouchableOpacity
         style={styles.loadMoreBtn}
-        onPress={() => Alert.alert('Paginação', 'Carregando próximo lote de pedidos da API...')}
+        onPress={() => Alert.alert('Paginação', 'Carregando próximo lote de pedidos da API')}
       >
         <Feather name="refresh-cw" size={14} color={COLORS.preto} />
-        <Text style={styles.loadMoreText}>Carregar Mais Pedidos (692 restantes)</Text>
+        <Text style={styles.loadMoreText}>Carregar mais pedidos (692 restantes)</Text>
       </TouchableOpacity>
 
-      {/* 7. CARD BALANÇO & REPASSE ABADEUS */}
+      {/* 7. Card balanço e repasse ABADEUS */}
       <View style={styles.balanceCard}>
         <View style={styles.balanceTopRow}>
           <View>
-            <Text style={styles.balanceTitle}>Balanço & Repasse ABADEUS</Text>
-            <Text style={styles.balanceSub}>Transparência Solidária Oficial</Text>
+            <Text style={styles.balanceTitle}>Balanço e repasse ABADEUS</Text>
+            <Text style={styles.balanceSub}>Transparência solidária oficial</Text>
           </View>
           <View style={styles.auditedBadge}>
             <Ionicons name="shield-checkmark" size={13} color="#2E7D32" />
@@ -297,39 +297,39 @@ export default function AdminOrdersScreen() {
         </View>
 
         <View style={styles.balanceLine}>
-          <Text style={styles.balanceLabel}>Arrecadação Bruta Operada:</Text>
+          <Text style={styles.balanceLabel}>Arrecadação bruta operada:</Text>
           <Text style={styles.balanceValue}>R$ 48.650,00</Text>
         </View>
 
         <View style={styles.balanceLine}>
-          <Text style={styles.balanceLabel}>Custo Insumos e Embalagens:</Text>
+          <Text style={styles.balanceLabel}>Custo de insumos e embalagens:</Text>
           <Text style={[styles.balanceValue, { color: '#2E7D32' }]}>
-            R$ 0,00 (100% Patrocinado)
+            R$ 0,00 (100% patrocinado)
           </Text>
         </View>
 
         <View style={styles.balanceDivider} />
 
         <View style={styles.balanceLine}>
-          <Text style={styles.balanceNetLabel}>Destinação Projetos Sociais:</Text>
+          <Text style={styles.balanceNetLabel}>Destinação a projetos sociais:</Text>
           <Text style={styles.balanceNetValue}>R$ 48.650,00</Text>
         </View>
 
-        {/* Pílulas dos Projetos */}
+        {/* Pílulas dos projetos */}
         <View style={styles.projectsRow}>
           <View style={styles.projectPill}>
-            <Text style={styles.projectPillText}>🤖 Oficinas Robótica</Text>
+            <Text style={styles.projectPillText}>🤖 Oficinas de robótica</Text>
           </View>
           <View style={styles.projectPill}>
-            <Text style={styles.projectPillText}>🎻 Música Juvenil</Text>
+            <Text style={styles.projectPillText}>🎻 Música juvenil</Text>
           </View>
           <View style={styles.projectPill}>
-            <Text style={styles.projectPillText}>❤️ Assistência às Famílias</Text>
+            <Text style={styles.projectPillText}>❤️ Assistência às famílias</Text>
           </View>
         </View>
 
         <View style={styles.pixInstitutionFooter}>
-          <Text style={styles.pixInstitutionLabel}>Chave Pix Oficial da Instituição:</Text>
+          <Text style={styles.pixInstitutionLabel}>Chave Pix oficial da instituição:</Text>
           <Text style={styles.pixInstitutionKey}>abadeus@abadeus.org.br</Text>
         </View>
       </View>
@@ -657,4 +657,4 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: COLORS.mediterraneo,
   },
-});
+});  

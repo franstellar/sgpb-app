@@ -14,10 +14,10 @@ import PanOperationCard from '../components/PanOperationCard';
 const INITIAL_PANS = [
   {
     id: 1,
-    code: 'Tacho 01 Gigante',
-    dishName: 'Paella Frutos do Mar Tradicional',
-    chefInfo: 'Mestre Zeca & Voluntários',
-    statusLabel: 'Servindo Agora',
+    code: 'Tacho 01',
+    dishName: 'Paella de frutos do mar',
+    chefInfo: 'Equipe de cozinha e voluntários',
+    statusLabel: 'Servindo agora',
     badgeBg: '#E8F5E9',
     badgeColor: '#2E7D32',
     borderColor: '#2E7D32',
@@ -27,9 +27,9 @@ const INITIAL_PANS = [
   },
   {
     id: 2,
-    code: 'Tacho 02 Nobre',
-    dishName: 'Lagostins & Camarão Pistola',
-    statusLabel: 'Apuração do Caldo',
+    code: 'Tacho 02',
+    dishName: 'Paella de carnes',
+    statusLabel: 'Apuração do caldo',
     badgeBg: '#FFF3D1',
     badgeColor: '#B87D14',
     borderColor: COLORS.acafrao,
@@ -41,9 +41,9 @@ const INITIAL_PANS = [
   },
   {
     id: 3,
-    code: 'Tacho 03 Veggie',
-    dishName: 'Veggie da Terra & Cogumelos Frescos',
-    statusLabel: 'Fogo Baixo / Repouso',
+    code: 'Tacho 03',
+    dishName: 'Paella veggie',
+    statusLabel: 'Fogo baixo / repouso',
     badgeBg: '#E6F2F8',
     badgeColor: COLORS.mediterraneo,
     borderColor: '#EADBC0',
@@ -53,8 +53,8 @@ const INITIAL_PANS = [
   },
   {
     id: 4,
-    code: 'Tacho 04 Reserva',
-    dishName: '2ª Rodada Tradicional (300 porções)',
+    code: 'Tacho 04 reserva',
+    dishName: '2ª rodada de frutos do mar (300 porções)',
     statusLabel: 'Programado: 13h15',
     badgeBg: COLORS.creme,
     badgeColor: COLORS.cinzaTexto,
@@ -69,31 +69,31 @@ const INITIAL_PANS = [
 const PRODUCT_STOCK_LIST = [
   {
     id: 1,
-    name: 'Paella Tradicional (450g)',
-    tag: '• Estoque Crítico',
+    name: 'Paella de frutos do mar (individual)',
+    tag: '• Estoque crítico',
     tagBg: '#FDE8E6',
     tagColor: COLORS.tomate,
-    sold: 650,
-    max: 700,
+    sold: 186,
+    max: 200,
     percent: 93,
-    remainingText: 'Restam apenas 50 un',
+    remainingText: 'Restam 14 un',
     barColor: COLORS.tomate,
   },
   {
     id: 2,
-    name: 'Paella Nobre Familiar (1,2kg)',
-    tag: '90% Esgotado',
+    name: 'Paella de carnes (4 pessoas)',
+    tag: '90% esgotado',
     tagBg: '#FFF3D1',
     tagColor: '#B87D14',
-    sold: 180,
-    max: 200,
+    sold: 72,
+    max: 80,
     percent: 90,
-    remainingText: 'Restam 20 un',
+    remainingText: 'Restam 8 un',
     barColor: COLORS.acafrao,
   },
   {
     id: 3,
-    name: 'Paella Veggie da Terra (450g)',
+    name: 'Paella veggie (individual)',
     tag: 'Normal',
     tagBg: '#E8F5E9',
     tagColor: '#2E7D32',
@@ -105,28 +105,28 @@ const PRODUCT_STOCK_LIST = [
   },
   {
     id: 4,
-    name: 'Mini Churros Artesanais (6 un)',
-    tag: 'Sobremesa',
-    tagBg: '#E6F2F8',
-    tagColor: COLORS.mediterraneo,
-    sold: 320,
-    max: 400,
-    percent: 80,
-    remainingText: 'Restam 80 un',
-    barColor: COLORS.mediterraneo,
-  },
-  {
-    id: 5,
-    name: 'Combo Paelito + Suco Natural',
+    name: 'Combo Paelito frutos do mar',
     tag: 'Combo',
     tagBg: '#FDE8B2',
     tagColor: '#8B5E08',
-    sold: 220,
-    max: 250,
+    sold: 88,
+    max: 100,
     percent: 88,
-    statusLabel: 'Status: Em saída ativa',
-    remainingText: 'Restam 30 combos',
+    statusLabel: 'Em saída ativa',
+    remainingText: 'Restam 12 combos',
     barColor: COLORS.tomate,
+  },
+  {
+    id: 5,
+    name: 'Refrigerante lata (350mL)',
+    tag: 'Bebida',
+    tagBg: '#E6F2F8',
+    tagColor: COLORS.mediterraneo,
+    sold: 160,
+    max: 200,
+    percent: 80,
+    remainingText: 'Restam 40 un',
+    barColor: COLORS.mediterraneo,
   },
 ];
 
@@ -144,8 +144,8 @@ export default function AdminStockScreen() {
     setMaxCapacity((prev) => prev + 200);
     setExtraBatchReleased(true);
     Alert.alert(
-      'Lote Extra Liberado! 🎉',
-      '+200 porções solidárias foram adicionadas ao estoque disponível no aplicativo.'
+      'Lote extra liberado',
+      '+200 porções solidárias adicionadas ao estoque disponível no aplicativo'
     );
   };
 
@@ -164,7 +164,7 @@ export default function AdminStockScreen() {
           ? {
               ...p,
               type: 'SERVING',
-              statusLabel: 'Servindo Agora',
+              statusLabel: 'Servindo agora',
               badgeBg: '#E8F5E9',
               badgeColor: '#2E7D32',
               borderColor: '#2E7D32',
@@ -172,7 +172,7 @@ export default function AdminStockScreen() {
           : p
       )
     );
-    Alert.alert('Tacho Pronto! 🥘', 'Tacho 02 Nobre liberado para servir na bancada!');
+    Alert.alert('Tacho pronto', 'Tacho liberado para servir na bancada');
   };
 
   const handleStartPanPrep = (panId) => {
@@ -182,7 +182,7 @@ export default function AdminStockScreen() {
           ? {
               ...p,
               type: 'COOKING',
-              statusLabel: 'Apuração do Caldo',
+              statusLabel: 'Apuração do caldo',
               badgeBg: '#FFF3D1',
               badgeColor: '#B87D14',
               borderColor: COLORS.acafrao,
@@ -192,7 +192,7 @@ export default function AdminStockScreen() {
           : p
       )
     );
-    Alert.alert('Fogo Aceso! 🔥', 'Preparo do Tacho 04 iniciado pela equipe de cozinha.');
+    Alert.alert('Preparo iniciado', 'Preparo do tacho iniciado pela equipe de cozinha');
   };
 
   return (
@@ -201,31 +201,31 @@ export default function AdminStockScreen() {
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* 1. CABEÇALHO ESTOQUE & TACHOS */}
+      {/* 1. Cabeçalho estoque e tachos */}
       <View style={styles.headerRow}>
         <View>
-          <Text style={styles.pageTitle}>Estoque & Tachos</Text>
+          <Text style={styles.pageTitle}>Estoque e tachos</Text>
           <View style={styles.kitchenActiveRow}>
             <View style={styles.greenDot} />
-            <Text style={styles.kitchenActiveText}>Cozinha Solidária em operação</Text>
+            <Text style={styles.kitchenActiveText}>Cozinha solidária em operação</Text>
           </View>
         </View>
 
         <TouchableOpacity
           style={styles.refreshBtn}
-          onPress={() => Alert.alert('Sincronizado 🔄', 'Estoque atualizado com o banco central.')}
+          onPress={() => Alert.alert('Sincronizado', 'Estoque atualizado com o banco central')}
         >
           <Feather name="refresh-cw" size={14} color={COLORS.preto} />
           <Text style={styles.refreshBtnText}>Atualizar</Text>
         </TouchableOpacity>
       </View>
 
-      {/* 2. CARD DE CAPACIDADE TOTAL DO EVENTO */}
+      {/* 2. Card de capacidade total do evento */}
       <View style={styles.capacityCard}>
         <View style={styles.capacityTopRow}>
-          <Text style={styles.capacityOverline}>CAPACIDADE TOTAL DO EVENTO</Text>
+          <Text style={styles.capacityOverline}>Capacidade total do evento</Text>
           <View style={styles.soldPercentBadge}>
-            <Text style={styles.soldPercentText}>{soldPercent}% Vendido</Text>
+            <Text style={styles.soldPercentText}>{soldPercent}% vendido</Text>
           </View>
         </View>
 
@@ -243,36 +243,35 @@ export default function AdminStockScreen() {
         </View>
 
         <Text style={styles.capacitySubText}>
-          {remainingUnits} restantes no {extraBatchReleased ? 'Lote Extra' : '1º Lote'}
+          {remainingUnits} restantes no {extraBatchReleased ? 'lote extra' : '1º lote'}
         </Text>
       </View>
 
-      {/* 3. BANNER DE ALERTA: 1º LOTE PRESTES A ESGOTAR */}
+      {/* 3. Banner de alerta: 1º lote prestes a esgotar */}
       {!extraBatchReleased && (
         <View style={styles.lotAlertCard}>
           <View style={styles.lotAlertHeader}>
             <Ionicons name="warning" size={18} color="#B87D14" />
-            <Text style={styles.lotAlertTitle}>1º Lote prestes a esgotar!</Text>
+            <Text style={styles.lotAlertTitle}>1º lote prestes a esgotar</Text>
           </View>
           <Text style={styles.lotAlertDesc}>
-            Restam apenas 115 fichas. Deseja disponibilizar o Lote Extra com +200 porções
-            beneficentes?
+            Restam 115 fichas. Deseja liberar o lote extra com +200 porções beneficentes?
           </Text>
           <View style={styles.lotAlertActions}>
             <TouchableOpacity style={styles.laterBtn}>
-              <Text style={styles.laterBtnText}>Mais Tarde</Text>
+              <Text style={styles.laterBtnText}>Mais tarde</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.releaseLotBtn}
               onPress={handleReleaseExtraBatch}
             >
-              <Text style={styles.releaseLotBtnText}>Liberar Lote Extra</Text>
+              <Text style={styles.releaseLotBtnText}>Liberar lote extra</Text>
             </TouchableOpacity>
           </View>
         </View>
       )}
 
-      {/* 4. BOTÕES DE CONTROLE: PAUSAR VENDAS & + NOVO ITEM */}
+      {/* 4. Botões de controle: pausar vendas e novo item */}
       <View style={styles.quickControlsRow}>
         <TouchableOpacity
           style={[styles.pauseSalesBtn, salesPaused && styles.pauseSalesBtnActive]}
@@ -289,26 +288,26 @@ export default function AdminStockScreen() {
               salesPaused && { color: COLORS.branco },
             ]}
           >
-            {salesPaused ? 'Retomar Vendas' : 'Pausar Vendas'}
+            {salesPaused ? 'Retomar vendas' : 'Pausar vendas'}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.newItemBtn}
           onPress={() =>
-            Alert.alert('Novo Item no Cardápio ➕', 'Abrindo modal de cadastro de produto/lote...')
+            Alert.alert('Novo item no cardápio', 'Abrindo cadastro de produto ou lote')
           }
         >
           <Feather name="plus" size={16} color={COLORS.branco} />
-          <Text style={styles.newItemText}>Novo Item</Text>
+          <Text style={styles.newItemText}>Novo item</Text>
         </TouchableOpacity>
       </View>
 
-      {/* 5. TACHOS EM OPERAÇÃO */}
+      {/* 5. Tachos em operação */}
       <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionTitle}>Tachos em Operação</Text>
+        <Text style={styles.sectionTitle}>Tachos em operação</Text>
         <View style={styles.pansCountPill}>
-          <Text style={styles.pansCountPillText}>4 Tachos Alocados</Text>
+          <Text style={styles.pansCountPillText}>{pans.length} tachos alocados</Text>
         </View>
       </View>
 
@@ -323,11 +322,11 @@ export default function AdminStockScreen() {
         />
       ))}
 
-      {/* 6. ESTOQUE POR PRODUTO (CARDÁPIO OFICIAL) */}
+      {/* 6. Estoque por produto */}
       <View style={[styles.sectionHeaderRow, { marginTop: 8 }]}>
         <View>
-          <Text style={styles.overline}>CARDÁPIO OFICIAL</Text>
-          <Text style={styles.sectionTitle}>Estoque por Produto</Text>
+          <Text style={styles.overline}>Cardápio oficial</Text>
+          <Text style={styles.sectionTitle}>Estoque por produto</Text>
         </View>
       </View>
 
@@ -344,7 +343,7 @@ export default function AdminStockScreen() {
             </View>
 
             <Text style={styles.prodMetricsLine}>
-              Vendidas: {prod.sold} un {prod.max ? `| Estoque Máx: ${prod.max} un` : ''}
+              Vendidas: {prod.sold} un {prod.max ? `| Estoque máx: ${prod.max} un` : ''}
             </Text>
 
             <View style={styles.prodProgressBg}>
@@ -368,36 +367,36 @@ export default function AdminStockScreen() {
         ))}
       </View>
 
-      {/* 7. INSUMOS & DOAÇÕES (100% SOLIDÁRIO) */}
+      {/* 7. Insumos e doações */}
       <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionTitle}>Insumos & Doações</Text>
+        <Text style={styles.sectionTitle}>Insumos e doações</Text>
         <View style={styles.solidaryPill}>
-          <Text style={styles.solidaryPillText}>100% Solidário</Text>
+          <Text style={styles.solidaryPillText}>100% solidário</Text>
         </View>
       </View>
 
       <View style={styles.inputsGrid}>
         <View style={styles.inputBox}>
           <Text style={styles.inputBigVal}>120 kg</Text>
-          <Text style={styles.inputTitle}>Arroz Bomba Especial</Text>
-          <Text style={styles.inputSub}>100% Doado por Cooperativa Local</Text>
+          <Text style={styles.inputTitle}>Arroz bomba especial</Text>
+          <Text style={styles.inputSub}>100% doado por cooperativa local</Text>
         </View>
 
         <View style={styles.inputBox}>
           <Text style={[styles.inputBigVal, { color: COLORS.mediterraneo }]}>180 kg</Text>
-          <Text style={styles.inputTitle}>Frutos do Mar Nobres</Text>
-          <Text style={styles.inputSub}>100% Doado por Pescados da Ilha</Text>
+          <Text style={styles.inputTitle}>Frutos do mar</Text>
+          <Text style={styles.inputSub}>100% doado por parceiro local</Text>
         </View>
 
         <View style={styles.inputBox}>
           <Text style={[styles.inputBigVal, { color: '#B87D14' }]}>Legítimo</Text>
-          <Text style={styles.inputTitle}>Açafrão Espanhol</Text>
+          <Text style={styles.inputTitle}>Açafrão espanhol</Text>
           <Text style={styles.inputSub}>Lote especial garantido</Text>
         </View>
 
         <View style={styles.inputBox}>
           <Text style={[styles.inputBigVal, { color: '#2E7D32' }]}>95,8%</Text>
-          <Text style={styles.inputTitle}>Embalagens Seladas</Text>
+          <Text style={styles.inputTitle}>Embalagens seladas</Text>
           <Text style={styles.inputSub}>1.150/1.200 utilizadas</Text>
         </View>
       </View>

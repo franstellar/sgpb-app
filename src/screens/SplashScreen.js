@@ -10,13 +10,13 @@ export default function SplashScreen() {
       <StatusBar barStyle="light-content" backgroundColor={COLORS.tomate} />
 
       <View style={styles.centerContent}>
-        {/* Pílula da Edição */}
+        {/* Pílula da edição */}
         <View style={styles.editionPill}>
           <View style={styles.yellowDot} />
-          <Text style={styles.editionText}>12ª EDIÇÃO SOLIDÁRIA • 2026</Text>
+          <Text style={styles.editionText}>12ª edição solidária • 2026</Text>
         </View>
 
-        {/* Círculo do Mascote / Ícone Principal */}
+        {/* Círculo do mascote / ícone principal */}
         <View style={styles.logoOuterRing}>
           <View style={styles.logoInnerCircle}>
             <Text style={styles.logoEmoji}>🥘</Text>
@@ -26,17 +26,17 @@ export default function SplashScreen() {
         {/* Marca Paelito */}
         <Text style={styles.brandTitle}>Paelito</Text>
         <Text style={styles.brandTagline}>
-          Paella feita para compartilhar.{'\n'}Sabor que transforma vidas!
+          Paella feita para compartilhar{'\n'}Sabor que transforma vidas!
         </Text>
 
         {/* Selo ABADEUS */}
         <View style={styles.abadeusBadge}>
           <Ionicons name="heart" size={14} color={COLORS.tomate} />
-          <Text style={styles.abadeusBadgeText}>100% Beneficente • ABADEUS Criciúma/SC</Text>
+          <Text style={styles.abadeusBadgeText}>100% beneficente • ABADEUS Criciúma/SC</Text>
         </View>
       </View>
 
-      {/* Rodapé de Carregamento */}
+      {/* Rodapé de carregamento */}
       <View style={styles.footer}>
         <ActivityIndicator size="small" color={COLORS.acafrao} />
         <Text style={styles.loadingText}>Aquecendo os tachos solidários...</Text>

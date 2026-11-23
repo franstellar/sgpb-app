@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import AdminTopBar from '../components/AdminTopBar';
 import AdminBottomTabBar from '../components/AdminBottomTabBar';
@@ -20,27 +20,27 @@ import AdminStockScreen from './AdminStockScreen';
 const PANS_STATUS = [
   {
     id: 1,
-    name: 'Tacho 1 • Tradicional Frutos do Mar',
-    badge: '95% Pronto',
+    name: 'Tacho 1 • Paella de frutos do mar',
+    badge: '95% pronto',
     badgeBg: '#E8F5E9',
     badgeColor: '#2E7D32',
-    desc: 'Servindo ativamente na bancada principal',
+    desc: 'Servindo na bancada principal',
     progress: 0.95,
     barColor: '#2E7D32',
   },
   {
     id: 2,
-    name: 'Tacho 2 • Nobre Especial',
+    name: 'Tacho 2 • Paella de carnes',
     badge: 'Cozimento (~12 min)',
     badgeBg: '#FFF3D1',
     badgeColor: '#B87D14',
-    desc: 'Fase de apuração do caldo de açafrão',
+    desc: 'Apuração do caldo de açafrão',
     progress: 0.65,
     barColor: COLORS.acafrao,
   },
   {
     id: 3,
-    name: 'Tacho 3 • Veggie & Cogumelos',
+    name: 'Tacho 3 • Paella veggie',
     badge: '40 restam',
     badgeBg: '#E6F2F8',
     badgeColor: COLORS.mediterraneo,
@@ -53,27 +53,27 @@ const PANS_STATUS = [
 const RECENT_PICKUPS = [
   {
     seq: '#84',
-    name: 'Roberto Alcantara',
+    name: 'Cliente',
     code: '#PAE-8429',
-    summary: '2x Porção Tradicional • Há 2 min',
+    summary: '2x Paella de carnes (individual) • Há 2 min',
     channel: 'Drive-thru',
     channelBg: '#E6F2F8',
     channelColor: COLORS.mediterraneo,
   },
   {
     seq: '#83',
-    name: 'Mariana Silveira',
+    name: 'Cliente',
     code: '#PAE-8428',
-    summary: '1x Família Nobre • Há 5 min',
+    summary: 'Paella de frutos do mar (4 pessoas) • Há 5 min',
     channel: 'Salão',
     channelBg: '#FFF3D1',
     channelColor: '#8B5E08',
   },
   {
     seq: '#82',
-    name: 'Carlos Eduardo Ramos',
+    name: 'Cliente',
     code: '#PAE-8427',
-    summary: '3x Tradicional + 1x Sobremesa • Há 8 min',
+    summary: '2x Combo Paelito carnes + Paella veggie (individual) • Há 8 min',
     channel: 'Drive-thru',
     channelBg: '#E6F2F8',
     channelColor: COLORS.mediterraneo,
@@ -90,217 +90,211 @@ export default function AdminScreen({ user, onLogout }) {
 
       <AdminTopBar user={user} onLogout={onLogout} />
 
-      {activeTab === 'CHECKIN' && <AdminCheckinScreen />}
+      {activeTab === 'CHECKIN' && <AdminCheckinScreen user={user} />}
       {activeTab === 'ORDERS' && <AdminOrdersScreen />}
       {activeTab === 'STOCK' && <AdminStockScreen />}
 
       {activeTab === 'DASHBOARD' && (
-        <View style={{ flex: 1 }}>
-          <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 16, fontWeight: '700' }}>
-            Dashboard Administrativo
-          </Text>
-        </View>
-      )}
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* 1. BOTÕES DE AÇÃO RÁPIDA (CHECK-IN QR & VENDA BALCÃO) */}
-        <TouchableOpacity
-          style={styles.primaryQuickAction}
-          onPress={() => setActiveTab('CHECKIN')}
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.quickActionIconBox}>
-            <Ionicons name="qr-code-outline" size={20} color={COLORS.branco} />
-          </View>
-          <Text style={styles.primaryQuickActionText}>
-            Abrir Leitor de QR Code (Check-in Express)
-          </Text>
-          <Feather name="chevron-right" size={18} color={COLORS.branco} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.secondaryQuickAction}
-          onPress={() =>
-            Alert.alert(
-              'Venda Balcão / Pix Manual 🧾',
-              'Abrindo formulário rápido de venda presencial...'
-            )
-          }
-        >
-          <Feather name="plus-circle" size={18} color={COLORS.preto} />
-          <Text style={styles.secondaryQuickActionText}>
-            Registrar Venda Balcão / Pix Manual
-          </Text>
-        </TouchableOpacity>
-
-        {/* 2. CARD PRINCIPAL: ARRECADAÇÃO SOLIDÁRIA */}
-        <View style={styles.revenueCard}>
-          <View style={styles.revenueTopRow}>
-            <Text style={styles.revenueOverline}>ARRECADAÇÃO SOLIDÁRIA</Text>
-            <View style={styles.goalBeatBadge}>
-              <Text style={styles.goalBeatText}>Meta Batida 121%</Text>
+          {/* 1. Botões de ação rápida */}
+          <TouchableOpacity
+            style={styles.primaryQuickAction}
+            onPress={() => setActiveTab('CHECKIN')}
+          >
+            <View style={styles.quickActionIconBox}>
+              <Ionicons name="qr-code-outline" size={20} color={COLORS.branco} />
             </View>
-          </View>
-
-          <Text style={styles.revenueAmount}>R$ 48.650,00</Text>
-
-          <View style={styles.revenueProgressBg}>
-            <View style={[styles.revenueProgressFill, { width: '100%' }]} />
-          </View>
-
-          <View style={styles.revenueFooterRow}>
-            <Text style={styles.revenueMetaText}>Meta inicial: R$ 40.000,00</Text>
-            <Text style={styles.revenueExtraText}>+18% extra</Text>
-          </View>
-        </View>
-
-        {/* 3. GRID 2 COLUNAS: PORÇÕES TOTAIS & CHECK-INS FEITOS */}
-        <View style={styles.kpiRow}>
-          <View style={styles.kpiCard}>
-            <View style={styles.kpiHeader}>
-              <Ionicons name="restaurant-outline" size={16} color={COLORS.tomate} />
-              <Text style={styles.kpiTitle}>Porções Totais</Text>
-            </View>
-            <Text style={styles.kpiBigValue}>1.085/1.200</Text>
-            <Text style={styles.kpiSubText}>90% vendidas • 115 restam</Text>
-          </View>
-
-          <View style={styles.kpiCard}>
-            <View style={styles.kpiHeader}>
-              <Feather name="check-circle" size={16} color={COLORS.mediterraneo} />
-              <Text style={styles.kpiTitle}>Check-ins Feitos</Text>
-            </View>
-            <Text style={[styles.kpiBigValue, { color: COLORS.mediterraneo }]}>
-              742 (68%)
+            <Text style={styles.primaryQuickActionText}>
+              Abrir leitor de QR Code (check-in expresso)
             </Text>
-            <Text style={styles.kpiSubText}>343 na fila • Aguardando</Text>
-          </View>
-        </View>
+            <Feather name="chevron-right" size={18} color={COLORS.branco} />
+          </TouchableOpacity>
 
-        {/* 4. BARRA DE TICKET MÉDIO BENEFICENTE */}
-        <View style={styles.avgTicketCard}>
-          <View style={styles.avgTicketLeft}>
-            <View style={styles.avgIconCircle}>
-              <Feather name="trending-up" size={16} color="#8B5E08" />
-            </View>
-            <Text style={styles.avgTicketLabel}>Ticket Médio Beneficente</Text>
-          </View>
-          <Text style={styles.avgTicketValue}>R$ 68,40 / por pedido</Text>
-        </View>
+          <TouchableOpacity
+            style={styles.secondaryQuickAction}
+            onPress={() =>
+              Alert.alert(
+                'Venda balcão ou Pix manual',
+                'Abrindo formulário rápido de venda presencial'
+              )
+            }
+          >
+            <Feather name="plus-circle" size={18} color={COLORS.preto} />
+            <Text style={styles.secondaryQuickActionText}>
+              Registrar venda balcão ou Pix manual
+            </Text>
+          </TouchableOpacity>
 
-        {/* 5. FLUXO DE ENTREGA (DRIVE-THRU vs SALÃO LOCAL) */}
-        <Text style={styles.sectionTitle}>Fluxo de Entrega</Text>
-
-        <View style={styles.kpiRow}>
-          <View style={styles.flowCard}>
-            <View style={styles.flowTopRow}>
-              <Text style={styles.flowChannelTitle}>Drive-Thru</Text>
-              <View style={styles.highAdhesionBadge}>
-                <Text style={styles.highAdhesionText}>Alta Adesão</Text>
+          {/* 2. Card principal: arrecadação solidária */}
+          <View style={styles.revenueCard}>
+            <View style={styles.revenueTopRow}>
+              <Text style={styles.revenueOverline}>Arrecadação solidária</Text>
+              <View style={styles.goalBeatBadge}>
+                <Text style={styles.goalBeatText}>Meta batida 121%</Text>
               </View>
             </View>
-            <Text style={styles.flowNumber}>520</Text>
-            <Text style={styles.flowUnitLabel}>porções entregues</Text>
-            <View style={styles.flowDivider} />
-            <Text style={styles.flowMetricBold}>⏱️ 1 min 45s / carro</Text>
-            <Text style={styles.flowStatusNote}>Fila rápida fluindo</Text>
-          </View>
 
-          <View style={styles.flowCard}>
-            <View style={styles.flowTopRow}>
-              <Text style={styles.flowChannelTitle}>Salão Local</Text>
-              <View style={styles.liveSmallBadge}>
-                <Text style={styles.liveSmallText}>Ao vivo</Text>
-              </View>
+            <Text style={styles.revenueAmount}>R$ 48.650,00</Text>
+
+            <View style={styles.revenueProgressBg}>
+              <View style={[styles.revenueProgressFill, { width: '100%' }]} />
             </View>
-            <Text style={[styles.flowNumber, { color: COLORS.mediterraneo }]}>222</Text>
-            <Text style={styles.flowUnitLabel}>porções servidas</Text>
-            <View style={styles.flowDivider} />
-            <Text style={styles.flowMetricBold}>🍽️ Mesas cheias</Text>
-            <Text style={styles.flowStatusNote}>Confraternização ativa</Text>
-          </View>
-        </View>
 
-        {/* 6. STATUS DOS TACHOS DE PAELLA */}
-        <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionTitle}>Status dos Tachos de Paella</Text>
-          <View style={styles.pansCountBadge}>
-            <Text style={styles.pansCountText}>3 em operação</Text>
+            <View style={styles.revenueFooterRow}>
+              <Text style={styles.revenueMetaText}>Meta inicial: R$ 40.000,00</Text>
+              <Text style={styles.revenueExtraText}>+18% extra</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.pansContainer}>
-          {PANS_STATUS.map((pan) => (
-            <View key={pan.id} style={styles.panCard}>
-              <View style={styles.panHeader}>
-                <Text style={styles.panTitle} numberOfLines={1}>
-                  {pan.name}
-                </Text>
-                <View style={[styles.panBadge, { backgroundColor: pan.badgeBg }]}>
-                  <Text style={[styles.panBadgeText, { color: pan.badgeColor }]}>
-                    {pan.badge}
+          {/* 3. Grid 2 colunas: porções totais e check-ins feitos */}
+          <View style={styles.kpiRow}>
+            <View style={styles.kpiCard}>
+              <View style={styles.kpiHeader}>
+                <Ionicons name="restaurant-outline" size={16} color={COLORS.tomate} />
+                <Text style={styles.kpiTitle}>Porções totais</Text>
+              </View>
+              <Text style={styles.kpiBigValue}>1.085/1.200</Text>
+              <Text style={styles.kpiSubText}>90% vendidas • 115 restam</Text>
+            </View>
+
+            <View style={styles.kpiCard}>
+              <View style={styles.kpiHeader}>
+                <Feather name="check-circle" size={16} color={COLORS.mediterraneo} />
+                <Text style={styles.kpiTitle}>Check-ins feitos</Text>
+              </View>
+              <Text style={[styles.kpiBigValue, { color: COLORS.mediterraneo }]}>
+                742 (68%)
+              </Text>
+              <Text style={styles.kpiSubText}>343 na fila</Text>
+            </View>
+          </View>
+
+          {/* 4. Barra de ticket médio beneficente */}
+          <View style={styles.avgTicketCard}>
+            <View style={styles.avgTicketLeft}>
+              <View style={styles.avgIconCircle}>
+                <Feather name="trending-up" size={16} color="#8B5E08" />
+              </View>
+              <Text style={styles.avgTicketLabel}>Ticket médio beneficente</Text>
+            </View>
+            <Text style={styles.avgTicketValue}>R$ 68,40 / pedido</Text>
+          </View>
+
+          {/* 5. Fluxo de entrega */}
+          <Text style={styles.sectionTitle}>Fluxo de entrega</Text>
+
+          <View style={styles.kpiRow}>
+            <View style={styles.flowCard}>
+              <View style={styles.flowTopRow}>
+                <Text style={styles.flowChannelTitle}>Drive-thru</Text>
+                <View style={styles.highAdhesionBadge}>
+                  <Text style={styles.highAdhesionText}>Alta adesão</Text>
+                </View>
+              </View>
+              <Text style={styles.flowNumber}>520</Text>
+              <Text style={styles.flowUnitLabel}>porções entregues</Text>
+              <View style={styles.flowDivider} />
+              <Text style={styles.flowMetricBold}>⏱️ 1 min 45s / carro</Text>
+              <Text style={styles.flowStatusNote}>Fila rápida fluindo</Text>
+            </View>
+
+            <View style={styles.flowCard}>
+              <View style={styles.flowTopRow}>
+                <Text style={styles.flowChannelTitle}>Salão local</Text>
+                <View style={styles.liveSmallBadge}>
+                  <Text style={styles.liveSmallText}>Ao vivo</Text>
+                </View>
+              </View>
+              <Text style={[styles.flowNumber, { color: COLORS.mediterraneo }]}>222</Text>
+              <Text style={styles.flowUnitLabel}>porções servidas</Text>
+              <View style={styles.flowDivider} />
+              <Text style={styles.flowMetricBold}>🍽️ Mesas cheias</Text>
+              <Text style={styles.flowStatusNote}>Confraternização ativa</Text>
+            </View>
+          </View>
+
+          {/* 6. Status dos tachos de paella */}
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>Status dos tachos de paella</Text>
+            <View style={styles.pansCountBadge}>
+              <Text style={styles.pansCountText}>3 em operação</Text>
+            </View>
+          </View>
+
+          <View style={styles.pansContainer}>
+            {PANS_STATUS.map((pan) => (
+              <View key={pan.id} style={styles.panCard}>
+                <View style={styles.panHeader}>
+                  <Text style={styles.panTitle} numberOfLines={1}>
+                    {pan.name}
+                  </Text>
+                  <View style={[styles.panBadge, { backgroundColor: pan.badgeBg }]}>
+                    <Text style={[styles.panBadgeText, { color: pan.badgeColor }]}>
+                      {pan.badge}
+                    </Text>
+                  </View>
+                </View>
+                <Text style={styles.panDesc}>{pan.desc}</Text>
+                <View style={styles.panProgressBg}>
+                  <View
+                    style={[
+                      styles.panProgressFill,
+                      { width: `${pan.progress * 100}%`, backgroundColor: pan.barColor },
+                    ]}
+                  />
+                </View>
+              </View>
+            ))}
+          </View>
+
+          {/* 7. Últimos pedidos retirados */}
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>Últimos pedidos retirados</Text>
+            <TouchableOpacity onPress={() => setActiveTab('ORDERS')}>
+              <Text style={styles.seeAllLink}>Ver todos</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.recentList}>
+            {RECENT_PICKUPS.map((item) => (
+              <View key={item.code} style={styles.recentCard}>
+                <View style={styles.seqCircle}>
+                  <Text style={styles.seqText}>{item.seq}</Text>
+                </View>
+
+                <View style={{ flex: 1 }}>
+                  <View style={styles.recentTopLine}>
+                    <Text style={styles.recentName}>{item.name}</Text>
+                    <Text style={styles.recentCode}>{item.code}</Text>
+                  </View>
+                  <Text style={styles.recentSummary}>{item.summary}</Text>
+                </View>
+
+                <View style={[styles.channelPill, { backgroundColor: item.channelBg }]}>
+                  <Text style={[styles.channelPillText, { color: item.channelColor }]}>
+                    {item.channel}
                   </Text>
                 </View>
               </View>
-              <Text style={styles.panDesc}>{pan.desc}</Text>
-              <View style={styles.panProgressBg}>
-                <View
-                  style={[
-                    styles.panProgressFill,
-                    { width: `${pan.progress * 100}%`, backgroundColor: pan.barColor },
-                  ]}
-                />
-              </View>
-            </View>
-          ))}
-        </View>
-
-        {/* 7. ÚLTIMOS PEDIDOS RETIRADOS */}
-        <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionTitle}>Últimos Pedidos Retirados</Text>
-          <TouchableOpacity onPress={() => setActiveTab('ORDERS')}>
-            <Text style={styles.seeAllLink}>Ver todos</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.recentList}>
-          {RECENT_PICKUPS.map((item) => (
-            <View key={item.code} style={styles.recentCard}>
-              <View style={styles.seqCircle}>
-                <Text style={styles.seqText}>{item.seq}</Text>
-              </View>
-
-              <View style={{ flex: 1 }}>
-                <View style={styles.recentTopLine}>
-                  <Text style={styles.recentName}>{item.name}</Text>
-                  <Text style={styles.recentCode}>{item.code}</Text>
-                </View>
-                <Text style={styles.recentSummary}>{item.summary}</Text>
-              </View>
-
-              <View style={[styles.channelPill, { backgroundColor: item.channelBg }]}>
-                <Text style={[styles.channelPillText, { color: item.channelColor }]}>
-                  {item.channel}
-                </Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        {/* 8. RODAPÉ SOLIDARIEDADE */}
-        <View style={styles.footerBanner}>
-          <Ionicons name="heart" size={18} color={COLORS.tomate} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.footerBannerTitle}>Solidariedade que Alimenta Vidas</Text>
-            <Text style={styles.footerBannerDesc}>
-              100% dos recursos são revertidos para os programas de educação e qualificação da
-              entidade ABADEUS.
-            </Text>
+            ))}
           </View>
-        </View>
-      </ScrollView>
+
+          {/* 8. Rodapé solidariedade */}
+          <View style={styles.footerBanner}>
+            <Ionicons name="heart" size={18} color={COLORS.tomate} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.footerBannerTitle}>Solidariedade que alimenta vidas</Text>
+              <Text style={styles.footerBannerDesc}>
+                100% dos recursos vão para os programas de educação e qualificação da ABADEUS
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      )}
 
       <AdminBottomTabBar activeTab={activeTab} onChangeTab={setActiveTab} />
     </SafeAreaView>

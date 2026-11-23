@@ -30,19 +30,19 @@ export default function EventInfoScreen({ onOrderNow }) {
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* 1. HERO INSTITUCIONAL */}
+      {/* 1. Hero institucional */}
       <View style={styles.editionPill}>
         <View style={styles.redDot} />
-        <Text style={styles.editionPillText}>12ª EDIÇÃO SOLIDÁRIA</Text>
+        <Text style={styles.editionPillText}>12ª edição solidária</Text>
       </View>
 
-      <Text style={styles.heroTitle}>Mais que gastronomia, um compromisso com o futuro.</Text>
+      <Text style={styles.heroTitle}>Mais que gastronomia, um compromisso com o futuro</Text>
       <Text style={styles.heroSub}>
-        A união acolhedora entre a culinária mediterrânea e a transformação social de centenas de
-        famílias em Criciúma/SC.
+        A união entre a culinária mediterrânea e a transformação social de centenas de famílias em
+        Criciúma/SC
       </Text>
 
-      {/* 2. TRADIÇÃO & MESTRES PAELLEIROS */}
+      {/* 2. Tradição e mestres paelleiros */}
       <View style={styles.traditionCard}>
         <View style={styles.traditionImageWrap}>
           <Image
@@ -51,18 +51,18 @@ export default function EventInfoScreen({ onOrderNow }) {
           />
           <View style={styles.traditionOverlay} />
           <View style={styles.traditionBadge}>
-            <Text style={styles.traditionBadgeText}>PAELITO • SABOR & ALMA</Text>
+            <Text style={styles.traditionBadgeText}>Paelito • Sabor e solidariedade</Text>
           </View>
-          <Text style={styles.traditionPhotoTitle}>Tradição & Mestres Paelleiros</Text>
+          <Text style={styles.traditionPhotoTitle}>Tradição e cozinha solidária</Text>
         </View>
 
         <View style={styles.traditionBody}>
-          <Text style={styles.overline}>PAELITO</Text>
-          <Text style={styles.cardMainTitle}>O Segredo do Nosso Tacho</Text>
+          <Text style={styles.overline}>Paelito</Text>
+          <Text style={styles.cardMainTitle}>O segredo do nosso tacho</Text>
           <Text style={styles.cardParagraph}>
-            Nascida do encontro generoso entre renomados chefs voluntários e a comunidade de
-            Criciúma, a Paella do Paelito combina frutos do mar frescos e cortes seletos em arroz ao
-            açafrão espanhol, cozida lentamente em tachos gigantes com afeto incondicional.
+            Preparada por chefs voluntários e pela comunidade de Criciúma, a paella do Paelito reúne
+            opções de frutos do mar, carnes e veggie em arroz ao açafrão espanhol, cozida lentamente
+            em tachos gigantes.
           </Text>
 
           <View style={styles.profitHighlight}>
@@ -74,13 +74,13 @@ export default function EventInfoScreen({ onOrderNow }) {
         </View>
       </View>
 
-      {/* 3. IMPACTO SOCIAL COMPROVADO - ABADEUS */}
-      <Text style={styles.overline}>IMPACTO SOCIAL COMPROVADO</Text>
+      {/* 3. Impacto social comprovado - ABADEUS */}
+      <Text style={styles.overline}>Impacto social comprovado</Text>
       <Text style={styles.sectionTitle}>Associação Beneficente ABADEUS</Text>
       <Text style={styles.sectionDesc}>
-        Há mais de 45 anos no Bairro Cristo Redentor, a ABADEUS atua como farol de dignidade
-        humana, promovendo cidadania, inovação pedagógica e acolhimento para crianças, adolescentes
-        e suas famílias em vulnerabilidade.
+        Há mais de 45 anos no bairro Cristo Redentor, a ABADEUS promove cidadania, inovação
+        pedagógica e acolhimento para crianças, adolescentes e famílias em situação de
+        vulnerabilidade.
       </Text>
 
       <View style={styles.impactGrid}>
@@ -90,7 +90,7 @@ export default function EventInfoScreen({ onOrderNow }) {
           </View>
           <Text style={styles.impactTitle}>Robótica</Text>
           <Text style={styles.impactSub}>
-            Inclusão digital e IA para centenas de jovens da periferia.
+            Inclusão digital e IA para centenas de jovens da comunidade
           </Text>
         </View>
 
@@ -100,26 +100,26 @@ export default function EventInfoScreen({ onOrderNow }) {
           </View>
           <Text style={styles.impactTitle}>Música</Text>
           <Text style={styles.impactSub}>
-            Orquestra juvenil, violino e oficinas de expressão artística.
+            Orquestra juvenil, violino e oficinas de expressão artística
           </Text>
         </View>
 
         <View style={styles.impactBox}>
           <Text style={[styles.impactBigNumber, { color: COLORS.tomate }]}>+2.400</Text>
           <Text style={styles.impactSub}>
-            Jovens capacitados e inseridos no mercado de trabalho.
+            Jovens capacitados e inseridos no mercado de trabalho
           </Text>
         </View>
 
         <View style={styles.impactBox}>
           <Text style={[styles.impactBigNumber, { color: COLORS.mediterraneo }]}>500+</Text>
           <Text style={styles.impactSub}>
-            Famílias assistidas mensalmente com cestas e apoio biopsicossocial.
+            Famílias assistidas mensalmente com cestas e apoio biopsicossocial
           </Text>
         </View>
       </View>
 
-      {/* Depoimento Lucas Silveira */}
+      {/* Depoimento anônimo */}
       <View style={styles.testimonialCard}>
         <Ionicons name="chatbox-ellipses" size={22} color={COLORS.acafrao} />
         <Text style={styles.testimonialQuote}>
@@ -129,18 +129,18 @@ export default function EventInfoScreen({ onOrderNow }) {
         </Text>
         <View style={styles.testimonialAuthorRow}>
           <View style={styles.authorAvatar}>
-            <Text style={styles.authorAvatarText}>LS</Text>
+            <Ionicons name="person" size={16} color={COLORS.branco} />
           </View>
           <View>
-            <Text style={styles.authorName}>Lucas Silveira, 18 anos</Text>
-            <Text style={styles.authorRole}>Ex-aluno do Centro de Inovação ABADEUS</Text>
+            <Text style={styles.authorName}>Ex-aluno da ABADEUS</Text>
+            <Text style={styles.authorRole}>Turma de programação • Centro de Inovação</Text>
           </View>
         </View>
       </View>
 
-      {/* 4. PROGRAME-SE: DIA DO EVENTO & RETIRADA */}
-      <Text style={styles.overline}>PROGRAME-SE</Text>
-      <Text style={styles.sectionTitle}>Dia do Evento & Retirada</Text>
+      {/* 4. Programe-se: dia do evento e retirada */}
+      <Text style={styles.overline}>Programe-se</Text>
+      <Text style={styles.sectionTitle}>Dia do evento e retirada</Text>
 
       <View style={styles.scheduleCard}>
         <View style={styles.scheduleItem}>
@@ -148,8 +148,8 @@ export default function EventInfoScreen({ onOrderNow }) {
             <Feather name="calendar" size={18} color="#C88A14" />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.scheduleLabel}>DATA & HORÁRIO</Text>
-            <Text style={styles.scheduleMain}>Sábado, 28 de Novembro de 2026</Text>
+            <Text style={styles.scheduleLabel}>Data e horário</Text>
+            <Text style={styles.scheduleMain}>Sábado, 28 de novembro de 2026</Text>
             <Text style={styles.scheduleSub}>Das 11h30 às 14h30 (pontual)</Text>
           </View>
         </View>
@@ -161,18 +161,18 @@ export default function EventInfoScreen({ onOrderNow }) {
             <Feather name="map-pin" size={18} color={COLORS.tomate} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.scheduleLabel}>LOCAL DE RETIRADA</Text>
+            <Text style={styles.scheduleLabel}>Local de retirada</Text>
             <Text style={styles.scheduleMain}>Centro Comunitário ABADEUS</Text>
             <Text style={styles.scheduleSub}>
-              Rua Maria Salete de Oliveira, 422 - Cristo Redentor, Criciúma/SC
+              Rua Maria Salete de Oliveira, 422 • Cristo Redentor, Criciúma/SC
             </Text>
           </View>
         </View>
 
-        {/* Mapa Visual Criciúma + Botão GPS */}
+        {/* Mapa visual Criciúma + botão GPS */}
         <View style={styles.mapPreviewBox}>
           <View style={styles.mapBadgeRow}>
-            <Text style={styles.mapNeighborhoodTag}>CRISTO REDENTOR • CRICIÚMA/SC</Text>
+            <Text style={styles.mapNeighborhoodTag}>Cristo Redentor • Criciúma/SC</Text>
           </View>
           <View style={styles.mapPinCenter}>
             <Ionicons name="location" size={32} color={COLORS.tomate} />
@@ -185,19 +185,19 @@ export default function EventInfoScreen({ onOrderNow }) {
         </View>
       </View>
 
-      {/* 5. MODALIDADES DE RETIRADA (DRIVE-THRU vs SALÃO) */}
-      <Text style={styles.pickupChoiceTitle}>Escolha como retirar sua porção:</Text>
+      {/* 5. Modalidades de retirada (drive-thru vs salão) */}
+      <Text style={styles.pickupChoiceTitle}>Escolha como retirar sua porção</Text>
 
       <View style={styles.optionCard}>
         <View style={styles.optionHeader}>
           <View style={[styles.optionIconBox, { backgroundColor: '#E6F2F8' }]}>
             <Ionicons name="car-sport-outline" size={20} color={COLORS.mediterraneo} />
           </View>
-          <Text style={styles.optionTitle}>Opção 1: Drive-Thru Expresso</Text>
+          <Text style={styles.optionTitle}>Opção 1: Drive-thru expresso</Text>
         </View>
         <Text style={styles.optionDesc}>
-          Praticidade total. Sem precisar descer do automóvel, passe pela via sinalizada na frente
-          da ABADEUS. Nossos voluntários escaneiam seu QR Code e entregam seu pacote lacrado.
+          Sem precisar descer do carro, passe pela via sinalizada em frente à ABADEUS. Nossos
+          voluntários escaneiam seu QR Code e entregam seu pedido lacrado.
         </Text>
         <View style={styles.optionHighlightPill}>
           <Feather name="zap" size={13} color={COLORS.mediterraneo} />
@@ -212,31 +212,31 @@ export default function EventInfoScreen({ onOrderNow }) {
           <View style={[styles.optionIconBox, { backgroundColor: '#FFF3D1' }]}>
             <Ionicons name="people-outline" size={20} color="#C88A14" />
           </View>
-          <Text style={styles.optionTitle}>Opção 2: Salão Solidário</Text>
+          <Text style={styles.optionTitle}>Opção 2: Salão solidário</Text>
         </View>
         <Text style={styles.optionDesc}>
-          Para quem deseja descer, abraçar nossa equipe voluntária, conferir os tachos fumegantes em
-          ação e registrar fotos no painel instagramável do Paelito.
+          Para quem quiser descer, conhecer a equipe voluntária, acompanhar os tachos de perto e
+          aproveitar o espaço de convivência.
         </Text>
         <View style={[styles.optionHighlightPill, { backgroundColor: '#FFF8E6' }]}>
           <Ionicons name="musical-note" size={13} color="#C88A14" />
           <Text style={[styles.optionHighlightText, { color: '#8B5E08' }]}>
-            Ambiente festivo, música ao vivo e recepção calorosa
+            Ambiente festivo, música ao vivo e recepção acolhedora
           </Text>
         </View>
       </View>
 
-      {/* Dica de Mestre */}
+      {/* Dica de mestre */}
       <View style={styles.chefTipBox}>
         <Ionicons name="flame" size={20} color={COLORS.tomate} />
         <Text style={styles.chefTipText}>
-          <Text style={{ fontWeight: '800', color: COLORS.preto }}>Dica de mestre: </Text>A paella é
-          entregue em embalagem térmica exclusiva do Paelito, mantendo-se fumegante e saborosa por
-          até 2 horas após o recolhimento!
+          <Text style={{ fontWeight: '800', color: COLORS.preto }}>Dica: </Text>a paella é entregue
+          em embalagem térmica do Paelito, mantendo a temperatura e o sabor por até 2 horas após a
+          retirada
         </Text>
       </View>
 
-      {/* 6. FAQ + CTA + TRANSPARÊNCIA */}
+      {/* 6. FAQ + CTA + transparência */}
       <EventFaqAccordion onOrderNow={onOrderNow} />
     </ScrollView>
   );
@@ -435,11 +435,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.mediterraneo,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  authorAvatarText: {
-    color: COLORS.branco,
-    fontSize: 12,
-    fontWeight: '800',
   },
   authorName: {
     fontSize: 12,

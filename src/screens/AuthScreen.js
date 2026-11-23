@@ -16,8 +16,8 @@ import { COLORS } from '../theme/colors';
 const DEMO_USERS = {
   BUYER: {
     id: 4,
-    name: 'Maria Clara Silveira',
-    email: 'mariaclara.silveira@email.com',
+    name: 'Cliente',
+    email: 'cliente@email.com',
     phone: '(48) 99842-1082',
     role: 'BUYER',
   },
@@ -30,14 +30,14 @@ const DEMO_USERS = {
   },
   VOLUNTEER: {
     id: 2,
-    name: 'Carlos M. (Voluntário)',
+    name: 'Voluntário',
     email: 'voluntario@abadeus.com.br',
     phone: '(48) 99999-1111',
     role: 'VOLUNTEER',
   },
   PARTNER: {
     id: 3,
-    name: 'Parceiro Ponto de Venda',
+    name: 'Parceiro ponto de venda',
     email: 'parceiro@abadeus.com.br',
     phone: '(48) 99999-2222',
     role: 'PARTNER',
@@ -48,25 +48,25 @@ export default function AuthScreen({ onLoginSuccess }) {
   const [mode, setMode] = useState('BUYER'); // BUYER | STAFF
   const [isRegistering, setIsRegistering] = useState(false);
 
-  // Campos Apoiador / Comprador
-  const [buyerName, setBuyerName] = useState('Maria Clara Silveira');
-  const [buyerEmail, setBuyerEmail] = useState('mariaclara.silveira@email.com');
+  // Campos apoiador / comprador
+  const [buyerName, setBuyerName] = useState('Cliente');
+  const [buyerEmail, setBuyerEmail] = useState('cliente@email.com');
   const [buyerPhone, setBuyerPhone] = useState('(48) 99842-1082');
 
-  // Campos Equipe (Admin / Voluntário / Parceiro)
+  // Campos equipe (admin / voluntário / parceiro)
   const [staffEmail, setStaffEmail] = useState('admin@abadeus.com.br');
   const [staffPassword, setStaffPassword] = useState('ADM123');
   const [failedAttempts, setFailedAttempts] = useState(0);
 
   const handleBuyerSubmit = () => {
     if (!buyerEmail.trim() || (isRegistering && !buyerName.trim())) {
-      Alert.alert('Campos obrigatórios', 'Preencha seu nome e e-mail para continuar.');
+      Alert.alert('Campos obrigatórios', 'Preencha seu nome e e-mail para continuar');
       return;
     }
 
     onLoginSuccess({
       id: 4,
-      name: buyerName.trim() || 'Maria Clara Silveira',
+      name: buyerName.trim() || 'Cliente',
       email: buyerEmail.trim(),
       phone: buyerPhone.trim() || '(48) 99842-1082',
       role: 'BUYER',
@@ -76,8 +76,8 @@ export default function AuthScreen({ onLoginSuccess }) {
   const handleStaffLogin = () => {
     if (failedAttempts >= 5) {
       Alert.alert(
-        'Acesso Bloqueado (NF3.1) 🔒',
-        'Limite de 5 tentativas excedido. Sua conta está temporariamente bloqueada por 5 minutos.'
+        'Acesso bloqueado (NF3.1)',
+        'Limite de 5 tentativas excedido. Sua conta está temporariamente bloqueada por 5 minutos'
       );
       return;
     }
@@ -108,13 +108,13 @@ export default function AuthScreen({ onLoginSuccess }) {
 
     if (nextAttempts >= 5) {
       Alert.alert(
-        'Alerta de Segurança (NF3.1) 🚨',
-        '5 tentativas inválidas registradas. O acesso foi bloqueado por 5 minutos.'
+        'Alerta de segurança (NF3.1)',
+        '5 tentativas inválidas registradas. O acesso foi bloqueado por 5 minutos'
       );
     } else {
       Alert.alert(
-        'Credenciais Inválidas',
-        `Senha ou e-mail incorretos. Tentativa ${nextAttempts} de 5.`
+        'Credenciais inválidas',
+        `Senha ou e-mail incorretos. Tentativa ${nextAttempts} de 5`
       );
     }
   };
@@ -133,12 +133,12 @@ export default function AuthScreen({ onLoginSuccess }) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* 1. CABEÇALHO DA MARCA PAELITO */}
+        {/* 1. Cabeçalho da marca Paelito */}
         <View style={styles.headerCenter}>
           <View style={styles.topBadgesRow}>
             <View style={styles.editionPill}>
               <View style={styles.redDot} />
-              <Text style={styles.editionPillText}>12ª EDIÇÃO SOLIDÁRIA</Text>
+              <Text style={styles.editionPillText}>12ª edição solidária</Text>
             </View>
             <View style={styles.abadeusPill}>
               <Text style={styles.abadeusPillText}>🎉 ABADEUS</Text>
@@ -157,7 +157,7 @@ export default function AuthScreen({ onLoginSuccess }) {
           </Text>
         </View>
 
-        {/* 2. SELETOR DE PERFIL: APOIADOR vs EQUIPE ABADEUS */}
+        {/* 2. Seletor de perfil: apoiador vs equipe ABADEUS */}
         <View style={styles.modeSwitchContainer}>
           <TouchableOpacity
             style={[styles.modeTab, mode === 'BUYER' && styles.modeTabActive]}
@@ -169,7 +169,7 @@ export default function AuthScreen({ onLoginSuccess }) {
               color={mode === 'BUYER' ? COLORS.branco : COLORS.preto}
             />
             <Text style={[styles.modeTabText, mode === 'BUYER' && styles.modeTabTextActive]}>
-              Sou Apoiador
+              Sou apoiador
             </Text>
           </TouchableOpacity>
 
@@ -183,19 +183,19 @@ export default function AuthScreen({ onLoginSuccess }) {
               color={mode === 'STAFF' ? COLORS.branco : COLORS.preto}
             />
             <Text style={[styles.modeTabText, mode === 'STAFF' && styles.modeTabTextActive]}>
-              Equipe / Operação
+              Equipe / operação
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* 3A. VISÃO DO APOIADOR / COMPRADOR (F3 - AUTOCADASTRO) */}
+        {/* 3A. Visão do apoiador / comprador (F3 - autocadastro) */}
         {mode === 'BUYER' ? (
           <View style={styles.formCard}>
             <View style={styles.cardHeaderRow}>
               <View>
-                <Text style={styles.cardOverline}>ACESSO RÁPIDO DO CLIENTE</Text>
+                <Text style={styles.cardOverline}>Acesso rápido do cliente</Text>
                 <Text style={styles.cardTitle}>
-                  {isRegistering ? 'Criar Conta Solidária' : 'Garanta sua Paella'}
+                  {isRegistering ? 'Criar conta solidária' : 'Garanta sua paella'}
                 </Text>
               </View>
               <View style={styles.pixFastBadge}>
@@ -205,20 +205,20 @@ export default function AuthScreen({ onLoginSuccess }) {
             </View>
 
             <Text style={styles.cardDesc}>
-              Identifique-se rapidamente para escolher suas porções e receber seu Voucher Digital de
-              retirada no Drive-Thru ou Salão.
+              Identifique-se rapidamente para escolher suas porções e receber seu voucher digital de
+              retirada no drive-thru ou salão
             </Text>
 
-            <Text style={styles.inputLabel}>Nome Completo</Text>
+            <Text style={styles.inputLabel}>Nome completo</Text>
             <TextInput
               style={styles.input}
               value={buyerName}
               onChangeText={setBuyerName}
-              placeholder="Ex: Maria Clara Silveira"
+              placeholder="Digite seu nome completo"
               placeholderTextColor={COLORS.cinzaTexto}
             />
 
-            <Text style={styles.inputLabel}>E-mail para Recibo e QR Code</Text>
+            <Text style={styles.inputLabel}>E-mail para recibo e QR Code</Text>
             <TextInput
               style={styles.input}
               value={buyerEmail}
@@ -229,7 +229,7 @@ export default function AuthScreen({ onLoginSuccess }) {
               placeholderTextColor={COLORS.cinzaTexto}
             />
 
-            <Text style={styles.inputLabel}>WhatsApp (Notificação de Pedido Pronto)</Text>
+            <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
             <TextInput
               style={styles.input}
               value={buyerPhone}
@@ -241,7 +241,7 @@ export default function AuthScreen({ onLoginSuccess }) {
 
             <TouchableOpacity style={styles.primaryBuyerBtn} onPress={handleBuyerSubmit}>
               <Text style={styles.primaryBuyerBtnText}>
-                {isRegistering ? 'Cadastrar e Ver Cardápio' : 'Entrar e Ver Cardápio Solidário'}
+                {isRegistering ? 'Cadastrar e ver cardápio' : 'Entrar e ver cardápio solidário'}
               </Text>
               <Feather name="arrow-right" size={18} color={COLORS.branco} />
             </TouchableOpacity>
@@ -258,27 +258,27 @@ export default function AuthScreen({ onLoginSuccess }) {
             </TouchableOpacity>
           </View>
         ) : (
-          /* 3B. VISÃO DA EQUIPE (ADMIN, VOLUNTÁRIO, PARCEIRO - F3 & NF3.1) */
+          /* 3B. Visão da equipe (admin, voluntário, parceiro - F3 e NF3.1) */
           <View style={styles.formCard}>
             <View style={styles.cardHeaderRow}>
               <View>
                 <Text style={[styles.cardOverline, { color: COLORS.mediterraneo }]}>
-                  ACESSO RESTRITO • SGPB
+                  Acesso restrito • SGPB
                 </Text>
-                <Text style={styles.cardTitle}>Portal da Equipe ABADEUS</Text>
+                <Text style={styles.cardTitle}>Portal da equipe ABADEUS</Text>
               </View>
               <View style={styles.securityBadge}>
                 <Feather name="lock" size={12} color="#2E7D32" />
-                <Text style={styles.securityBadgeText}>NF3.1 Ativo</Text>
+                <Text style={styles.securityBadgeText}>NF3.1 ativo</Text>
               </View>
             </View>
 
             <Text style={styles.cardDesc}>
-              Exclusivo para Coordenação (Admin), Voluntários do Check-in Express e Parceiros
-              cadastrados pelo organizador (Req. F3).
+              Exclusivo para coordenação (admin), voluntários do check-in expresso e parceiros
+              cadastrados pelo organizador (Req. F3)
             </Text>
 
-            <Text style={styles.inputLabel}>E-mail Institucional / Operador</Text>
+            <Text style={styles.inputLabel}>E-mail institucional / operador</Text>
             <TextInput
               style={styles.input}
               value={staffEmail}
@@ -289,7 +289,7 @@ export default function AuthScreen({ onLoginSuccess }) {
               placeholderTextColor={COLORS.cinzaTexto}
             />
 
-            <Text style={styles.inputLabel}>Código / Senha de Acesso</Text>
+            <Text style={styles.inputLabel}>Código / senha de acesso</Text>
             <TextInput
               style={styles.input}
               value={staffPassword}
@@ -303,20 +303,20 @@ export default function AuthScreen({ onLoginSuccess }) {
               <View style={styles.lockoutWarningBox}>
                 <Feather name="alert-circle" size={14} color={COLORS.tomate} />
                 <Text style={styles.lockoutWarningText}>
-                  Atenção: {failedAttempts}/5 tentativas utilizadas (Bloqueio de 5 min após 5 erros).
+                  Atenção: {failedAttempts}/5 tentativas utilizadas (bloqueio de 5 min após 5 erros)
                 </Text>
               </View>
             )}
 
             <TouchableOpacity style={styles.primaryStaffBtn} onPress={handleStaffLogin}>
               <Feather name="log-in" size={17} color={COLORS.branco} />
-              <Text style={styles.primaryBuyerBtnText}>Acessar Painel Operacional</Text>
+              <Text style={styles.primaryBuyerBtnText}>Acessar painel operacional</Text>
             </TouchableOpacity>
 
-            {/* Atalhos Rápidos de Demonstração para os Perfis da Equipe */}
+            {/* Atalhos rápidos de demonstração para os perfis da equipe */}
             <View style={styles.quickProfilesBox}>
               <Text style={styles.quickProfilesTitle}>
-                ⚡ ACESSO RÁPIDO PARA APRESENTAÇÃO (SEEDER):
+                ⚡ Acesso rápido para apresentação (seeder)
               </Text>
 
               <View style={styles.quickButtonsRow}>
@@ -343,22 +343,22 @@ export default function AuthScreen({ onLoginSuccess }) {
                   <Text style={[styles.roleChipTitle, { color: COLORS.mediterraneo }]}>
                     PARTNER
                   </Text>
-                  <Text style={styles.roleChipSub}>Ponto Venda</Text>
+                  <Text style={styles.roleChipSub}>Ponto de venda</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         )}
 
-        {/* 4. RODAPÉ INFORMATIVO DO EVENTO */}
+        {/* 4. Rodapé informativo do evento */}
         <View style={styles.eventFooterCard}>
           <View style={styles.footerIconBox}>
             <Feather name="calendar" size={18} color={COLORS.tomate} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.footerEventTitle}>Sábado, 28 de Novembro • 11h30 às 14h30</Text>
+            <Text style={styles.footerEventTitle}>Sábado, 28 de novembro • 11h30 às 14h30</Text>
             <Text style={styles.footerEventSub}>
-              Drive-Thru Expresso & Salão • Sede ABADEUS (Cristo Redentor, Criciúma/SC)
+              Drive-thru expresso e salão • Sede ABADEUS (Cristo Redentor, Criciúma/SC)
             </Text>
           </View>
         </View>
