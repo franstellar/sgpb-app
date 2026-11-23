@@ -6,7 +6,8 @@ export default function CatalogGridItem({ item, quantity = 0, onIncrement, onDec
   return (
     <View style={[styles.card, quantity > 0 && styles.cardSelected]}>
       <View style={styles.imageWrap}>
-        <Image source={{ uri: item.image }} style={styles.image} />
+        <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} style={styles.image} />
+
         {item.badge && (
           <View style={[styles.badge, { backgroundColor: item.badge.bg }]}>
             <Text style={[styles.badgeText, { color: item.badge.color }]}>
@@ -14,19 +15,24 @@ export default function CatalogGridItem({ item, quantity = 0, onIncrement, onDec
             </Text>
           </View>
         )}
+
+        {!!item.weight && (
+          <View style={styles.weightBadge}>
+            <Text style={styles.weightBadgeText}>{item.weight}</Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.body}>
-        <View style={styles.titleRow}>
-          <Text style={styles.name} numberOfLines={1}>
+        <View>
+          <Text style={styles.name} numberOfLines={2}>
             {item.shortName || item.name}
           </Text>
-          {item.weight && <Text style={styles.weight}>{item.weight}</Text>}
-        </View>
 
-        <Text style={styles.desc} numberOfLines={2}>
-          {item.shortDesc || item.description}
-        </Text>
+          <Text style={styles.desc} numberOfLines={2}>
+            {item.shortDesc || item.description}
+          </Text>
+        </View>
 
         <View style={styles.footer}>
           <Text style={styles.price}>
@@ -88,26 +94,32 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '800',
   },
+  weightBadge: {
+    position: 'absolute',
+    bottom: 6,
+    right: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  weightBadgeText: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: COLORS.preto,
+  },
   body: {
     padding: 10,
-  },
-  titleRow: {
-    flexDirection: 'row',
+    flex: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
   },
   name: {
     fontSize: 12,
     fontWeight: '800',
     color: COLORS.preto,
-    flex: 1,
-  },
-  weight: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: COLORS.cinzaTexto,
-    marginLeft: 4,
+    lineHeight: 16,
+    minHeight: 32,
+    marginBottom: 4,
   },
   desc: {
     fontSize: 10,

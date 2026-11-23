@@ -9,7 +9,7 @@ import {
   Linking,
   Alert,
 } from 'react-native';
-import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import EventFaqAccordion from '../components/EventFaqAccordion';
 
@@ -46,14 +46,16 @@ export default function EventInfoScreen({ onOrderNow }) {
       <View style={styles.traditionCard}>
         <View style={styles.traditionImageWrap}>
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=1000' }}
+            source={require('../../assets/images/paella-solidaria.png')}
             style={styles.traditionImage}
           />
           <View style={styles.traditionOverlay} />
-          <View style={styles.traditionBadge}>
-            <Text style={styles.traditionBadgeText}>Paelito • Sabor e solidariedade</Text>
+          <View style={styles.traditionTextWrap}>
+            <View style={styles.traditionBadge}>
+              <Text style={styles.traditionBadgeText}>Paelito • Sabor e solidariedade</Text>
+            </View>
+            <Text style={styles.traditionPhotoTitle}>Tradição e cozinha solidária</Text>
           </View>
-          <Text style={styles.traditionPhotoTitle}>Tradição e cozinha solidária</Text>
         </View>
 
         <View style={styles.traditionBody}>
@@ -86,7 +88,7 @@ export default function EventInfoScreen({ onOrderNow }) {
       <View style={styles.impactGrid}>
         <View style={styles.impactBox}>
           <View style={[styles.impactIconWrap, { backgroundColor: '#E6F2F8' }]}>
-            <MaterialCommunityIcons name="robot-outline" size={20} color={COLORS.mediterraneo} />
+            <Ionicons name="hardware-chip-outline" size={20} color={COLORS.mediterraneo} />
           </View>
           <Text style={styles.impactTitle}>Robótica</Text>
           <Text style={styles.impactSub}>
@@ -244,7 +246,7 @@ export default function EventInfoScreen({ onOrderNow }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.creme },
-  scrollContent: { paddingHorizontal: 16, paddingBottom: 105 },
+  scrollContent: { paddingHorizontal: 16, paddingBottom: 110 },
   editionPill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -287,30 +289,33 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   traditionImageWrap: {
-    height: 165,
+    height: 175,
     position: 'relative',
-    justifyContent: 'flex-end',
-    padding: 14,
   },
   traditionImage: {
-    ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
   },
   traditionOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
+  },
+  traditionTextWrap: {
+    position: 'absolute',
+    bottom: 14,
+    left: 14,
+    right: 14,
   },
   traditionBadge: {
     backgroundColor: COLORS.acafrao,
     alignSelf: 'flex-start',
-    paddingHorizontal: 8,
+    paddingHorizontal: 9,
     paddingVertical: 3,
     borderRadius: 8,
-    marginBottom: 4,
+    marginBottom: 5,
   },
   traditionBadgeText: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '900',
     color: COLORS.preto,
   },

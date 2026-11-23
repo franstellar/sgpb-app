@@ -48,7 +48,7 @@ export default function AdminTopBar({ user, onLogout }) {
         <TouchableOpacity
           style={styles.reportBtn}
           onPress={() =>
-            Alert.alert('Relatório Geral 📊', 'Exportando prestação de contas parcial em PDF...')
+            Alert.alert('Relatório geral', 'Exportando prestação de contas parcial em PDF...')
           }
         >
           <Feather name="file-text" size={14} color={COLORS.mediterraneo} />

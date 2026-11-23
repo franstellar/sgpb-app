@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 
@@ -10,7 +10,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Como recebo meu QR Code de retirada?',
-    a: 'Assim que o pagamento via Pix é confirmado, seu Voucher Digital com QR Code fica disponível imediatamente na aba "Pedidos" do app e também é enviado para seu e-mail e WhatsApp.',
+    a: 'Assim que o pagamento via Pix é confirmado, seu voucher digital com QR Code fica disponível imediatamente na aba "Pedidos" do app e também é enviado para seu e-mail e WhatsApp.',
   },
   {
     q: 'A paella vem quente e pronta para servir?',
@@ -18,11 +18,11 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Outra pessoa pode retirar no meu lugar?',
-    a: 'Pode sim! Basta encaminhar o print ou PDF do seu Voucher Digital (pelo botão "Enviar no Whats" na aba Pedidos) para a pessoa apresentar na fila.',
+    a: 'Pode sim! Basta encaminhar o print ou PDF do seu voucher digital (pelo botão "Enviar no Whats" na aba "Pedidos") para a pessoa apresentar na fila.',
   },
   {
     q: 'Haverá bebidas e sobremesas no local?',
-    a: 'Sim! No Salão Solidário e no Drive-Thru teremos bebidas geladas e os famosos minichurros artesanais com doce de leite da ABADEUS.',
+    a: 'Sim! No salão solidário e no drive-thru teremos bebidas geladas e os minichurros artesanais com doce de leite da ABADEUS.',
   },
 ];
 
@@ -35,9 +35,9 @@ export default function EventFaqAccordion({ onOrderNow }) {
 
   return (
     <View>
-      {/* 1. DÚVIDAS FREQUENTES */}
-      <Text style={styles.overline}>DÚVIDAS FREQUENTES</Text>
-      <Text style={styles.sectionTitle}>Perguntas da Comunidade</Text>
+      {/* 1. Dúvidas frequentes */}
+      <Text style={styles.overline}>Dúvidas frequentes</Text>
+      <Text style={styles.sectionTitle}>Perguntas da comunidade</Text>
 
       <View style={styles.faqList}>
         {FAQ_ITEMS.map((item, idx) => {
@@ -63,35 +63,34 @@ export default function EventFaqAccordion({ onOrderNow }) {
         })}
       </View>
 
-      {/* 2. CTA CARD: CORRENTE DE AMOR */}
+      {/* 2. CTA card: corrente de amor */}
       <View style={styles.ctaBanner}>
         <Text style={styles.ctaTitle}>
-          Garanta sua porção e faça parte desta corrente de amor!
+          Garanta sua porção e faça parte desta corrente solidária!
         </Text>
         <Text style={styles.ctaSubtitle}>
-          As porções do 1º lote já estão em contagem regressiva. Não fique sem o melhor almoço do
-          ano!
+          As porções do 1º lote já estão em contagem regressiva. Garanta seu almoço solidário
         </Text>
 
         <TouchableOpacity style={styles.ctaButton} onPress={onOrderNow}>
-          <Text style={styles.ctaButtonText}>Fazer Meu Pedido Agora</Text>
-          <Feather name="arrow-right" size={16} color={COLORS.tomate} />
+          <Text style={styles.ctaButtonText}>Fazer meu pedido agora</Text>
+          <Feather name="arrow-right" size={16} color={COLORS.preto} />
         </TouchableOpacity>
 
-        <Text style={styles.ctaFootNote}>Entrega rápida com opção Drive-thru ou Salão</Text>
+        <Text style={styles.ctaFootNote}>Entrega rápida com opção drive-thru ou salão</Text>
       </View>
 
-      {/* 3. PRESTAÇÃO DE CONTAS & TRANSPARÊNCIA */}
+      {/* 3. Prestação de contas e transparência */}
       <View style={styles.transparencyCard}>
         <View style={styles.transparencyHeader}>
           <Ionicons name="shield-checkmark" size={20} color={COLORS.mediterraneo} />
-          <Text style={styles.transparencyTitle}>Prestação de Contas & Transparência</Text>
+          <Text style={styles.transparencyTitle}>Prestação de contas e transparência</Text>
         </View>
 
         <Text style={styles.transparencyDesc}>
           A Associação Beneficente ABADEUS é auditada independentemente e possui certificados
-          municipais e federais de Utilidade Pública. Todas as receitas e balanços são publicados
-          publicamente no portal oficial.
+          municipais e federais de utilidade pública. Todas as receitas e balanços são publicados no
+          portal oficial.
         </Text>
 
         <View style={styles.contactList}>
@@ -101,7 +100,7 @@ export default function EventFaqAccordion({ onOrderNow }) {
           </View>
           <View style={styles.contactRow}>
             <Ionicons name="logo-whatsapp" size={15} color="#25D366" />
-            <Text style={styles.contactText}>WhatsApp do Evento: (48) 99123-4567</Text>
+            <Text style={styles.contactText}>WhatsApp do evento: (48) 99123-4567</Text>
           </View>
           <View style={styles.contactRow}>
             <Feather name="mail" size={14} color={COLORS.mediterraneo} />
@@ -112,11 +111,11 @@ export default function EventFaqAccordion({ onOrderNow }) {
         <TouchableOpacity
           style={styles.whatsTeamBtn}
           onPress={() =>
-            Alert.alert('WhatsApp ABADEUS 💬', 'Iniciando conversa com a equipe do evento...')
+            Alert.alert('WhatsApp ABADEUS', 'Iniciando conversa com a equipe do evento')
           }
         >
           <Ionicons name="logo-whatsapp" size={18} color={COLORS.branco} />
-          <Text style={styles.whatsTeamBtnText}>Falar com Equipe pelo WhatsApp</Text>
+          <Text style={styles.whatsTeamBtnText}>Falar com a equipe pelo WhatsApp</Text>
         </TouchableOpacity>
       </View>
     </View>

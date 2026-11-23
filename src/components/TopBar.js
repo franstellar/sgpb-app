@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
+
+const MASCOTE_IMG = require('../../assets/images/mascote-paelito.png');
 
 export default function TopBar({ cartCount = 0, onOpenCart, onLogout }) {
   return (
     <View style={styles.topBar}>
       <View style={styles.brandRow}>
-        <View style={styles.mascotCircle}>
-          <Text style={{ fontSize: 18 }}>🐂</Text>
-        </View>
+        <Image source={MASCOTE_IMG} style={styles.mascotImg} resizeMode="contain" />
         <Text style={styles.brandText}>Paelito</Text>
       </View>
 
@@ -37,22 +38,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     backgroundColor: COLORS.creme,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.cinzaClaro,
   },
-  brandRow: { flexDirection: 'row', alignItems: 'center' },
-  mascotCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FFE4B5',
+  brandRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 8,
+    gap: 8,
   },
-  brandText: { fontSize: 20, fontWeight: '800', color: COLORS.tomate },
+  mascotImg: {
+    width: 34,
+    height: 34,
+  },
+  brandText: {
+    fontSize: 22,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.tomate,
+    lineHeight: 28,
+  },
   topActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   cartBtn: { position: 'relative', padding: 6 },
   cartBadge: {
@@ -66,7 +71,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cartBadgeText: { color: COLORS.branco, fontSize: 10, fontWeight: '700' },
+  cartBadgeText: {
+    color: COLORS.branco,
+    fontSize: 10,
+    fontFamily: FONTS.bodyBold,
+  },
   profileBtn: {
     width: 32,
     height: 32,

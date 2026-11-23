@@ -6,12 +6,12 @@ import { COLORS } from '../theme/colors';
 export default function PendingOrderCard({ order, onSimulatePay }) {
   const handleCopyPix = () => {
     Alert.alert(
-      'Código Pix Copiado! 📋',
-      'Cole no aplicativo do seu banco para liberar seu QR Code de retirada.',
+      'Código Pix copiado',
+      'Cole no aplicativo do seu banco para liberar seu QR Code de retirada',
       [
         { text: 'OK' },
         ...(onSimulatePay
-          ? [{ text: 'Simular Pagamento Agora', onPress: () => onSimulatePay(order.id) }]
+          ? [{ text: 'Simular pagamento agora', onPress: () => onSimulatePay(order.id) }]
           : []),
       ]
     );
@@ -19,18 +19,18 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
 
   return (
     <View style={styles.card}>
-      {/* Banner Amarelo: AGUARDANDO PAGAMENTO PIX */}
+      {/* Banner amarelo: aguardando pagamento Pix */}
       <View style={styles.pendingBanner}>
         <Feather name="clock" size={14} color="#7A4F08" />
         <Text style={styles.pendingBannerText}>
-          AGUARDANDO PAGAMENTO PIX ({order.expiresIn || 'Expira em 12:40'})
+          Aguardando pagamento Pix ({order.expiresIn || 'Expira em 12:40'})
         </Text>
       </View>
 
       <View style={styles.body}>
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.metaLabel}>PEDIDO</Text>
+            <Text style={styles.metaLabel}>Pedido</Text>
             <View style={styles.idRow}>
               <Text style={styles.orderIdText}>#{order.orderNumber}</Text>
               <Text style={styles.timeText}>{order.createdAt || 'Hoje, 14:48'}</Text>
@@ -38,7 +38,7 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
           </View>
 
           <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.metaLabel}>TOTAL PENDENTE</Text>
+            <Text style={styles.metaLabel}>Total pendente</Text>
             <Text style={styles.totalPendingText}>
               R$ {Number(order.totalAmount).toFixed(2).replace('.', ',')}
             </Text>
@@ -63,13 +63,13 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
           <Ionicons name="information-circle-outline" size={16} color="#8B5E08" />
           <Text style={styles.noticeText}>
             O QR Code de retirada será liberado automaticamente após a confirmação do pagamento via
-            Pix.
+            Pix
           </Text>
         </View>
 
         <TouchableOpacity style={styles.copyPixBtn} onPress={handleCopyPix}>
           <Feather name="copy" size={16} color={COLORS.branco} />
-          <Text style={styles.copyPixBtnText}>Copiar Código Pix (Copia e Cola)</Text>
+          <Text style={styles.copyPixBtnText}>Copiar código Pix (copia e cola)</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   metaLabel: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '800',
     color: COLORS.cinzaTexto,
   },

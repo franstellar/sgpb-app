@@ -4,7 +4,8 @@ import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 
 export default function PaidOrderTicketCard({ order }) {
-  const initials = (order.customerName || 'Maria Clara')
+  const displayName = order.customerName || 'Cliente';
+  const initials = displayName
     .split(' ')
     .slice(0, 2)
     .map((n) => n[0])
@@ -13,17 +14,17 @@ export default function PaidOrderTicketCard({ order }) {
 
   return (
     <View style={styles.card}>
-      {/* Banner Topo: PAGO & LIBERADO */}
+      {/* Banner topo: pago e liberado */}
       <View style={styles.statusBanner}>
         <Ionicons name="checkmark-circle" size={16} color={COLORS.branco} />
-        <Text style={styles.statusBannerText}>PAGO & LIBERADO PARA RETIRADA</Text>
+        <Text style={styles.statusBannerText}>Pago e liberado para retirada</Text>
       </View>
 
       <View style={styles.body}>
-        {/* Cabeçalho Identificador e Total */}
+        {/* Cabeçalho identificador e total */}
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.metaLabel}>IDENTIFICADOR</Text>
+            <Text style={styles.metaLabel}>Identificador</Text>
             <View style={styles.idRow}>
               <Text style={styles.orderIdText}>#{order.orderNumber}</Text>
               <Text style={styles.timeText}>{order.createdAt || 'Hoje, 14:32'}</Text>
@@ -31,18 +32,18 @@ export default function PaidOrderTicketCard({ order }) {
           </View>
 
           <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.metaLabel}>TOTAL PAGO</Text>
+            <Text style={styles.metaLabel}>Total pago</Text>
             <Text style={styles.totalPaidText}>
               R$ {Number(order.totalAmount).toFixed(2).replace('.', ',')}
             </Text>
           </View>
         </View>
 
-        {/* Lista de Itens Confirmados */}
+        {/* Lista de itens confirmados */}
         <View style={styles.itemsBox}>
           <View style={styles.itemsTitleRow}>
             <Ionicons name="restaurant-outline" size={13} color={COLORS.tomate} />
-            <Text style={styles.itemsTitle}>ITENS CONFIRMADOS NO CARDÁPIO</Text>
+            <Text style={styles.itemsTitle}>Itens confirmados no cardápio</Text>
           </View>
 
           {order.items?.map((item, idx) => (
@@ -68,7 +69,7 @@ export default function PaidOrderTicketCard({ order }) {
                 style={{ marginRight: 6 }}
               />
               <Text style={[styles.itemName, { color: COLORS.tomate }]}>
-                Doação Pedagógica ABADEUS
+                Doação pedagógica ABADEUS
               </Text>
               <Text style={[styles.itemPrice, { color: COLORS.tomate }]}>
                 + R$ {Number(order.donation).toFixed(2).replace('.', ',')}
@@ -84,15 +85,13 @@ export default function PaidOrderTicketCard({ order }) {
           </View>
         </View>
 
-        {/* Linha do Comprador */}
+        {/* Linha do comprador */}
         <View style={styles.customerRow}>
           <View style={styles.avatarCircle}>
             <Text style={styles.avatarText}>{initials}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.customerName}>
-              {order.customerName || 'Maria Clara Silveira'}
-            </Text>
+            <Text style={styles.customerName}>{displayName}</Text>
             <Text style={styles.customerPhone}>
               {order.customerPhone || '(48) 99842-1082'}
             </Text>
@@ -102,12 +101,12 @@ export default function PaidOrderTicketCard({ order }) {
           </View>
         </View>
 
-        {/* VOUCHER DIGITAL OFICIAL DE RETIRADA */}
+        {/* Voucher digital oficial de retirada */}
         <View style={styles.voucherBox}>
           <View style={styles.voucherTopTag}>
             <Text style={styles.voucherTopTagText}>ABADEUS</Text>
           </View>
-          <Text style={styles.voucherOverline}>VOUCHER DIGITAL OFICIAL DE RETIRADA</Text>
+          <Text style={styles.voucherOverline}>Voucher digital oficial de retirada</Text>
 
           <View style={styles.qrContainer}>
             <Ionicons name="qr-code" size={145} color={COLORS.preto} />
@@ -115,19 +114,20 @@ export default function PaidOrderTicketCard({ order }) {
 
           <View style={styles.validationCodePill}>
             <Text style={styles.validationCodeText}>
-              {order.validationCode || `VAL-${order.orderNumber.replace('PAE-', '').replace('PAEL-', '')}-CRICIUMA-OK`}
+              {order.validationCode ||
+                `VAL-${order.orderNumber.replace('PAE-', '').replace('PAEL-', '')}-CRICIUMA-OK`}
             </Text>
           </View>
 
           <Text style={styles.voucherHint}>
-            Apresente este código para o voluntário escanear no dia do evento.
+            Apresente este código para o voluntário escanear no dia do evento
           </Text>
 
           <View style={styles.voucherActionsRow}>
             <TouchableOpacity
               style={styles.whatsBtn}
               onPress={() =>
-                Alert.alert('WhatsApp 📲', 'Voucher enviado para o seu WhatsApp cadastrado!')
+                Alert.alert('WhatsApp', 'Voucher enviado para o seu WhatsApp cadastrado')
               }
             >
               <Ionicons name="logo-whatsapp" size={16} color={COLORS.branco} />
@@ -137,7 +137,7 @@ export default function PaidOrderTicketCard({ order }) {
             <TouchableOpacity
               style={styles.pdfBtn}
               onPress={() =>
-                Alert.alert('PDF Salvo 📄', 'O comprovante em PDF foi salvo no seu aparelho.')
+                Alert.alert('PDF salvo', 'O comprovante em PDF foi salvo no seu aparelho')
               }
             >
               <Feather name="download" size={15} color={COLORS.preto} />
@@ -146,11 +146,11 @@ export default function PaidOrderTicketCard({ order }) {
           </View>
         </View>
 
-        {/* Informações de Horário e Local */}
+        {/* Informações de horário e local */}
         <View style={styles.eventFootInfo}>
           <View style={styles.footInfoRow}>
             <Feather name="calendar" size={14} color={COLORS.tomate} />
-            <Text style={styles.footInfoBold}>Sábado, 28/Nov • 11h30 às 14h30</Text>
+            <Text style={styles.footInfoBold}>Sábado, 28 de novembro • 11h30 às 14h30</Text>
           </View>
           <View style={styles.footInfoRow}>
             <Feather name="map-pin" size={14} color={COLORS.mediterraneo} />
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     color: COLORS.branco,
     fontSize: 11,
     fontWeight: '800',
-    letterSpacing: 0.4,
+    letterSpacing: 0.3,
   },
   body: {
     padding: 16,
@@ -204,10 +204,9 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   metaLabel: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '800',
     color: COLORS.cinzaTexto,
-    letterSpacing: 0.5,
   },
   idRow: {
     flexDirection: 'row',
@@ -246,7 +245,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   itemsTitle: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '800',
     color: COLORS.preto,
   },
@@ -358,11 +357,10 @@ const styles = StyleSheet.create({
     color: '#8B5E08',
   },
   voucherOverline: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '800',
     color: COLORS.cinzaTexto,
     marginBottom: 12,
-    letterSpacing: 0.4,
   },
   qrContainer: {
     backgroundColor: COLORS.branco,

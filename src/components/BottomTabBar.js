@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 
@@ -11,8 +12,15 @@ const TABS = [
 ];
 
 export default function BottomTabBar({ activeTab, onChangeTab }) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.bottomBar}>
+    <View
+      style={[
+        styles.bottomBar,
+        { paddingBottom: Math.max(insets.bottom, 10) },
+      ]}
+    >
       {TABS.map((tab) => {
         const isFocused = activeTab === tab.key;
         return (
@@ -23,13 +31,13 @@ export default function BottomTabBar({ activeTab, onChangeTab }) {
           >
             <Ionicons
               name={tab.icon}
-              size={20}
+              size={22}
               color={isFocused ? COLORS.tomate : COLORS.cinzaTexto}
             />
             <Text
               style={[
                 styles.tabLabel,
-                isFocused && { color: COLORS.tomate, fontWeight: '700' },
+                isFocused && { color: COLORS.tomate, fontWeight: '800' },
               ]}
             >
               {tab.label}
@@ -47,14 +55,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 64,
+    paddingTop: 10,
     backgroundColor: COLORS.branco,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: '#EADBC0',
+    elevation: 10,
   },
   tabItem: { alignItems: 'center', justifyContent: 'center', flex: 1 },
-  tabLabel: { fontSize: 10, color: COLORS.cinzaTexto, marginTop: 3 },
+  tabLabel: { fontSize: 11, color: COLORS.cinzaTexto, marginTop: 3, fontWeight: '600' },
 });

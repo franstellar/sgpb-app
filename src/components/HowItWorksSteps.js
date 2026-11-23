@@ -7,35 +7,35 @@ const STEPS = [
     num: '1',
     color: COLORS.tomate,
     title: 'Escolha suas porções',
-    desc: 'Selecione as porções para você ou para a família toda direto no app.',
+    desc: 'Selecione as porções para você ou para a família direto no app',
   },
   {
     num: '2',
     color: COLORS.acafrao,
     title: 'Pague com Pix em segundos',
-    desc: 'Confirmação instantânea sem taxas bancárias adicionais.',
+    desc: 'Confirmação instantânea sem taxas bancárias adicionais',
   },
   {
     num: '3',
     color: COLORS.mediterraneo,
     title: 'Receba seu QR Code',
-    desc: 'Seu cupom digital de retirada é salvo automaticamente em "Meus Pedidos".',
+    desc: 'Seu cupom digital de retirada fica salvo automaticamente na aba "Pedidos"',
   },
   {
     num: '4',
     color: COLORS.tomate,
-    title: 'Retire quentinha no Drive-thru',
-    desc: 'No dia do evento, basta apresentar o código e receber sua embalagem com carinho!',
+    title: 'Retire quentinha no drive-thru ou salão',
+    desc: 'No dia do evento, basta apresentar o código e retirar sua embalagem',
   },
 ];
 
 export default function HowItWorksSteps() {
   return (
     <View style={styles.stepsSection}>
-      <Text style={styles.stepsOverline}>PRATICIDADE TOTAL</Text>
-      <Text style={styles.stepsMainTitle}>Como Funciona em 4 Passos</Text>
+      <Text style={styles.stepsOverline}>Praticidade total</Text>
+      <Text style={styles.stepsMainTitle}>Como funciona em 4 passos</Text>
       <Text style={styles.stepsSubtitle}>
-        Tudo pensado para você retirar sem fila e sem complicação.
+        Tudo pensado para você retirar sem fila e sem complicação
       </Text>
 
       {STEPS.map((step) => (

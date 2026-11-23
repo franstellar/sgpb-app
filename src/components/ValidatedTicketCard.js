@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 
@@ -8,17 +8,17 @@ export default function ValidatedTicketCard({ ticket, onConfirmDelivery, onRepor
 
   return (
     <View style={styles.card}>
-      {/* Banner Verde: TICKET VÁLIDO & PAGO */}
+      {/* Banner verde: ticket válido e pago */}
       <View style={styles.validBanner}>
         <View style={styles.validBannerLeft}>
           <Ionicons name="checkmark-circle" size={16} color={COLORS.branco} />
-          <Text style={styles.validBannerText}>TICKET VÁLIDO & PAGO</Text>
+          <Text style={styles.validBannerText}>Ticket válido e pago</Text>
         </View>
         <Text style={styles.validTimeText}>{ticket.validatedTime || 'Hoje, 12:44'}</Text>
       </View>
 
       <View style={styles.body}>
-        {/* Código do Pedido e Cliente */}
+        {/* Código do pedido e cliente */}
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.orderCode}>{ticket.code}</Text>
@@ -31,17 +31,17 @@ export default function ValidatedTicketCard({ ticket, onConfirmDelivery, onRepor
           </View>
         </View>
 
-        {/* Identificação de Veículo */}
+        {/* Identificação do veículo */}
         <View style={styles.vehicleBox}>
-          <Text style={styles.vehicleOverline}>IDENTIFICAÇÃO DE VEÍCULO</Text>
+          <Text style={styles.vehicleOverline}>Identificação do veículo</Text>
           <View style={styles.vehicleRow}>
             <Ionicons name="car-sport" size={18} color={COLORS.mediterraneo} />
             <Text style={styles.vehicleText}>{ticket.vehicle}</Text>
           </View>
         </View>
 
-        {/* Itens para Entrega Imediata */}
-        <Text style={styles.itemsSectionTitle}>ITENS PARA ENTREGA IMEDIATA</Text>
+        {/* Itens para entrega imediata */}
+        <Text style={styles.itemsSectionTitle}>Itens para entrega imediata</Text>
 
         <View style={styles.itemsList}>
           {ticket.items.map((item, idx) => (
@@ -57,16 +57,16 @@ export default function ValidatedTicketCard({ ticket, onConfirmDelivery, onRepor
           ))}
         </View>
 
-        {/* Botão Confirmar Entrega (Liberar) */}
+        {/* Botão confirmar entrega */}
         <TouchableOpacity style={styles.confirmBtn} onPress={onConfirmDelivery}>
           <Feather name="check-circle" size={18} color={COLORS.branco} />
-          <Text style={styles.confirmBtnText}>Confirmar Entrega (Liberar)</Text>
+          <Text style={styles.confirmBtnText}>Confirmar entrega (liberar)</Text>
         </TouchableOpacity>
 
-        {/* Botão Problema no Pedido / Suporte */}
+        {/* Botão problema no pedido / suporte */}
         <TouchableOpacity style={styles.supportBtn} onPress={onReportIssue}>
           <Feather name="alert-triangle" size={15} color={COLORS.tomate} />
-          <Text style={styles.supportBtnText}>Problema no Pedido / Chamar Suporte</Text>
+          <Text style={styles.supportBtnText}>Problema no pedido / chamar suporte</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     color: COLORS.branco,
     fontSize: 11,
     fontWeight: '900',
-    letterSpacing: 0.4,
+    letterSpacing: 0.3,
   },
   validTimeText: {
     color: '#E8F5E9',
@@ -150,10 +150,9 @@ const styles = StyleSheet.create({
     borderColor: '#D0E2E8',
   },
   vehicleOverline: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '800',
     color: COLORS.mediterraneo,
-    letterSpacing: 0.5,
     marginBottom: 4,
   },
   vehicleRow: {
@@ -167,10 +166,9 @@ const styles = StyleSheet.create({
     color: COLORS.preto,
   },
   itemsSectionTitle: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '800',
     color: COLORS.cinzaTexto,
-    letterSpacing: 0.5,
     marginBottom: 8,
   },
   itemsList: {

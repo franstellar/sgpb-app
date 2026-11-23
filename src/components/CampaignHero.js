@@ -6,53 +6,53 @@ import { COLORS } from '../theme/colors';
 export default function CampaignHero({ onOrderPress }) {
   return (
     <View>
-      {/* Tags da Edição */}
+      {/* Tags da edição */}
       <View style={styles.heroHeaderRow}>
         <View style={styles.editionPill}>
           <View style={styles.redDot} />
-          <Text style={styles.editionPillText}>12ª EDIÇÃO SOLIDÁRIA</Text>
+          <Text style={styles.editionPillText}>12ª edição solidária</Text>
         </View>
         <View style={styles.abadeusPill}>
-          <Text style={styles.abadeusPillText}>🎉 ABADEUS</Text>
+          <Text style={styles.abadeusPillText}>ABADEUS</Text>
         </View>
       </View>
 
-      <Text style={styles.heroTitle}>Sabor que transforma.</Text>
+      <Text style={styles.heroTitle}>Sabor que transforma</Text>
       <Text style={styles.heroSubtitle}>
         Paella feita para compartilhar. Mais que uma paella, uma boa causa para aquecer corações!
       </Text>
 
-      {/* Card Principal com Foto */}
+      {/* Card principal com foto */}
       <View style={styles.heroCard}>
         <View style={styles.heroImageWrapper}>
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=1000' }}
+            source={require('../../assets/images/paella-solidaria.png')}
             style={styles.heroImage}
           />
           <View style={styles.heroOverlay} />
           <View style={styles.heroImageTextWrap}>
-            <Text style={styles.heroRecipeTag}>RECEITA TRADICIONAL</Text>
-            <Text style={styles.heroDishTitle}>Frutos do mar & tempero{'\n'}nobre</Text>
+            <Text style={styles.heroRecipeTag}>Receita tradicional</Text>
+            <Text style={styles.heroDishTitle}>Frutos do mar, carnes{'\n'}e opção veggie</Text>
           </View>
           <View style={styles.beneficenteBadge}>
             <Text style={styles.beneficenteBadgeTitle}>100%</Text>
-            <Text style={styles.beneficenteBadgeSub}>Beneficente</Text>
+            <Text style={styles.beneficenteBadgeSub}>beneficente</Text>
           </View>
         </View>
 
         <View style={styles.heroCardFooter}>
           <View>
             <Text style={styles.startingAtLabel}>Porções a partir de</Text>
-            <Text style={styles.startingAtPrice}>R$ 45,00</Text>
+            <Text style={styles.startingAtPrice}>R$ 40,00</Text>
           </View>
           <TouchableOpacity style={styles.heroCtaButton} onPress={onOrderPress}>
-            <Text style={styles.heroCtaText}>Fazer Pedido</Text>
+            <Text style={styles.heroCtaText}>Fazer pedido</Text>
             <Feather name="arrow-right" size={16} color={COLORS.branco} />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Bloco Causa com Propósito Real */}
+      {/* Bloco causa com propósito real */}
       <View style={styles.causeCard}>
         <View style={styles.causeTopRow}>
           <View style={styles.causeIconCircle}>
@@ -60,12 +60,12 @@ export default function CampaignHero({ onOrderPress }) {
           </View>
           <View style={{ flex: 1 }}>
             <View style={styles.causeTitleRow}>
-              <Text style={styles.causeTitle}>Causa com Propósito Real</Text>
+              <Text style={styles.causeTitle}>Causa com propósito real</Text>
               <Ionicons name="checkmark-circle" size={16} color={COLORS.mediterraneo} />
             </View>
             <Text style={styles.causeDescription}>
               Cada bilhete garante oficinas gratuitas de música, tecnologia e panificação para
-              jovens em vulnerabilidade.
+              jovens em vulnerabilidade
             </Text>
           </View>
         </View>
@@ -86,23 +86,23 @@ export default function CampaignHero({ onOrderPress }) {
         </View>
 
         <View style={styles.goalHeaderRow}>
-          <Text style={styles.goalLabel}>🔥 Meta de Vendas da Campanha</Text>
-          <Text style={styles.goalPercent}>78% Alcançada</Text>
+          <Text style={styles.goalLabel}>🔥 Meta de vendas da campanha</Text>
+          <Text style={styles.goalPercent}>78% alcançada</Text>
         </View>
         <View style={styles.progressBarBg}>
           <View style={[styles.progressBarFill, { width: '78%' }]} />
         </View>
-        <Text style={styles.goalRemainingText}>Restam apenas 264 porções disponíveis</Text>
+        <Text style={styles.goalRemainingText}>Restam 264 porções disponíveis</Text>
       </View>
 
-      {/* Bloco Data & Retirada */}
+      {/* Bloco data e retirada */}
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Feather name="calendar" size={18} color={COLORS.mediterraneo} />
-          <Text style={styles.sectionTitle}>Data & Retirada</Text>
+          <Text style={styles.sectionTitle}>Data e retirada</Text>
         </View>
         <View style={styles.driveThruBadge}>
-          <Text style={styles.driveThruBadgeText}>Drive-Thru & Salão</Text>
+          <Text style={styles.driveThruBadgeText}>Drive-thru e salão</Text>
         </View>
       </View>
 
@@ -111,9 +111,9 @@ export default function CampaignHero({ onOrderPress }) {
           <Feather name="calendar" size={18} color="#C88A14" />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.infoTag}>QUANDO</Text>
-          <Text style={styles.infoMainText}>Sábado, 28 de Novembro de 2026</Text>
-          <Text style={styles.infoSubText}>🕒 11h30 às 14h30 (Sem filas com agendamento)</Text>
+          <Text style={styles.infoTag}>Quando</Text>
+          <Text style={styles.infoMainText}>Sábado, 28 de novembro de 2026</Text>
+          <Text style={styles.infoSubText}>🕒 11h30 às 14h30 (sem filas com agendamento)</Text>
         </View>
       </View>
 
@@ -122,11 +122,10 @@ export default function CampaignHero({ onOrderPress }) {
           <Feather name="map-pin" size={18} color={COLORS.tomate} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.infoTag}>ONDE</Text>
-          <Text style={styles.infoMainText}>ABADEUS - Criciúma/SC</Text>
+          <Text style={styles.infoTag}>Onde</Text>
+          <Text style={styles.infoMainText}>ABADEUS • Criciúma/SC</Text>
           <Text style={styles.infoSubText}>
-            Rua Maria Salete de Oliveira, 422 - Bairro Cristo Redentor (Acesso rápido com
-            sinalização)
+            Rua Maria Salete de Oliveira, 422 • Cristo Redentor (acesso rápido com sinalização)
           </Text>
         </View>
       </View>
@@ -176,10 +175,10 @@ const styles = StyleSheet.create({
   },
   heroImageWrapper: { height: 185, position: 'relative' },
   heroImage: { width: '100%', height: '100%' },
-  heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.28)' },
-  heroImageTextWrap: { position: 'absolute', bottom: 12, left: 12 },
-  heroRecipeTag: { fontSize: 9, fontWeight: '800', color: COLORS.acafrao, letterSpacing: 0.6 },
-  heroDishTitle: { fontSize: 16, fontWeight: '800', color: COLORS.branco, lineHeight: 20 },
+  heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.48)' },
+  heroImageTextWrap: { position: 'absolute', bottom: 12, left: 12, right: 110 },
+  heroRecipeTag: { fontSize: 10, fontWeight: '800', color: COLORS.acafrao, letterSpacing: 0.4 },
+  heroDishTitle: { fontSize: 16, fontWeight: '800', color: COLORS.branco, lineHeight: 20, marginTop: 2 },
   beneficenteBadge: {
     position: 'absolute',
     bottom: 12,
@@ -188,6 +187,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
+    alignItems: 'center',
   },
   beneficenteBadgeTitle: { color: COLORS.branco, fontWeight: '900', fontSize: 13 },
   beneficenteBadgeSub: { color: COLORS.branco, fontSize: 10, fontWeight: '600' },
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  infoTag: { fontSize: 9, fontWeight: '800', color: COLORS.cinzaTexto },
+  infoTag: { fontSize: 10, fontWeight: '800', color: COLORS.cinzaTexto },
   infoMainText: { fontSize: 14, fontWeight: '800', color: COLORS.preto, marginVertical: 2 },
   infoSubText: { fontSize: 11, color: COLORS.cinzaTexto, lineHeight: 16 },
 });

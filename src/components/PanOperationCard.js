@@ -12,7 +12,7 @@ export default function PanOperationCard({
 }) {
   return (
     <View style={[styles.card, { borderColor: pan.borderColor || '#EADBC0' }]}>
-      {/* Cabeçalho do Tacho */}
+      {/* Cabeçalho do tacho */}
       <View style={styles.headerRow}>
         <View style={styles.titleWrap}>
           <Text style={styles.panCode}>{pan.code}</Text>
@@ -28,7 +28,7 @@ export default function PanOperationCard({
 
       {pan.chefInfo && <Text style={styles.chefText}>👨‍🍳 {pan.chefInfo}</Text>}
 
-      {/* Tacho 01: Servindo Agora com controle de porções */}
+      {/* Tacho servindo agora com controle de porções */}
       {pan.type === 'SERVING' && (
         <View style={styles.servingBox}>
           <View style={styles.metricsCols}>
@@ -37,7 +37,7 @@ export default function PanOperationCard({
               <Text style={styles.metricBoldValue}>{pan.totalYield} porções</Text>
             </View>
             <View>
-              <Text style={styles.metricSmallLabel}>Restam no Tacho</Text>
+              <Text style={styles.metricSmallLabel}>Restam no tacho</Text>
               <Text style={[styles.metricBoldValue, { color: COLORS.tomate }]}>
                 {pan.remaining} porções
               </Text>
@@ -58,7 +58,7 @@ export default function PanOperationCard({
         </View>
       )}
 
-      {/* Tacho 02: Em Apuração do Caldo */}
+      {/* Tacho em apuração do caldo */}
       {pan.type === 'COOKING' && (
         <View>
           <Text style={styles.estimateText}>⏱️ {pan.estimateText}</Text>
@@ -72,12 +72,12 @@ export default function PanOperationCard({
           </View>
           <TouchableOpacity style={styles.readyActionBtn} onPress={onMarkReady}>
             <Feather name="check-circle" size={15} color={COLORS.preto} />
-            <Text style={styles.readyActionBtnText}>Marcar como Pronto para Servir</Text>
+            <Text style={styles.readyActionBtnText}>Marcar como pronto para servir</Text>
           </TouchableOpacity>
         </View>
       )}
 
-      {/* Tacho 03: Fogo Baixo / Repouso */}
+      {/* Tacho em fogo baixo / repouso */}
       {pan.type === 'RESTING' && (
         <View style={styles.restingRow}>
           <Text style={styles.restingMeta}>Rendimento: {pan.totalYield} un</Text>
@@ -87,13 +87,13 @@ export default function PanOperationCard({
         </View>
       )}
 
-      {/* Tacho 04: Reserva Programado */}
+      {/* Tacho reserva programado */}
       {pan.type === 'SCHEDULED' && (
         <View>
           <Text style={styles.estimateText}>📅 {pan.scheduleNote}</Text>
           <TouchableOpacity style={styles.startPrepBtn} onPress={onStartPrep}>
             <Ionicons name="play" size={15} color={COLORS.mediterraneo} />
-            <Text style={styles.startPrepBtnText}>Iniciar Preparo do Tacho 04</Text>
+            <Text style={styles.startPrepBtnText}>Iniciar preparo ({pan.code})</Text>
           </TouchableOpacity>
         </View>
       )}

@@ -13,35 +13,35 @@ export default function AdminOrderCard({
     switch (order.status) {
       case 'PAID_WAITING':
         return {
-          text: 'Pago • Aguarda Retirada',
+          text: 'Pago • Aguarda retirada',
           bg: '#E6F2F8',
           color: COLORS.mediterraneo,
           border: COLORS.mediterraneo,
         };
       case 'DELIVERED_DRIVE':
         return {
-          text: 'Entregue com Sucesso',
+          text: 'Entregue com sucesso',
           bg: '#E8F5E9',
           color: '#2E7D32',
           border: '#C8E6C9',
         };
       case 'PENDING_PIX':
         return {
-          text: 'Aguardando Pagamento Pix',
+          text: 'Aguardando pagamento Pix',
           bg: '#FFF3D1',
           color: '#B87D14',
           border: COLORS.acafrao,
         };
       case 'DELIVERED_SALON':
         return {
-          text: 'Entregue • Salão Solidário',
+          text: 'Entregue • Salão solidário',
           bg: '#E8F5E9',
           color: '#2E7D32',
           border: '#C8E6C9',
         };
       case 'CANCELLED':
         return {
-          text: 'Cancelado • Estoque Devolvido',
+          text: 'Cancelado • Estoque devolvido',
           bg: '#FDE8E6',
           color: COLORS.tomate,
           border: COLORS.tomate,
@@ -68,25 +68,25 @@ export default function AdminOrderCard({
   const handleMoreOptions = () => {
     if (order.status === 'PAID_WAITING') {
       Alert.alert(
-        `Opções do Pedido ${order.code}`,
+        `Opções do pedido ${order.code}`,
         'Selecione uma ação administrativa (registrada no histórico de auditoria):',
         [
           { text: 'Fechar', style: 'cancel' },
           {
-            text: 'Reembolsar Pedido (Devolver Estoque)',
+            text: 'Reembolsar pedido (devolver estoque)',
             style: 'destructive',
             onPress: () => onRefundOrder && onRefundOrder(order.id),
           },
         ]
       );
     } else {
-      Alert.alert('Auditoria do Pedido', `Código: ${order.code}\nCliente: ${order.customer}`);
+      Alert.alert('Auditoria do pedido', `Código: ${order.code}\nCliente: ${order.customer}`);
     }
   };
 
   return (
     <View style={[styles.card, { borderColor: badge.border }]}>
-      {/* Linha 1: Código, Badge de Status e Valor */}
+      {/* Linha 1: código, badge de status e valor */}
       <View style={styles.topRow}>
         <View style={styles.codeBadgeGroup}>
           <Text style={styles.orderCode}>{order.code}</Text>
@@ -110,14 +110,14 @@ export default function AdminOrderCard({
         </View>
       </View>
 
-      {/* Linha 2: Nome do Comprador e Telefone */}
+      {/* Linha 2: nome do comprador e telefone */}
       <View style={styles.customerRow}>
         <Text style={styles.customerName}>{order.customer}</Text>
         <Text style={styles.dotSeparator}>•</Text>
         <Text style={styles.customerPhone}>{order.phone}</Text>
       </View>
 
-      {/* Linha 3: Resumo dos Itens */}
+      {/* Linha 3: resumo dos itens */}
       <View style={styles.itemsBox}>
         <Text style={styles.itemsSummaryText}>{order.itemsSummary}</Text>
         {order.unitPriceNote && (
@@ -125,7 +125,7 @@ export default function AdminOrderCard({
         )}
       </View>
 
-      {/* Linha 4: Metadados de Logística / Veículo / Mesa / Doação */}
+      {/* Linha 4: metadados de logística / veículo / mesa / doação */}
       <View style={styles.tagsRow}>
         {order.channelTag && (
           <View style={styles.infoTag}>
@@ -146,13 +146,13 @@ export default function AdminOrderCard({
         )}
       </View>
 
-      {/* Linha 5: Rodapé de Ações conforme o Status */}
+      {/* Linha 5: rodapé de ações conforme o status */}
       {order.status === 'PAID_WAITING' && (
         <View style={styles.actionsFooter}>
           <TouchableOpacity
             style={styles.secondaryBtn}
             onPress={() =>
-              Alert.alert('Comprovante Pix 💠', `Chave de transação confirmada para ${order.code}`)
+              Alert.alert('Comprovante Pix', `Chave de transação confirmada para ${order.code}`)
             }
           >
             <Text style={styles.secondaryBtnText}>Ver Pix</Text>
@@ -163,7 +163,7 @@ export default function AdminOrderCard({
             onPress={() => onMarkDelivered && onMarkDelivered(order.id)}
           >
             <Feather name="check" size={15} color={COLORS.branco} />
-            <Text style={styles.primaryDeliverBtnText}>Marcar Entregue</Text>
+            <Text style={styles.primaryDeliverBtnText}>Marcar entregue</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.moreIconBtn} onPress={handleMoreOptions}>
@@ -181,11 +181,11 @@ export default function AdminOrderCard({
           <TouchableOpacity
             style={styles.receiptLinkBtn}
             onPress={() =>
-              Alert.alert('Recibo Oficial 🧾', `Recibo REC-${order.code.replace('#', '')} emitido.`)
+              Alert.alert('Recibo oficial', `Recibo REC-${order.code.replace('#', '')} emitido`)
             }
           >
             <Feather name="file-text" size={13} color={COLORS.mediterraneo} />
-            <Text style={styles.receiptLinkText}>Ver Recibo</Text>
+            <Text style={styles.receiptLinkText}>Ver recibo</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -196,13 +196,13 @@ export default function AdminOrderCard({
             style={styles.whatsappRemindBtn}
             onPress={() =>
               Alert.alert(
-                'Chave Pix Reenviada 📲',
-                `Lembrete com código Copia e Cola enviado para ${order.customer}.`
+                'Chave Pix reenviada',
+                `Lembrete com código copia e cola enviado para ${order.customer}`
               )
             }
           >
             <Ionicons name="logo-whatsapp" size={15} color="#2E7D32" />
-            <Text style={styles.whatsappRemindText}>Reenviar Chave Pix no WhatsApp</Text>
+            <Text style={styles.whatsappRemindText}>Reenviar chave Pix no WhatsApp</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

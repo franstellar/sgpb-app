@@ -1,28 +1,34 @@
 {
   "expo": {
-    "name": "sgpb-app",
+    "name": "Paelito",
     "slug": "sgpb-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/mascote-paelito.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+        "backgroundColor": "#FFF8E7",
+        "foregroundImage": "./assets/images/mascote-paelito.png"
+      },
+      "package": "com.franboisesteam.sgpbapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/mascote-paelito.png"
     },
     "plugins": [
       "expo-sqlite",
-      "expo-font"
-    ]
+      "expo-font",
+      "expo-status-bar"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d3c6e400-fdc6-4b54-8e62-c76e1ed0e2e5"
+      }
+    },
+    "owner": "franboises-team"
   }
 }

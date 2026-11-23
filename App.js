@@ -5,8 +5,36 @@ import AuthScreen from './src/screens/AuthScreen';
 import BuyerScreen from './src/screens/BuyerScreen';
 import AdminScreen from './src/screens/AdminScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  useFonts,
+  Baloo2_500Medium,
+  Baloo2_600SemiBold,
+  Baloo2_700Bold,
+  Baloo2_800ExtraBold,
+} from '@expo-google-fonts/baloo-2';
+import {
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+} from '@expo-google-fonts/poppins';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Baloo2_500Medium,
+    Baloo2_600SemiBold,
+    Baloo2_700Bold,
+    Baloo2_800ExtraBold,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   const [screen, setScreen] = useState('SPLASH'); // SPLASH | AUTH | BUYER | ADMIN | VOLUNTEER | PARTNER
   const [currentUser, setCurrentUser] = useState(null);
 

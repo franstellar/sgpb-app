@@ -7,7 +7,7 @@ export default function ProductCard({ item, onAdd }) {
   return (
     <View style={styles.productCard}>
       <View style={styles.productImageContainer}>
-        <Image source={{ uri: item.image }} style={styles.productImage} />
+        <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} style={styles.productImage} />
 
         {item.topLeftBadge && (
           <View style={[styles.badgeTopLeft, { backgroundColor: item.topLeftBadge.bg }]}>
@@ -51,7 +51,7 @@ export default function ProductCard({ item, onAdd }) {
           </View>
 
           <TouchableOpacity style={styles.addBtn} onPress={() => onAdd && onAdd(item)}>
-            <Text style={styles.addBtnText}>+ Pedir Agora</Text>
+            <Text style={styles.addBtnText}>+ Pedir agora</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   titlePriceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 6,
   },
   productName: { fontSize: 15, fontWeight: '800', color: COLORS.preto, flex: 1, marginRight: 8 },

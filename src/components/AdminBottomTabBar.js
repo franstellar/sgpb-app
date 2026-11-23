@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 
 const ADMIN_TABS = [
@@ -11,8 +12,15 @@ const ADMIN_TABS = [
 ];
 
 export default function AdminBottomTabBar({ activeTab, onChangeTab }) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.bottomBar}>
+    <View
+      style={[
+        styles.bottomBar,
+        { paddingBottom: Math.max(insets.bottom, 10) },
+      ]}
+    >
       {ADMIN_TABS.map((tab) => {
         const isFocused = activeTab === tab.key;
         return (
@@ -23,7 +31,7 @@ export default function AdminBottomTabBar({ activeTab, onChangeTab }) {
           >
             <Ionicons
               name={tab.icon}
-              size={20}
+              size={22}
               color={isFocused ? COLORS.tomate : COLORS.cinzaTexto}
             />
             <Text
@@ -47,13 +55,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 64,
+    paddingTop: 10,
     backgroundColor: COLORS.branco,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: '#EADBC0',
+    elevation: 10,
   },
   tabItem: {
     alignItems: 'center',
@@ -61,8 +70,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: 11,
     color: COLORS.cinzaTexto,
     marginTop: 3,
+    fontWeight: '600',
   },
 });

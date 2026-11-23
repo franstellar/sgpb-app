@@ -21,12 +21,12 @@ export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, lo
 
   const defaultPixPayload =
     pixCode ||
-    `00020126580014br.gov.bcb.pix0136abadeus-paelito-beneficente-20255204000053039865405${Number(
+    `00020126580014br.gov.bcb.pix0136abadeus-paelito-beneficente-20265204000053039865405${Number(
       totalAmount
     ).toFixed(2)}5802BR5925PAELITO BENEFICENTE ABADE6009CRICIUMA62070503***6304E8A2`;
 
   const handleCopyPix = () => {
-    Alert.alert('Código Pix Copiado! 📋', 'Cole no aplicativo do seu banco na opção Pix Copia e Cola.');
+    Alert.alert('Código Pix copiado', 'Cole no aplicativo do seu banco na opção Pix copia e cola');
   };
 
   return (
@@ -40,7 +40,7 @@ export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, lo
         </Text>
       </View>
 
-      {/* Moldura do QR Code igual ao Figma */}
+      {/* Moldura do QR Code */}
       <View style={styles.qrOuterFrame}>
         <View style={styles.qrInnerBox}>
           <Ionicons name="qr-code" size={150} color={COLORS.preto} />
@@ -52,10 +52,10 @@ export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, lo
 
       <Text style={styles.instructions}>
         Abra o app do seu banco, escolha <Text style={{ fontWeight: '700' }}>Pagar via Pix</Text> e
-        aponte a câmera para o QR Code acima.
+        aponte a câmera para o QR Code acima
       </Text>
 
-      {/* Caixa do Pix Copia e Cola */}
+      {/* Caixa do Pix copia e cola */}
       <View style={styles.copyPasteBox}>
         <Text style={styles.copyPasteCode} numberOfLines={3}>
           {defaultPixPayload}
@@ -64,32 +64,32 @@ export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, lo
 
       <TouchableOpacity style={styles.copyBtn} onPress={handleCopyPix}>
         <Feather name="copy" size={16} color={COLORS.tomate} />
-        <Text style={styles.copyBtnText}>Copiar Código Pix Copia e Cola</Text>
+        <Text style={styles.copyBtnText}>Copiar código Pix copia e cola</Text>
       </TouchableOpacity>
 
       <View style={styles.autoNoticeRow}>
         <Ionicons name="checkmark-circle-outline" size={16} color={COLORS.mediterraneo} />
         <Text style={styles.autoNoticeText}>
           Assim que confirmado pelo banco, seu QR Code de retirada será emitido automaticamente e
-          enviado por WhatsApp e E-mail.
+          enviado por WhatsApp e e-mail
         </Text>
       </View>
 
-      {/* Botão Principal Concluir Pedido com Pix */}
+      {/* Botão principal concluir pedido com Pix */}
       <TouchableOpacity
         style={[styles.confirmBtn, loading && { opacity: 0.7 }]}
         onPress={onConfirmOrder}
         disabled={loading}
       >
         <Text style={styles.confirmBtnText}>
-          {loading ? 'Processando Pedido...' : 'Concluir Pedido com Pix'}
+          {loading ? 'Processando pedido...' : 'Concluir pedido com Pix'}
         </Text>
         <Feather name="check-circle" size={18} color={COLORS.branco} />
       </TouchableOpacity>
 
       <View style={styles.secureRow}>
         <Feather name="lock" size={12} color={COLORS.cinzaTexto} />
-        <Text style={styles.secureText}>Ambiente Seguro de Arrecadação ABADEUS</Text>
+        <Text style={styles.secureText}>Ambiente seguro de arrecadação ABADEUS</Text>
       </View>
     </View>
   );

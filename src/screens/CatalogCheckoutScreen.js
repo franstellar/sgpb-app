@@ -6,177 +6,78 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Image,
   Alert,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
-import CatalogGridItem from '../components/CatalogGridItem';
 import PixPaymentBox from '../components/PixPaymentBox';
 
 export const CHECKOUT_CATALOG = [
   // Paellas de frutos do mar
-  {
-    id: 1,
-    shortName: 'Paella de frutos do mar (individual)',
-    weight: '450g',
-    price: 50.0,
-    shortDesc: 'Camarão, lula e mexilhão',
-    image: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800',
-    badge: { text: 'Mais pedido', bg: COLORS.tomate, color: COLORS.branco },
-  },
-  {
-    id: 2,
-    shortName: 'Paella de frutos do mar (2 pessoas)',
-    weight: '900g',
-    price: 95.0,
-    shortDesc: 'Camarão, lula e mexilhão',
-    image: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=800',
-    badge: { text: '2 pessoas', bg: COLORS.acafrao, color: COLORS.preto },
-  },
-  {
-    id: 3,
-    shortName: 'Paella de frutos do mar (4 pessoas)',
-    weight: '1,8kg',
-    price: 180.0,
-    shortDesc: 'Camarão, lula e mexilhão',
-    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
-    badge: { text: 'Ideal família', bg: COLORS.acafrao, color: COLORS.preto },
-  },
+  { id: 1, name: 'Paella de frutos do mar (individual)', label: 'Individual', weight: '450g', price: 50.0 },
+  { id: 2, name: 'Paella de frutos do mar (2 pessoas)', label: 'Para 2 pessoas', weight: '900g', price: 95.0 },
+  { id: 3, name: 'Paella de frutos do mar (4 pessoas)', label: 'Para 4 pessoas', weight: '1,8kg', price: 180.0 },
 
   // Paellas de carnes
-  {
-    id: 4,
-    shortName: 'Paella de carnes (individual)',
-    weight: '450g',
-    price: 45.0,
-    shortDesc: 'Frango, lombo suíno e linguiça',
-    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
-    badge: { text: 'Individual', bg: COLORS.tomate, color: COLORS.branco },
-  },
-  {
-    id: 5,
-    shortName: 'Paella de carnes (2 pessoas)',
-    weight: '900g',
-    price: 85.0,
-    shortDesc: 'Frango, lombo suíno e linguiça',
-    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
-    badge: { text: '2 pessoas', bg: COLORS.acafrao, color: COLORS.preto },
-  },
-  {
-    id: 6,
-    shortName: 'Paella de carnes (4 pessoas)',
-    weight: '1,8kg',
-    price: 160.0,
-    shortDesc: 'Frango, lombo suíno e linguiça',
-    image: 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=800',
-    badge: { text: 'Ideal família', bg: COLORS.acafrao, color: COLORS.preto },
-  },
+  { id: 4, name: 'Paella de carnes (individual)', label: 'Individual', weight: '450g', price: 45.0 },
+  { id: 5, name: 'Paella de carnes (2 pessoas)', label: 'Para 2 pessoas', weight: '900g', price: 85.0 },
+  { id: 6, name: 'Paella de carnes (4 pessoas)', label: 'Para 4 pessoas', weight: '1,8kg', price: 160.0 },
 
   // Paellas veggie
-  {
-    id: 7,
-    shortName: 'Paella veggie (individual)',
-    weight: '450g',
-    price: 40.0,
-    shortDesc: 'Cogumelos frescos, alcachofras e pimentões',
-    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
-    badge: { text: 'Vegetariana', bg: '#2E7D32', color: COLORS.branco },
-  },
-  {
-    id: 8,
-    shortName: 'Paella veggie (2 pessoas)',
-    weight: '900g',
-    price: 75.0,
-    shortDesc: 'Cogumelos frescos, alcachofras e pimentões',
-    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
-    badge: { text: 'Vegetariana', bg: '#2E7D32', color: COLORS.branco },
-  },
-  {
-    id: 9,
-    shortName: 'Paella veggie (4 pessoas)',
-    weight: '1,8kg',
-    price: 140.0,
-    shortDesc: 'Cogumelos frescos, alcachofras e pimentões',
-    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
-    badge: { text: 'Vegetariana', bg: '#2E7D32', color: COLORS.branco },
-  },
+  { id: 7, name: 'Paella veggie (individual)', label: 'Individual', weight: '450g', price: 40.0 },
+  { id: 8, name: 'Paella veggie (2 pessoas)', label: 'Para 2 pessoas', weight: '900g', price: 75.0 },
+  { id: 9, name: 'Paella veggie (4 pessoas)', label: 'Para 4 pessoas', weight: '1,8kg', price: 140.0 },
 
   // Combos Paelito
-  {
-    id: 10,
-    shortName: 'Combo Paelito frutos do mar',
-    weight: '',
-    price: 65.0,
-    shortDesc: 'Individual + 4 minichurros + refri lata grátis',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Combo + refri', bg: COLORS.mediterraneo, color: COLORS.branco },
-  },
-  {
-    id: 11,
-    shortName: 'Combo Paelito carnes',
-    weight: '',
-    price: 60.0,
-    shortDesc: 'Individual + 4 minichurros + refri lata grátis',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Combo + refri', bg: COLORS.mediterraneo, color: COLORS.branco },
-  },
-  {
-    id: 12,
-    shortName: 'Combo Paelito veggie',
-    weight: '',
-    price: 55.0,
-    shortDesc: 'Individual + 4 minichurros + refri lata grátis',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Combo + refri', bg: COLORS.mediterraneo, color: COLORS.branco },
-  },
+  { id: 10, name: 'Combo Paelito frutos do mar', label: 'Frutos do mar', weight: '', price: 65.0 },
+  { id: 11, name: 'Combo Paelito carnes', label: 'Carnes', weight: '', price: 60.0 },
+  { id: 12, name: 'Combo Paelito veggie', label: 'Veggie', weight: '', price: 55.0 },
 
   // Bebidas
+  { id: 13, name: 'Refrigerante lata (350mL)', label: 'Refrigerante lata (350mL)', sub: 'Coca-Cola, Pepsi ou Guaraná', price: 6.0 },
+  { id: 14, name: 'Refrigerante 600mL', label: 'Refrigerante 600mL', sub: 'Coca-Cola, Pepsi ou Guaraná', price: 9.0 },
+  { id: 15, name: 'Refrigerante 2L', label: 'Refrigerante 2L', sub: 'Coca-Cola, Pepsi ou Guaraná', price: 14.0 },
+  { id: 16, name: 'Água mineral (500mL)', label: 'Água mineral (500mL)', sub: 'Com ou sem gás', price: 4.0 },
+  { id: 17, name: 'Suco integral (300mL)', label: 'Suco integral (300mL)', sub: 'Uva ou laranja', price: 8.0 },
+];
+
+const PAELLA_GROUPS = [
   {
-    id: 13,
-    shortName: 'Refrigerante lata',
-    weight: '350mL',
-    price: 6.0,
-    shortDesc: 'Coca-Cola, Pepsi ou Guaraná',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
+    key: 'seafood',
+    title: 'Paella de frutos do mar',
+    desc: 'Camarão, lula e mexilhão no arroz ao açafrão espanhol',
+    badge: { text: 'Mais pedido', bg: COLORS.tomate, color: COLORS.branco },
+    image: require('../../assets/images/paella-marinera.png'),
+    itemIds: [1, 2, 3],
   },
   {
-    id: 14,
-    shortName: 'Refrigerante 600mL',
-    weight: '600mL',
-    price: 9.0,
-    shortDesc: 'Coca-Cola, Pepsi ou Guaraná',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
+    key: 'meat',
+    title: 'Paella de carnes',
+    desc: 'Frango, lombo suíno e linguiça artesanal bem temperados',
+    badge: { text: 'Tradicional', bg: COLORS.acafrao, color: COLORS.preto },
+    image: require('../../assets/images/paella-valenciana.png'),
+    itemIds: [4, 5, 6],
   },
   {
-    id: 15,
-    shortName: 'Refrigerante 2L',
-    weight: '2L',
-    price: 14.0,
-    shortDesc: 'Coca-Cola, Pepsi ou Guaraná',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
-  },
-  {
-    id: 16,
-    shortName: 'Água mineral',
-    weight: '500mL',
-    price: 4.0,
-    shortDesc: 'Com/sem gás',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
-  },
-  {
-    id: 17,
-    shortName: 'Suco integral',
-    weight: '300mL',
-    price: 8.0,
-    shortDesc: 'Garrafa 300mL',
-    image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
-    badge: { text: 'Bebida', bg: '#E6F2F8', color: COLORS.mediterraneo },
+    key: 'veggie',
+    title: 'Paella veggie',
+    desc: 'Cogumelos frescos, alcachofras e pimentões selecionados',
+    badge: { text: 'Vegetariana', bg: '#2E7D32', color: COLORS.branco },
+    image: require('../../assets/images/paella-vegetariana.png'),
+    itemIds: [7, 8, 9],
   },
 ];
+
+const COMBO_GROUP = {
+  title: 'Combo Paelito',
+  desc: 'Porção individual + 4 minichurros artesanais + refrigerante lata ou água grátis',
+  badge: { text: '+ Refri grátis', bg: COLORS.mediterraneo, color: COLORS.branco },
+  image: 'https://images.unsplash.com/photo-1624371414361-e670edf4898d?w=900',
+  itemIds: [10, 11, 12],
+};
+
+const DRINK_IDS = [13, 14, 15, 16, 17];
 
 export default function CatalogCheckoutScreen({
   user,
@@ -190,6 +91,8 @@ export default function CatalogCheckoutScreen({
   const [email, setEmail] = useState(user?.email || 'cliente@email.com');
   const [whatsapp, setWhatsapp] = useState(user?.phone || '(48) 99842-1082');
   const [loading, setLoading] = useState(false);
+
+  const getItemById = (id) => CHECKOUT_CATALOG.find((p) => p.id === id);
 
   const selectedItems = CHECKOUT_CATALOG.filter((p) => (quantities[p.id] || 0) > 0);
 
@@ -220,7 +123,7 @@ export default function CatalogCheckoutScreen({
         totalAmount: grandTotal,
         customerName: fullName,
         items: selectedItems.map((i) => ({
-          name: i.shortName,
+          name: i.name,
           quantity: quantities[i.id],
           subtotal: i.price * quantities[i.id],
         })),
@@ -234,6 +137,55 @@ export default function CatalogCheckoutScreen({
         [{ text: 'Ver meu QR Code', onPress: () => onOrderCreated && onOrderCreated(newOrder) }]
       );
     }, 600);
+  };
+
+  const renderOptionRow = (item, isLast) => {
+    const qty = quantities[item.id] || 0;
+    return (
+      <View
+        key={item.id}
+        style={[
+          styles.optionRow,
+          !isLast && styles.optionRowBorder,
+          qty > 0 && styles.optionRowSelected,
+        ]}
+      >
+        <View style={{ flex: 1, marginRight: 10 }}>
+          <View style={styles.optionLabelWrap}>
+            <Text style={styles.optionLabel}>{item.label}</Text>
+            {!!item.weight && (
+              <View style={styles.weightPill}>
+                <Text style={styles.weightPillText}>{item.weight}</Text>
+              </View>
+            )}
+          </View>
+          {!!item.sub && <Text style={styles.optionSub}>{item.sub}</Text>}
+        </View>
+
+        <Text style={styles.optionPrice}>
+          R$ {item.price.toFixed(2).replace('.', ',')}
+        </Text>
+
+        <View style={styles.stepper}>
+          <TouchableOpacity
+            style={[styles.stepBtn, qty === 0 && styles.stepBtnDisabled]}
+            onPress={() => onUpdateQty(item.id, Math.max(0, qty - 1))}
+            disabled={qty === 0}
+          >
+            <Text style={styles.stepBtnText}>-</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.qtyText}>{qty}</Text>
+
+          <TouchableOpacity
+            style={styles.stepBtnPlus}
+            onPress={() => onUpdateQty(item.id, qty + 1)}
+          >
+            <Text style={styles.stepBtnPlusText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -264,19 +216,90 @@ export default function CatalogCheckoutScreen({
         Ingredientes frescos preparados pelos voluntários da cozinha solidária
       </Text>
 
-      {/* Grade 2x2 de produtos */}
-      <View style={styles.grid}>
-        {CHECKOUT_CATALOG.map((item) => (
-          <CatalogGridItem
-            key={item.id}
-            item={item}
-            quantity={quantities[item.id] || 0}
-            onIncrement={() => onUpdateQty(item.id, (quantities[item.id] || 0) + 1)}
-            onDecrement={() =>
-              onUpdateQty(item.id, Math.max(0, (quantities[item.id] || 0) - 1))
-            }
-          />
-        ))}
+      {/* Seção Paellas (3 cards agrupados por sabor) */}
+      <View style={styles.catalogSectionHeader}>
+        <Text style={styles.catalogSectionTitle}>Paellas</Text>
+        <Text style={styles.catalogSectionCount}>3 sabores</Text>
+      </View>
+
+      {PAELLA_GROUPS.map((group) => {
+        const hasSelected = group.itemIds.some((id) => (quantities[id] || 0) > 0);
+        return (
+          <View
+            key={group.key}
+            style={[styles.groupCard, hasSelected && styles.groupCardSelected]}
+          >
+            <View style={styles.groupImageWrap}>
+              <Image source={{ uri: group.image }} style={styles.groupImage} />
+              <View style={[styles.groupBadge, { backgroundColor: group.badge.bg }]}>
+                <Text style={[styles.groupBadgeText, { color: group.badge.color }]}>
+                  {group.badge.text}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.groupHeader}>
+              <Text style={styles.groupTitle}>{group.title}</Text>
+              <Text style={styles.groupDesc}>{group.desc}</Text>
+            </View>
+
+            <View style={styles.optionsList}>
+              {group.itemIds.map((id, idx) =>
+                renderOptionRow(getItemById(id), idx === group.itemIds.length - 1)
+              )}
+            </View>
+          </View>
+        );
+      })}
+
+      {/* Seção Combos Paelito (1 card agrupado) */}
+      <View style={styles.catalogSectionHeader}>
+        <Text style={styles.catalogSectionTitle}>Combos Paelito</Text>
+        <Text style={styles.catalogSectionCount}>Refri ou água grátis</Text>
+      </View>
+
+      <View
+        style={[
+          styles.groupCard,
+          COMBO_GROUP.itemIds.some((id) => (quantities[id] || 0) > 0) && styles.groupCardSelected,
+        ]}
+      >
+        <View style={styles.groupImageWrap}>
+          <Image source={{ uri: COMBO_GROUP.image }} style={styles.groupImage} />
+          <View style={[styles.groupBadge, { backgroundColor: COMBO_GROUP.badge.bg }]}>
+            <Text style={[styles.groupBadgeText, { color: COMBO_GROUP.badge.color }]}>
+              {COMBO_GROUP.badge.text}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.groupHeader}>
+          <Text style={styles.groupTitle}>{COMBO_GROUP.title}</Text>
+          <Text style={styles.groupDesc}>{COMBO_GROUP.desc}</Text>
+        </View>
+
+        <View style={styles.optionsList}>
+          {COMBO_GROUP.itemIds.map((id, idx) =>
+            renderOptionRow(getItemById(id), idx === COMBO_GROUP.itemIds.length - 1)
+          )}
+        </View>
+      </View>
+
+      {/* Seção Bebidas (lista compacta sem repetição de fotos) */}
+      <View style={styles.catalogSectionHeader}>
+        <Text style={styles.catalogSectionTitle}>Bebidas</Text>
+        <Text style={styles.catalogSectionCount}>Retirada gelada no local</Text>
+      </View>
+
+      <View
+        style={[
+          styles.drinksCard,
+          DRINK_IDS.some((id) => (quantities[id] || 0) > 0) && styles.groupCardSelected,
+        ]}
+      >
+        {DRINK_IDS.map((id, idx) =>
+          renderOptionRow(getItemById(id), idx === DRINK_IDS.length - 1)
+        )}
       </View>
 
       {/* 2. Doação pedagógica ABADEUS */}
@@ -378,7 +401,7 @@ export default function CatalogCheckoutScreen({
           return (
             <View key={item.id} style={styles.summaryLine}>
               <Text style={styles.summaryItemText}>
-                {item.shortName} (x{qty})
+                {item.name} (x{qty})
               </Text>
               <Text style={styles.summaryItemValue}>
                 R$ {sub.toFixed(2).replace('.', ',')}
@@ -435,7 +458,7 @@ export default function CatalogCheckoutScreen({
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.creme },
-  scrollContent: { paddingHorizontal: 16, paddingBottom: 100 },
+  scrollContent: { paddingHorizontal: 16, paddingBottom: 110 },
   subHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -490,14 +513,180 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 12,
     color: COLORS.cinzaTexto,
-    marginBottom: 14,
+    marginBottom: 16,
     lineHeight: 17,
   },
-  grid: {
+  catalogSectionHeader: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    alignItems: 'center',
+    marginTop: 4,
+    marginBottom: 10,
+    paddingBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EADBC0',
+  },
+  catalogSectionTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: COLORS.preto,
+  },
+  catalogSectionCount: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: COLORS.cinzaTexto,
+  },
+  groupCard: {
+    backgroundColor: COLORS.branco,
+    borderRadius: 18,
+    overflow: 'hidden',
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: '#EADBC0',
+    elevation: 2,
+  },
+  groupCardSelected: {
+    borderColor: COLORS.tomate,
+  },
+  groupImageWrap: {
+    height: 145,
+    position: 'relative',
+  },
+  groupImage: {
+    width: '100%',
+    height: '100%',
+  },
+  groupBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  groupBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  groupHeader: {
+    paddingHorizontal: 14,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+  groupTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: COLORS.preto,
+  },
+  groupDesc: {
+    fontSize: 12,
+    color: COLORS.cinzaTexto,
+    marginTop: 2,
+    lineHeight: 16,
+  },
+  optionsList: {
+    paddingHorizontal: 14,
+    paddingBottom: 6,
+  },
+  drinksCard: {
+    backgroundColor: COLORS.branco,
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 4,
+    marginBottom: 18,
+    borderWidth: 1.5,
+    borderColor: '#EADBC0',
+    elevation: 2,
+  },
+  optionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 11,
+  },
+  optionRowBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3E7CE',
+  },
+  optionRowSelected: {
+    backgroundColor: '#FFFDF8',
+  },
+  optionLabelWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  optionLabel: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: COLORS.preto,
+  },
+  weightPill: {
+    backgroundColor: '#F6EBD4',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  weightPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#7A5410',
+  },
+  optionSub: {
+    fontSize: 11,
+    color: COLORS.cinzaTexto,
+    marginTop: 2,
+  },
+  optionPrice: {
+    fontSize: 13,
+    fontWeight: '900',
+    color: COLORS.tomate,
+    marginRight: 10,
+  },
+  stepper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.creme,
+    borderRadius: 14,
+    paddingHorizontal: 4,
+    paddingVertical: 3,
+    gap: 8,
+  },
+  stepBtn: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: COLORS.branco,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepBtnDisabled: {
+    opacity: 0.4,
+  },
+  stepBtnText: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: COLORS.preto,
+  },
+  qtyText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: COLORS.preto,
+    minWidth: 14,
+    textAlign: 'center',
+  },
+  stepBtnPlus: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: COLORS.tomate,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepBtnPlusText: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: COLORS.branco,
   },
   donationCard: {
     flexDirection: 'row',
@@ -726,4 +915,4 @@ const styles = StyleSheet.create({
     color: COLORS.cinzaTexto,
     fontWeight: '600',
   },
-});
+}); 
