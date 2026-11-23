@@ -4,7 +4,7 @@
     "slug": "sgpb-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/mascote-paelito.png",
+    "icon": "./assets/images/icon-paelito.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -12,12 +12,12 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFF8E7",
-        "foregroundImage": "./assets/images/mascote-paelito.png"
+        "foregroundImage": "./assets/images/icon-paelito.png"
       },
       "package": "com.franboisesteam.sgpbapp"
     },
     "web": {
-      "favicon": "./assets/images/mascote-paelito.png"
+      "favicon": "./assets/images/icon-paelito.png"
     },
     "plugins": [
       "expo-sqlite",
