@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, StatusBar, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
+
+const MASCOTE_IMG = require('../../assets/images/mascote-paelito.png');
 
 export default function SplashScreen() {
   return (
@@ -19,7 +22,7 @@ export default function SplashScreen() {
         {/* Círculo do mascote / ícone principal */}
         <View style={styles.logoOuterRing}>
           <View style={styles.logoInnerCircle}>
-            <Text style={styles.logoEmoji}>🥘</Text>
+            <Image source={MASCOTE_IMG} style={styles.mascotImg} resizeMode="contain" />
           </View>
         </View>
 
@@ -78,8 +81,8 @@ const styles = StyleSheet.create({
   editionText: {
     color: COLORS.creme,
     fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 0.6,
+    fontFamily: FONTS.bodySemiBold,
+    letterSpacing: 0.4,
   },
   logoOuterRing: {
     width: 124,
@@ -101,23 +104,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     elevation: 6,
   },
-  logoEmoji: {
-    fontSize: 48,
+  mascotImg: {
+    width: 82,
+    height: 82,
   },
   brandTitle: {
-    fontSize: 44,
-    fontWeight: '900',
+    fontSize: 46,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.branco,
-    letterSpacing: -0.5,
+    lineHeight: 54,
   },
   brandTagline: {
     fontSize: 14,
+    fontFamily: FONTS.bodyMedium,
     color: '#FFE4E1',
     textAlign: 'center',
-    lineHeight: 20,
-    marginTop: 6,
+    lineHeight: 21,
+    marginTop: 4,
     marginBottom: 20,
-    fontWeight: '600',
   },
   abadeusBadge: {
     flexDirection: 'row',
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
   },
   abadeusBadgeText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   footer: {
@@ -140,6 +144,6 @@ const styles = StyleSheet.create({
   loadingText: {
     color: COLORS.creme,
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
   },
 });

@@ -142,14 +142,10 @@ export default function AuthScreen({ onLoginSuccess }) {
             </View>
             <View style={styles.abadeusPill}>
               <Image source={ABADEUS_LOGO} style={styles.abadeusLogo} resizeMode="contain" />
-              <Text style={styles.abadeusPillText}>ABADEUS</Text>
             </View>
           </View>
 
-          <View style={styles.brandRow}>
-            <Image source={LOGO_PAELITO} style={styles.loginLogo} resizeMode="contain" />
-            <Text style={styles.brandTitle}>Paelito</Text>
-          </View>
+          <Image source={LOGO_PAELITO} style={styles.loginLogo} resizeMode="contain" />
 
           <Text style={styles.heroSubtitle}>
             Mais que uma paella, uma boa causa para aquecer corações!
@@ -361,22 +357,16 @@ const styles = StyleSheet.create({
     color: COLORS.preto,
   },
   abadeusPill: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    justifyContent: 'center',
     backgroundColor: '#FDE8B2',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
   },
   abadeusLogo: {
-    width: 15,
-    height: 15,
-  },
-  abadeusPillText: {
-    fontSize: 10,
-    fontFamily: FONTS.bodyBold,
-    color: '#8B5E08',
+    width: 72,
+    height: 18,
   },
   loginLogo: {
     width: 210,

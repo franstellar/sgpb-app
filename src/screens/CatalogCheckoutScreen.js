@@ -230,7 +230,10 @@ export default function CatalogCheckoutScreen({
             style={[styles.groupCard, hasSelected && styles.groupCardSelected]}
           >
             <View style={styles.groupImageWrap}>
-              <Image source={{ uri: group.image }} style={styles.groupImage} />
+              <Image
+                source={typeof group.image === 'string' ? { uri: group.image } : group.image}
+                style={styles.groupImage}
+              />
               <View style={[styles.groupBadge, { backgroundColor: group.badge.bg }]}>
                 <Text style={[styles.groupBadgeText, { color: group.badge.color }]}>
                   {group.badge.text}
@@ -265,7 +268,10 @@ export default function CatalogCheckoutScreen({
         ]}
       >
         <View style={styles.groupImageWrap}>
-          <Image source={{ uri: COMBO_GROUP.image }} style={styles.groupImage} />
+          <Image
+            source={typeof COMBO_GROUP.image === 'string' ? { uri: COMBO_GROUP.image } : COMBO_GROUP.image}
+            style={styles.groupImage}
+          />
           <View style={[styles.groupBadge, { backgroundColor: COMBO_GROUP.badge.bg }]}>
             <Text style={[styles.groupBadgeText, { color: COMBO_GROUP.badge.color }]}>
               {COMBO_GROUP.badge.text}
