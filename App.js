@@ -20,7 +20,7 @@ import {
 } from '@expo-google-fonts/poppins';
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     Baloo2_500Medium,
     Baloo2_600SemiBold,
     Baloo2_700Bold,
@@ -31,10 +31,6 @@ export default function App() {
     Poppins_700Bold,
   });
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
   const [screen, setScreen] = useState('SPLASH'); // SPLASH | AUTH | BUYER | ADMIN | VOLUNTEER | PARTNER
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -44,7 +40,11 @@ export default function App() {
       setScreen('AUTH');
     }, 2000);
     return () => clearTimeout(timer);
-  }, [], );
+  }, []);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
@@ -76,11 +76,13 @@ export default function App() {
       {screen === 'SPLASH' && <SplashScreen />}
       {screen === 'AUTH' && <AuthScreen onLoginSuccess={handleLoginSuccess} />}
       {screen === 'ADMIN' && <AdminScreen user={currentUser} onLogout={handleLogout} />}
-      {screen === 'VOLUNTEER' && <AdminScreen user={currentUser} onLogout={handleLogout} />} 
-      {screen === 'PARTNER' && <AdminScreen user={currentUser} onLogout={handleLogout} />} 
-      {screen !== 'SPLASH' && screen !== 'AUTH' && screen !== 'ADMIN' && screen !== 'VOLUNTEER' && screen !== 'PARTNER' && (
-        <BuyerScreen user={currentUser} onLogout={handleLogout} />
-      )}
+      {screen === 'VOLUNTEER' && <AdminScreen user={currentUser} onLogout={handleLogout} />}
+      {screen === 'PARTNER' && <AdminScreen user={currentUser} onLogout={handleLogout} />}
+      {screen !== 'SPLASH' &&
+        screen !== 'AUTH' &&
+        screen !== 'ADMIN' &&
+        screen !== 'VOLUNTEER' &&
+        screen !== 'PARTNER' && <BuyerScreen user={currentUser} onLogout={handleLogout} />}
     </SafeAreaProvider>
   );
 }
