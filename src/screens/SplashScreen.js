@@ -1,5 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, StatusBar, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  StatusBar,
+  Image,
+  Animated,
+  Easing,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
@@ -8,42 +17,145 @@ import { FONTS } from '../theme/fonts';
 const MASCOTE_IMG = require('../../assets/images/mascote-paelito.png');
 
 export default function SplashScreen() {
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  const logoScale = useRef(new Animated.Value(0.45)).current;
+  const contentOpacity = useRef(new Animated.Value(0)).current;
+  const contentTranslateY = useRef(new Animated.Value(18)).current;
+  const mascotFloat = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const entrance = Animated.parallel([
+      // 1. Entrada elástica do círculo + mascote
+      Animated.timing(logoOpacity, {
+        toValue: 1,
+        duration: 420,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.spring(logoScale, {
+        toValue: 1,
+        friction: 5,
+        tension: 65,
+        useNativeDriver: true,
+      }),
+      // 2. Textos e selos entram logo em seguida subindo suave
+      Animated.sequence([
+        Animated.delay(180),
+        Animated.parallel([
+          Animated.timing(contentOpacity, {
+            toValue: 1,
+            duration: 450,
+            easing: Easing.out(Easing.cubic),
+            useNativeDriver: true,
+          }),
+          Animated.timing(contentTranslateY, {
+            toValue: 0,
+            duration: 450,
+            easing: Easing.out(Easing.cubic),
+            useNativeDriver: true,
+          }),
+        ]),
+      ]),
+    ]);
+
+    // 3. Flutuação leve e contínua no mascote depois de entrar
+    const floatLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(mascotFloat, {
+          toValue: -5,
+          duration: 700,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+        Animated.timing(mascotFloat, {
+          toValue: 0,
+          duration: 700,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    entrance.start(() => {
+      floatLoop.start();
+    });
+
+    return () => {
+      entrance.stop();
+      floatLoop.stop();
+    };
+  }, [logoOpacity, logoScale, contentOpacity, contentTranslateY, mascotFloat]);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.tomate} />
 
       <View style={styles.centerContent}>
         {/* Pílula da edição */}
-        <View style={styles.editionPill}>
+        <Animated.View
+          style={[
+            styles.editionPill,
+            {
+              opacity: contentOpacity,
+              transform: [{ translateY: contentTranslateY }],
+            },
+          ]}
+        >
           <View style={styles.yellowDot} />
           <Text style={styles.editionText}>12ª edição solidária • 2026</Text>
-        </View>
+        </Animated.View>
 
-        {/* Círculo do mascote / ícone principal */}
-        <View style={styles.logoOuterRing}>
+        {/* Círculo do mascote com pop-in elástico */}
+        <Animated.View
+          style={[
+            styles.logoOuterRing,
+            {
+              opacity: logoOpacity,
+              transform: [{ scale: logoScale }],
+            },
+          ]}
+        >
           <View style={styles.logoInnerCircle}>
-            <Image source={MASCOTE_IMG} style={styles.mascotImg} resizeMode="contain" />
+            <Animated.Image
+              source={MASCOTE_IMG}
+              style={[
+                styles.mascotImg,
+                { transform: [{ translateY: mascotFloat }] },
+              ]}
+              resizeMode="contain"
+            />
           </View>
-        </View>
+        </Animated.View>
 
-        {/* Marca Paelito */}
-        <Text style={styles.brandTitle}>Paelito</Text>
-        <Text style={styles.brandTagline}>
-          Paella feita para compartilhar{'\n'}Sabor que transforma vidas!
-        </Text>
+        {/* Marca Paelito + Selo ABADEUS */}
+        <Animated.View
+          style={[
+            styles.textBlock,
+            {
+              opacity: contentOpacity,
+              transform: [{ translateY: contentTranslateY }],
+            },
+          ]}
+        >
+          <Text style={styles.brandTitle}>Paelito</Text>
+          <Text style={styles.brandTagline}>
+            Paella feita para compartilhar{'\n'}Sabor que transforma vidas!
+          </Text>
 
-        {/* Selo ABADEUS */}
-        <View style={styles.abadeusBadge}>
-          <Ionicons name="heart" size={14} color={COLORS.tomate} />
-          <Text style={styles.abadeusBadgeText}>100% beneficente • ABADEUS Criciúma/SC</Text>
-        </View>
+          <View style={styles.abadeusBadge}>
+            <Ionicons name="heart" size={14} color={COLORS.tomate} />
+            <Text style={styles.abadeusBadgeText}>
+              100% beneficente • ABADEUS Criciúma/SC
+            </Text>
+          </View>
+        </Animated.View>
       </View>
 
       {/* Rodapé de carregamento */}
-      <View style={styles.footer}>
+      <Animated.View style={[styles.footer, { opacity: contentOpacity }]}>
         <ActivityIndicator size="small" color={COLORS.acafrao} />
         <Text style={styles.loadingText}>Aquecendo os tachos solidários...</Text>
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -107,6 +219,9 @@ const styles = StyleSheet.create({
   mascotImg: {
     width: 82,
     height: 82,
+  },
+  textBlock: {
+    alignItems: 'center',
   },
   brandTitle: {
     fontSize: 46,

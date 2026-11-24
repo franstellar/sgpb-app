@@ -38,7 +38,7 @@ export default function App() {
     initLocalDatabase();
     const timer = setTimeout(() => {
       setScreen('AUTH');
-    }, 2000);
+    }, 2500);
     return () => clearTimeout(timer);
   }, []);
 
