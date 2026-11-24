@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function PendingOrderCard({ order, onSimulatePay }) {
   const handleCopyPix = () => {
@@ -47,7 +48,7 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
 
         {order.items?.map((item, idx) => (
           <View key={idx} style={styles.itemBox}>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, marginRight: 8 }}>
               <Text style={styles.itemTitle}>
                 {item.quantity}x {item.name}
               </Text>
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   pendingBannerText: {
     color: '#4A3000',
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   body: {
     padding: 16,
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   },
   metaLabel: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.cinzaTexto,
   },
   idRow: {
@@ -119,18 +120,21 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   orderIdText: {
-    fontSize: 17,
-    fontWeight: '900',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 23,
   },
   timeText: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
   },
   totalPendingText: {
-    fontSize: 17,
-    fontWeight: '900',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: '#B87D14',
+    lineHeight: 23,
     marginTop: 2,
   },
   itemBox: {
@@ -144,17 +148,18 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   itemSub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
   },
   itemPrice: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   noticeRow: {
@@ -169,6 +174,7 @@ const styles = StyleSheet.create({
   noticeText: {
     flex: 1,
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: '#7A4F08',
     lineHeight: 15,
   },
@@ -184,6 +190,6 @@ const styles = StyleSheet.create({
   copyPixBtnText: {
     color: COLORS.branco,
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
 });

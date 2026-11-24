@@ -2,12 +2,16 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function ProductCard({ item, onAdd }) {
   return (
     <View style={styles.productCard}>
       <View style={styles.productImageContainer}>
-        <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} style={styles.productImage} />
+        <Image
+          source={typeof item.image === 'string' ? { uri: item.image } : item.image}
+          style={styles.productImage}
+        />
 
         {item.topLeftBadge && (
           <View style={[styles.badgeTopLeft, { backgroundColor: item.topLeftBadge.bg }]}>
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 14,
   },
-  badgeText: { fontSize: 10, fontWeight: '800' },
+  badgeText: { fontSize: 10, fontFamily: FONTS.bodyBold },
   productBody: { padding: 14 },
   titlePriceRow: {
     flexDirection: 'row',
@@ -101,17 +105,35 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 6,
   },
-  productName: { fontSize: 15, fontWeight: '800', color: COLORS.preto, flex: 1, marginRight: 8 },
-  productPrice: { fontSize: 15, fontWeight: '900', color: COLORS.tomate },
-  productDesc: { fontSize: 12, color: COLORS.cinzaTexto, lineHeight: 17, marginBottom: 14 },
+  productName: {
+    fontSize: 16,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.preto,
+    lineHeight: 21,
+    flex: 1,
+    marginRight: 8,
+  },
+  productPrice: {
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.tomate,
+    lineHeight: 21,
+  },
+  productDesc: {
+    fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    lineHeight: 17,
+    marginBottom: 14,
+  },
   footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   perksRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  perkText: { fontSize: 11, color: COLORS.cinzaTexto, fontWeight: '600' },
+  perkText: { fontSize: 11, color: COLORS.cinzaTexto, fontFamily: FONTS.bodyMedium },
   addBtn: {
     backgroundColor: COLORS.tomate,
     paddingHorizontal: 16,
     paddingVertical: 9,
     borderRadius: 20,
   },
-  addBtnText: { color: COLORS.branco, fontSize: 12, fontWeight: '700' },
+  addBtnText: { color: COLORS.branco, fontSize: 12, fontFamily: FONTS.bodyBold },
 });

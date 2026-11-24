@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function AdminOrderCard({
   order,
@@ -102,7 +103,7 @@ export default function AdminOrderCard({
           <Text
             style={[
               styles.timeText,
-              order.status === 'PENDING_PIX' && { color: COLORS.tomate, fontWeight: '800' },
+              order.status === 'PENDING_PIX' && styles.timeTextUrgent,
             ]}
           >
             {order.timeLabel}
@@ -175,7 +176,10 @@ export default function AdminOrderCard({
       {order.status === 'DELIVERED_DRIVE' && (
         <View style={styles.auditFooter}>
           <View>
-            <Text style={styles.validatorText}>✅ {order.validatedBy}</Text>
+            <View style={styles.validatorRow}>
+              <Ionicons name="checkmark-circle" size={14} color="#2E7D32" />
+              <Text style={styles.validatorText}>{order.validatedBy}</Text>
+            </View>
             <Text style={styles.pixIdText}>{order.pixId}</Text>
           </View>
           <TouchableOpacity
@@ -216,7 +220,10 @@ export default function AdminOrderCard({
 
       {order.status === 'DELIVERED_SALON' && (
         <View style={styles.auditFooter}>
-          <Text style={styles.validatorText}>✅ {order.validatedBy}</Text>
+          <View style={styles.validatorRow}>
+            <Ionicons name="checkmark-circle" size={14} color="#2E7D32" />
+            <Text style={styles.validatorText}>{order.validatedBy}</Text>
+          </View>
           <TouchableOpacity onPress={handleMoreOptions}>
             <Text style={styles.detailsLinkText}>Detalhes {'>'}</Text>
           </TouchableOpacity>
@@ -250,9 +257,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   orderCode: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 22,
   },
   statusBadge: {
     paddingHorizontal: 8,
@@ -261,18 +269,23 @@ const styles = StyleSheet.create({
   },
   statusBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   amountText: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
+    lineHeight: 22,
   },
   timeText: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
     marginTop: 2,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
+  },
+  timeTextUrgent: {
+    color: COLORS.tomate,
+    fontFamily: FONTS.bodyBold,
   },
   customerRow: {
     flexDirection: 'row',
@@ -282,7 +295,7 @@ const styles = StyleSheet.create({
   },
   customerName: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   dotSeparator: {
@@ -292,7 +305,7 @@ const styles = StyleSheet.create({
   customerPhone: {
     fontSize: 12,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   itemsBox: {
     backgroundColor: COLORS.creme,
@@ -308,12 +321,12 @@ const styles = StyleSheet.create({
   itemsSummaryText: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.preto,
   },
   unitPriceNote: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
     marginLeft: 8,
   },
@@ -334,7 +347,7 @@ const styles = StyleSheet.create({
   },
   infoTagText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.mediterraneo,
   },
   extraDonationTag: {
@@ -348,7 +361,7 @@ const styles = StyleSheet.create({
   },
   extraDonationText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   actionsFooter: {
@@ -369,7 +382,7 @@ const styles = StyleSheet.create({
   },
   secondaryBtnText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   primaryDeliverBtn: {
@@ -385,7 +398,7 @@ const styles = StyleSheet.create({
   primaryDeliverBtnText: {
     color: COLORS.branco,
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   moreIconBtn: {
     width: 34,
@@ -403,13 +416,19 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#F2E4C9',
   },
+  validatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
   validatorText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: '#2E7D32',
   },
   pixIdText: {
     fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
   },
@@ -424,7 +443,7 @@ const styles = StyleSheet.create({
   },
   receiptLinkText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
   whatsappRemindBtn: {
@@ -441,7 +460,7 @@ const styles = StyleSheet.create({
   },
   whatsappRemindText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   cancelBtn: {
@@ -452,12 +471,12 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   detailsLinkText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
 });

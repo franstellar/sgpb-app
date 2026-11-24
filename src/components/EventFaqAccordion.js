@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 const FAQ_ITEMS = [
   {
@@ -125,15 +126,16 @@ export default function EventFaqAccordion({ onOrderNow }) {
 const styles = StyleSheet.create({
   overline: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
     letterSpacing: 0.6,
     marginTop: 8,
   },
   sectionTitle: {
-    fontSize: 19,
-    fontWeight: '900',
+    fontSize: 21,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 27,
     marginBottom: 12,
     marginTop: 2,
   },
@@ -159,13 +161,14 @@ const styles = StyleSheet.create({
   },
   faqQuestion: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     flex: 1,
     marginRight: 8,
   },
   faqAnswer: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     lineHeight: 18,
     marginTop: 10,
@@ -182,15 +185,16 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   ctaTitle: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 20,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.branco,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 26,
     marginBottom: 8,
   },
   ctaSubtitle: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: '#FFE4E1',
     textAlign: 'center',
     lineHeight: 18,
@@ -209,14 +213,14 @@ const styles = StyleSheet.create({
   },
   ctaButtonText: {
     fontSize: 14,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   ctaFootNote: {
     fontSize: 10,
     color: '#FFE4E1',
     marginTop: 10,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   transparencyCard: {
     backgroundColor: COLORS.branco,
@@ -232,12 +236,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   transparencyTitle: {
-    fontSize: 15,
-    fontWeight: '800',
+    fontSize: 16,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    flex: 1,
   },
   transparencyDesc: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     lineHeight: 18,
     marginBottom: 14,
@@ -256,7 +262,7 @@ const styles = StyleSheet.create({
   },
   contactText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.preto,
   },
   whatsTeamBtn: {
@@ -271,6 +277,6 @@ const styles = StyleSheet.create({
   whatsTeamBtnText: {
     color: COLORS.branco,
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
 });

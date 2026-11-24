@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, loading }) {
   const [secondsLeft, setSecondsLeft] = useState(14 * 60 + 59); // 14:59
@@ -51,8 +52,8 @@ export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, lo
       </View>
 
       <Text style={styles.instructions}>
-        Abra o app do seu banco, escolha <Text style={{ fontWeight: '700' }}>Pagar via Pix</Text> e
-        aponte a câmera para o QR Code acima
+        Abra o app do seu banco, escolha <Text style={styles.instructionsBold}>Pagar via Pix</Text>{' '}
+        e aponte a câmera para o QR Code acima
       </Text>
 
       {/* Caixa do Pix copia e cola */}
@@ -117,10 +118,11 @@ const styles = StyleSheet.create({
   },
   timerText: {
     fontSize: 12,
+    fontFamily: FONTS.bodyMedium,
     color: '#8B5E08',
   },
   timerBold: {
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   qrOuterFrame: {
@@ -156,10 +158,15 @@ const styles = StyleSheet.create({
   },
   instructions: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     textAlign: 'center',
     lineHeight: 17,
     marginBottom: 12,
+  },
+  instructionsBold: {
+    fontFamily: FONTS.bodyBold,
+    color: COLORS.preto,
   },
   copyPasteBox: {
     backgroundColor: COLORS.creme,
@@ -189,7 +196,7 @@ const styles = StyleSheet.create({
   copyBtnText: {
     color: COLORS.tomate,
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   autoNoticeRow: {
     flexDirection: 'row',
@@ -203,6 +210,7 @@ const styles = StyleSheet.create({
   autoNoticeText: {
     flex: 1,
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.mediterraneo,
     lineHeight: 15,
   },
@@ -219,7 +227,7 @@ const styles = StyleSheet.create({
   confirmBtnText: {
     color: COLORS.branco,
     fontSize: 15,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   secureRow: {
     flexDirection: 'row',
@@ -231,6 +239,6 @@ const styles = StyleSheet.create({
   secureText: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
 });

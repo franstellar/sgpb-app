@@ -1,12 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function CatalogGridItem({ item, quantity = 0, onIncrement, onDecrement }) {
   return (
     <View style={[styles.card, quantity > 0 && styles.cardSelected]}>
       <View style={styles.imageWrap}>
-        <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} style={styles.image} />
+        <Image
+          source={typeof item.image === 'string' ? { uri: item.image } : item.image}
+          style={styles.image}
+        />
 
         {item.badge && (
           <View style={[styles.badge, { backgroundColor: item.badge.bg }]}>
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   weightBadge: {
     position: 'absolute',
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
   },
   weightBadgeText: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   body: {
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     lineHeight: 16,
     minHeight: 32,
@@ -123,6 +127,7 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     lineHeight: 14,
     marginBottom: 10,
@@ -134,8 +139,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    fontSize: 13,
-    fontWeight: '900',
+    fontSize: 15,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
   },
   stepper: {
@@ -160,12 +165,12 @@ const styles = StyleSheet.create({
   },
   stepBtnText: {
     fontSize: 14,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   qtyText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     minWidth: 12,
     textAlign: 'center',
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
   },
   stepBtnPlusText: {
     fontSize: 14,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.branco,
   },
 });

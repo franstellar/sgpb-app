@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function PanOperationCard({
   pan,
@@ -26,7 +27,12 @@ export default function PanOperationCard({
         </View>
       </View>
 
-      {pan.chefInfo && <Text style={styles.chefText}>👨‍🍳 {pan.chefInfo}</Text>}
+      {pan.chefInfo && (
+        <View style={styles.metaIconRow}>
+          <Ionicons name="people-outline" size={13} color={COLORS.cinzaTexto} />
+          <Text style={styles.chefText}>{pan.chefInfo}</Text>
+        </View>
+      )}
 
       {/* Tacho servindo agora com controle de porções */}
       {pan.type === 'SERVING' && (
@@ -61,7 +67,10 @@ export default function PanOperationCard({
       {/* Tacho em apuração do caldo */}
       {pan.type === 'COOKING' && (
         <View>
-          <Text style={styles.estimateText}>⏱️ {pan.estimateText}</Text>
+          <View style={styles.metaIconRow}>
+            <Feather name="clock" size={12} color={COLORS.cinzaTexto} />
+            <Text style={styles.estimateText}>{pan.estimateText}</Text>
+          </View>
           <View style={styles.progressBg}>
             <View
               style={[
@@ -90,7 +99,10 @@ export default function PanOperationCard({
       {/* Tacho reserva programado */}
       {pan.type === 'SCHEDULED' && (
         <View>
-          <Text style={styles.estimateText}>📅 {pan.scheduleNote}</Text>
+          <View style={styles.metaIconRow}>
+            <Feather name="calendar" size={12} color={COLORS.cinzaTexto} />
+            <Text style={styles.estimateText}>{pan.scheduleNote}</Text>
+          </View>
           <TouchableOpacity style={styles.startPrepBtn} onPress={onStartPrep}>
             <Ionicons name="play" size={15} color={COLORS.mediterraneo} />
             <Text style={styles.startPrepBtnText}>Iniciar preparo ({pan.code})</Text>
@@ -122,14 +134,15 @@ const styles = StyleSheet.create({
   },
   panCode: {
     fontSize: 11,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
     textTransform: 'uppercase',
   },
   panDishName: {
-    fontSize: 15,
-    fontWeight: '900',
+    fontSize: 16,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 21,
     marginTop: 1,
   },
   statusBadge: {
@@ -139,13 +152,19 @@ const styles = StyleSheet.create({
   },
   statusBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
+  },
+  metaIconRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 9,
   },
   chefText: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
-    marginBottom: 10,
+    fontFamily: FONTS.bodyMedium,
+    flex: 1,
   },
   servingBox: {
     backgroundColor: COLORS.creme,
@@ -162,12 +181,13 @@ const styles = StyleSheet.create({
   metricSmallLabel: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
   },
   metricBoldValue: {
-    fontSize: 15,
-    fontWeight: '900',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 22,
     marginTop: 2,
   },
   portionControls: {
@@ -186,7 +206,7 @@ const styles = StyleSheet.create({
   },
   stepBtnText: {
     fontSize: 12,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   portionMainBtn: {
@@ -200,13 +220,13 @@ const styles = StyleSheet.create({
   portionMainBtnText: {
     color: COLORS.branco,
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   estimateText: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontFamily: FONTS.bodyMedium,
+    flex: 1,
   },
   progressBg: {
     height: 7,
@@ -229,7 +249,7 @@ const styles = StyleSheet.create({
   },
   readyActionBtnText: {
     fontSize: 12,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   restingRow: {
@@ -243,7 +263,7 @@ const styles = StyleSheet.create({
   },
   restingMeta: {
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
   },
   availablePill: {
@@ -254,7 +274,7 @@ const styles = StyleSheet.create({
   },
   availablePillText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   startPrepBtn: {
@@ -270,7 +290,7 @@ const styles = StyleSheet.create({
   },
   startPrepBtnText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
 });

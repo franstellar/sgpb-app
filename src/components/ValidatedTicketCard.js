@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function ValidatedTicketCard({ ticket, onConfirmDelivery, onReportIssue }) {
   if (!ticket) return null;
@@ -99,13 +100,13 @@ const styles = StyleSheet.create({
   validBannerText: {
     color: COLORS.branco,
     fontSize: 11,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     letterSpacing: 0.3,
   },
   validTimeText: {
     color: '#E8F5E9',
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
   },
   body: {
     padding: 16,
@@ -117,20 +118,22 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   orderCode: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 24,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
+    lineHeight: 29,
     marginBottom: 2,
   },
   customerName: {
-    fontSize: 16,
-    fontWeight: '800',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 22,
   },
   customerPhone: {
     fontSize: 12,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
     marginTop: 2,
   },
   qrVerifiedBadge: {
@@ -151,7 +154,7 @@ const styles = StyleSheet.create({
   },
   vehicleOverline: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
     marginBottom: 4,
   },
@@ -162,12 +165,13 @@ const styles = StyleSheet.create({
   },
   vehicleText: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
+    flex: 1,
   },
   itemsSectionTitle: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.cinzaTexto,
     marginBottom: 8,
   },
@@ -194,17 +198,17 @@ const styles = StyleSheet.create({
   qtyText: {
     color: COLORS.branco,
     fontSize: 12,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
   },
   itemTitle: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   itemNote: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
     marginTop: 1,
   },
   confirmBtn: {
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
   confirmBtnText: {
     color: COLORS.branco,
     fontSize: 15,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
   },
   supportBtn: {
     flexDirection: 'row',
@@ -235,6 +239,6 @@ const styles = StyleSheet.create({
   supportBtnText: {
     color: COLORS.tomate,
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
 });

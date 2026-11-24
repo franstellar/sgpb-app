@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 const TABS = [
   { key: 'HOME', label: 'Início', icon: 'home-outline' },
@@ -34,12 +35,7 @@ export default function BottomTabBar({ activeTab, onChangeTab }) {
               size={22}
               color={isFocused ? COLORS.tomate : COLORS.cinzaTexto}
             />
-            <Text
-              style={[
-                styles.tabLabel,
-                isFocused && { color: COLORS.tomate, fontWeight: '800' },
-              ]}
-            >
+            <Text style={[styles.tabLabel, isFocused && styles.tabLabelActive]}>
               {tab.label}
             </Text>
           </TouchableOpacity>
@@ -65,5 +61,14 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   tabItem: { alignItems: 'center', justifyContent: 'center', flex: 1 },
-  tabLabel: { fontSize: 11, color: COLORS.cinzaTexto, marginTop: 3, fontWeight: '600' },
+  tabLabel: {
+    fontSize: 11,
+    color: COLORS.cinzaTexto,
+    marginTop: 3,
+    fontFamily: FONTS.bodyMedium,
+  },
+  tabLabelActive: {
+    color: COLORS.tomate,
+    fontFamily: FONTS.bodyBold,
+  },
 });

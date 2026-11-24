@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 const STEPS = [
   {
@@ -67,16 +68,23 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 8,
   },
-  stepsOverline: { fontSize: 10, fontWeight: '800', color: '#B87D14', textAlign: 'center' },
+  stepsOverline: {
+    fontSize: 10,
+    fontFamily: FONTS.bodyBold,
+    color: '#B87D14',
+    textAlign: 'center',
+  },
   stepsMainTitle: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 20,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
     textAlign: 'center',
+    lineHeight: 26,
     marginTop: 2,
   },
   stepsSubtitle: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     textAlign: 'center',
     marginBottom: 14,
@@ -97,7 +105,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  stepNumberText: { fontSize: 13, fontWeight: '800' },
-  stepTitle: { fontSize: 13, fontWeight: '800', color: COLORS.preto },
-  stepDesc: { fontSize: 11, color: COLORS.cinzaTexto, marginTop: 2, lineHeight: 15 },
+  stepNumberText: { fontSize: 14, fontFamily: FONTS.headingExtraBold },
+  stepTitle: { fontSize: 13, fontFamily: FONTS.bodyBold, color: COLORS.preto },
+  stepDesc: {
+    fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    marginTop: 2,
+    lineHeight: 15,
+  },
 });

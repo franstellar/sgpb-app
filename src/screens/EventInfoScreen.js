@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import EventFaqAccordion from '../components/EventFaqAccordion';
 
 export default function EventInfoScreen({ onOrderNow }) {
@@ -232,9 +233,8 @@ export default function EventInfoScreen({ onOrderNow }) {
       <View style={styles.chefTipBox}>
         <Ionicons name="flame" size={20} color={COLORS.tomate} />
         <Text style={styles.chefTipText}>
-          <Text style={{ fontWeight: '800', color: COLORS.preto }}>Dica: </Text>a paella é entregue
-          em embalagem térmica do Paelito, mantendo a temperatura e o sabor por até 2 horas após a
-          retirada
+          <Text style={styles.chefTipBold}>Dica: </Text>a paella é entregue em embalagem térmica do
+          Paelito, mantendo a temperatura e o sabor por até 2 horas após a retirada
         </Text>
       </View>
 
@@ -265,16 +265,17 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.tomate,
     marginRight: 6,
   },
-  editionPillText: { fontSize: 10, fontWeight: '800', color: COLORS.preto },
+  editionPillText: { fontSize: 10, fontFamily: FONTS.bodyBold, color: COLORS.preto },
   heroTitle: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 26,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
-    lineHeight: 30,
+    lineHeight: 32,
     marginBottom: 6,
   },
   heroSub: {
     fontSize: 13,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     lineHeight: 19,
     marginBottom: 16,
@@ -316,32 +317,35 @@ const styles = StyleSheet.create({
   },
   traditionBadgeText: {
     fontSize: 10,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   traditionPhotoTitle: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 20,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.branco,
+    lineHeight: 25,
   },
   traditionBody: {
     padding: 16,
   },
   overline: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
     letterSpacing: 0.6,
   },
   cardMainTitle: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 20,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 26,
     marginTop: 2,
     marginBottom: 6,
   },
   cardParagraph: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     lineHeight: 18,
     marginBottom: 12,
@@ -357,18 +361,21 @@ const styles = StyleSheet.create({
   },
   profitHighlightText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
+    flex: 1,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '900',
+    fontSize: 22,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 28,
     marginTop: 2,
     marginBottom: 6,
   },
   sectionDesc: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     lineHeight: 18,
     marginBottom: 14,
@@ -397,20 +404,22 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   impactTitle: {
-    fontSize: 14,
-    fontWeight: '800',
+    fontSize: 15,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
     marginBottom: 4,
   },
   impactBigNumber: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 24,
+    fontFamily: FONTS.headingExtraBold,
+    lineHeight: 29,
     marginBottom: 4,
   },
   impactSub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
-    lineHeight: 15,
+    lineHeight: 16,
   },
   testimonialCard: {
     backgroundColor: '#FDF1D6',
@@ -422,7 +431,7 @@ const styles = StyleSheet.create({
   },
   testimonialQuote: {
     fontSize: 12,
-    fontStyle: 'italic',
+    fontFamily: FONTS.bodyMedium,
     color: COLORS.preto,
     lineHeight: 18,
     marginVertical: 8,
@@ -443,11 +452,12 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   authorRole: {
     fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
   },
   scheduleCard: {
@@ -472,17 +482,18 @@ const styles = StyleSheet.create({
   },
   scheduleLabel: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.cinzaTexto,
   },
   scheduleMain: {
     fontSize: 14,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     marginVertical: 2,
   },
   scheduleSub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
   },
   divider: {
@@ -509,7 +520,7 @@ const styles = StyleSheet.create({
   },
   mapNeighborhoodTag: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
   mapPinCenter: {
@@ -518,7 +529,7 @@ const styles = StyleSheet.create({
   },
   mapPinLabel: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     marginTop: 2,
   },
@@ -535,11 +546,11 @@ const styles = StyleSheet.create({
   gpsBtnText: {
     color: COLORS.branco,
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   pickupChoiceTitle: {
-    fontSize: 15,
-    fontWeight: '800',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
     marginBottom: 10,
   },
@@ -565,12 +576,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   optionTitle: {
-    fontSize: 14,
-    fontWeight: '800',
+    fontSize: 15,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
   },
   optionDesc: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     lineHeight: 17,
     marginBottom: 10,
@@ -586,8 +598,9 @@ const styles = StyleSheet.create({
   },
   optionHighlightText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.mediterraneo,
+    flex: 1,
   },
   chefTipBox: {
     flexDirection: 'row',
@@ -603,7 +616,12 @@ const styles = StyleSheet.create({
   chefTipText: {
     flex: 1,
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: '#7A4F08',
     lineHeight: 16,
+  },
+  chefTipBold: {
+    fontFamily: FONTS.bodyBold,
+    color: COLORS.preto,
   },
 });

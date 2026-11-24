@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function PaidOrderTicketCard({ order }) {
   const displayName = order.customerName || 'Cliente';
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   statusBannerText: {
     color: COLORS.branco,
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     letterSpacing: 0.3,
   },
   body: {
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
   },
   metaLabel: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.cinzaTexto,
   },
   idRow: {
@@ -215,19 +216,21 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   orderIdText: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 19,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 24,
   },
   timeText: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   totalPaidText: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 19,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
+    lineHeight: 24,
     marginTop: 2,
   },
   itemsBox: {
@@ -246,7 +249,7 @@ const styles = StyleSheet.create({
   },
   itemsTitle: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   itemLine: {
@@ -265,18 +268,19 @@ const styles = StyleSheet.create({
   },
   qtyBadgeText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   itemName: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.preto,
+    marginRight: 6,
   },
   itemPrice: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   receiptFooter: {
@@ -290,7 +294,7 @@ const styles = StyleSheet.create({
   receiptMeta: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   customerRow: {
     flexDirection: 'row',
@@ -311,16 +315,17 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     color: COLORS.branco,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     fontSize: 13,
   },
   customerName: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   customerPhone: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
   },
   driveThruTag: {
@@ -331,7 +336,7 @@ const styles = StyleSheet.create({
   },
   driveThruTagText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
   voucherBox: {
@@ -353,12 +358,12 @@ const styles = StyleSheet.create({
   },
   voucherTopTagText: {
     fontSize: 9,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: '#8B5E08',
   },
   voucherOverline: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.cinzaTexto,
     marginBottom: 12,
   },
@@ -381,12 +386,13 @@ const styles = StyleSheet.create({
   },
   validationCodeText: {
     fontSize: 12,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     letterSpacing: 0.8,
   },
   voucherHint: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     textAlign: 'center',
     marginBottom: 14,
@@ -409,7 +415,7 @@ const styles = StyleSheet.create({
   whatsBtnText: {
     color: COLORS.branco,
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   pdfBtn: {
     flex: 1,
@@ -426,7 +432,7 @@ const styles = StyleSheet.create({
   pdfBtnText: {
     color: COLORS.preto,
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   eventFootInfo: {
     gap: 6,
@@ -438,13 +444,14 @@ const styles = StyleSheet.create({
   },
   footInfoBold: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   footInfoText: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
+    flex: 1,
   },
   priorityBadge: {
     flexDirection: 'row',
@@ -458,7 +465,8 @@ const styles = StyleSheet.create({
   },
   priorityBadgeText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: '#8B5E08',
+    flex: 1,
   },
 });

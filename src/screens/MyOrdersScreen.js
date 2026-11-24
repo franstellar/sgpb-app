@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import PaidOrderTicketCard from '../components/PaidOrderTicketCard';
 import PendingOrderCard from '../components/PendingOrderCard';
 
@@ -127,9 +128,12 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
 
       {/* Rodapé solidário */}
       <View style={styles.solidaryFooter}>
-        <Text style={styles.solidaryTitle}>
-          ❤️ 100% da renda revertida para as oficinas da ABADEUS
-        </Text>
+        <View style={styles.solidaryTitleRow}>
+          <Ionicons name="heart" size={14} color={COLORS.tomate} />
+          <Text style={styles.solidaryTitle}>
+            100% da renda revertida para as oficinas da ABADEUS
+          </Text>
+        </View>
         <Text style={styles.solidarySub}>
           Obrigado por apoiar esta causa solidária!
         </Text>
@@ -142,13 +146,15 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.creme },
   scrollContent: { paddingHorizontal: 16, paddingBottom: 100 },
   pageTitle: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 25,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 31,
     marginTop: 14,
   },
   pageSubtitle: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
     marginBottom: 14,
@@ -173,6 +179,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.preto,
   },
   searchBtn: {
@@ -185,10 +192,11 @@ const styles = StyleSheet.create({
   searchBtnText: {
     color: COLORS.branco,
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   tabsRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
     marginBottom: 16,
   },
@@ -206,11 +214,12 @@ const styles = StyleSheet.create({
   },
   tabPillText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.preto,
   },
   tabPillTextActive: {
     color: COLORS.branco,
+    fontFamily: FONTS.bodyBold,
   },
   helpCard: {
     backgroundColor: COLORS.branco,
@@ -231,13 +240,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   helpTitle: {
-    fontSize: 15,
-    fontWeight: '800',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
     marginBottom: 4,
   },
   helpDesc: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     textAlign: 'center',
     lineHeight: 17,
@@ -255,21 +265,28 @@ const styles = StyleSheet.create({
   },
   helpBtnText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
   solidaryFooter: {
     alignItems: 'center',
     paddingVertical: 8,
   },
+  solidaryTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
   solidaryTitle: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
     textAlign: 'center',
   },
   solidarySub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     textAlign: 'center',
     marginTop: 2,

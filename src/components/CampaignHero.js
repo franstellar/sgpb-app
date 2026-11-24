@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 export default function CampaignHero({ onOrderPress }) {
   return (
@@ -86,7 +87,10 @@ export default function CampaignHero({ onOrderPress }) {
         </View>
 
         <View style={styles.goalHeaderRow}>
-          <Text style={styles.goalLabel}>🔥 Meta de vendas da campanha</Text>
+          <View style={styles.goalLabelWrap}>
+            <Ionicons name="flame" size={14} color={COLORS.tomate} />
+            <Text style={styles.goalLabel}>Meta de vendas da campanha</Text>
+          </View>
           <Text style={styles.goalPercent}>78% alcançada</Text>
         </View>
         <View style={styles.progressBarBg}>
@@ -113,7 +117,10 @@ export default function CampaignHero({ onOrderPress }) {
         <View style={{ flex: 1 }}>
           <Text style={styles.infoTag}>Quando</Text>
           <Text style={styles.infoMainText}>Sábado, 28 de novembro de 2026</Text>
-          <Text style={styles.infoSubText}>🕒 11h30 às 14h30 (sem filas com agendamento)</Text>
+          <View style={styles.infoTimeRow}>
+            <Feather name="clock" size={12} color={COLORS.cinzaTexto} />
+            <Text style={styles.infoSubText}>11h30 às 14h30 (sem filas com agendamento)</Text>
+          </View>
         </View>
       </View>
 
@@ -156,16 +163,28 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.tomate,
     marginRight: 6,
   },
-  editionPillText: { fontSize: 10, fontWeight: '700', color: COLORS.preto },
+  editionPillText: { fontSize: 10, fontFamily: FONTS.bodySemiBold, color: COLORS.preto },
   abadeusPill: {
     backgroundColor: '#FDE8B2',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
   },
-  abadeusPillText: { fontSize: 10, fontWeight: '800', color: '#8B5E08' },
-  heroTitle: { fontSize: 28, fontWeight: '900', color: COLORS.tomate, marginBottom: 6 },
-  heroSubtitle: { fontSize: 13, color: COLORS.cinzaTexto, lineHeight: 19, marginBottom: 14 },
+  abadeusPillText: { fontSize: 10, fontFamily: FONTS.bodyBold, color: '#8B5E08' },
+  heroTitle: {
+    fontSize: 30,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.tomate,
+    lineHeight: 36,
+    marginBottom: 4,
+  },
+  heroSubtitle: {
+    fontSize: 13,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    lineHeight: 19,
+    marginBottom: 14,
+  },
   heroCard: {
     backgroundColor: COLORS.branco,
     borderRadius: 18,
@@ -177,8 +196,19 @@ const styles = StyleSheet.create({
   heroImage: { width: '100%', height: '100%' },
   heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.48)' },
   heroImageTextWrap: { position: 'absolute', bottom: 12, left: 12, right: 110 },
-  heroRecipeTag: { fontSize: 10, fontWeight: '800', color: COLORS.acafrao, letterSpacing: 0.4 },
-  heroDishTitle: { fontSize: 16, fontWeight: '800', color: COLORS.branco, lineHeight: 20, marginTop: 2 },
+  heroRecipeTag: {
+    fontSize: 10,
+    fontFamily: FONTS.bodyBold,
+    color: COLORS.acafrao,
+    letterSpacing: 0.4,
+  },
+  heroDishTitle: {
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.branco,
+    lineHeight: 22,
+    marginTop: 2,
+  },
   beneficenteBadge: {
     position: 'absolute',
     bottom: 12,
@@ -189,16 +219,30 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
-  beneficenteBadgeTitle: { color: COLORS.branco, fontWeight: '900', fontSize: 13 },
-  beneficenteBadgeSub: { color: COLORS.branco, fontSize: 10, fontWeight: '600' },
+  beneficenteBadgeTitle: {
+    color: COLORS.branco,
+    fontFamily: FONTS.headingExtraBold,
+    fontSize: 15,
+    lineHeight: 18,
+  },
+  beneficenteBadgeSub: {
+    color: COLORS.branco,
+    fontSize: 10,
+    fontFamily: FONTS.bodyMedium,
+  },
   heroCardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 14,
   },
-  startingAtLabel: { fontSize: 11, color: COLORS.cinzaTexto },
-  startingAtPrice: { fontSize: 20, fontWeight: '900', color: COLORS.tomate },
+  startingAtLabel: { fontSize: 11, fontFamily: FONTS.bodyMedium, color: COLORS.cinzaTexto },
+  startingAtPrice: {
+    fontSize: 22,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.tomate,
+    lineHeight: 27,
+  },
   heroCtaButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -208,7 +252,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     gap: 6,
   },
-  heroCtaText: { color: COLORS.branco, fontWeight: '700', fontSize: 13 },
+  heroCtaText: { color: COLORS.branco, fontFamily: FONTS.bodyBold, fontSize: 13 },
   causeCard: {
     backgroundColor: '#FDF1D6',
     borderRadius: 18,
@@ -227,8 +271,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   causeTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
-  causeTitle: { fontSize: 15, fontWeight: '800', color: COLORS.preto },
-  causeDescription: { fontSize: 12, color: COLORS.cinzaTexto, lineHeight: 17 },
+  causeTitle: {
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.preto,
+    lineHeight: 22,
+  },
+  causeDescription: {
+    fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    lineHeight: 17,
+  },
   metricsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 },
   metricBox: {
     width: '31%',
@@ -237,11 +291,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
   },
-  metricValue: { fontSize: 16, fontWeight: '900' },
-  metricLabel: { fontSize: 10, color: COLORS.cinzaTexto, marginTop: 2 },
-  goalHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  goalLabel: { fontSize: 11, fontWeight: '700', color: COLORS.preto },
-  goalPercent: { fontSize: 11, fontWeight: '800', color: COLORS.tomate },
+  metricValue: { fontSize: 18, fontFamily: FONTS.headingExtraBold, lineHeight: 23 },
+  metricLabel: {
+    fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    marginTop: 2,
+  },
+  goalHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  goalLabelWrap: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  goalLabel: { fontSize: 11, fontFamily: FONTS.bodyBold, color: COLORS.preto },
+  goalPercent: { fontSize: 11, fontFamily: FONTS.bodyBold, color: COLORS.tomate },
   progressBarBg: {
     height: 8,
     backgroundColor: '#EBD9B4',
@@ -251,6 +316,7 @@ const styles = StyleSheet.create({
   progressBarFill: { height: '100%', backgroundColor: COLORS.tomate },
   goalRemainingText: {
     fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     textAlign: 'right',
     marginTop: 4,
@@ -262,14 +328,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitleWithIcon: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  sectionTitle: { fontSize: 18, fontWeight: '800', color: COLORS.preto },
+  sectionTitle: {
+    fontSize: 20,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.preto,
+    lineHeight: 26,
+  },
   driveThruBadge: {
     backgroundColor: COLORS.mediterraneo,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
   },
-  driveThruBadgeText: { color: COLORS.branco, fontSize: 10, fontWeight: '700' },
+  driveThruBadgeText: { color: COLORS.branco, fontSize: 10, fontFamily: FONTS.bodyBold },
   infoCard: {
     flexDirection: 'row',
     backgroundColor: COLORS.branco,
@@ -286,7 +357,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  infoTag: { fontSize: 10, fontWeight: '800', color: COLORS.cinzaTexto },
-  infoMainText: { fontSize: 14, fontWeight: '800', color: COLORS.preto, marginVertical: 2 },
-  infoSubText: { fontSize: 11, color: COLORS.cinzaTexto, lineHeight: 16 },
+  infoTag: { fontSize: 10, fontFamily: FONTS.bodyBold, color: COLORS.cinzaTexto },
+  infoMainText: {
+    fontSize: 14,
+    fontFamily: FONTS.bodyBold,
+    color: COLORS.preto,
+    marginVertical: 2,
+  },
+  infoTimeRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 1 },
+  infoSubText: {
+    fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    lineHeight: 16,
+    flex: 1,
+  },
 });
