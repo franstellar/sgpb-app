@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import PixPaymentBox from '../components/PixPaymentBox';
 
 export const CHECKOUT_CATALOG = [
@@ -85,12 +86,43 @@ export default function CatalogCheckoutScreen({
   onUpdateQty,
   onBack,
   onOrderCreated,
+  scrollToSummaryTrigger,
 }) {
   const [includeDonation, setIncludeDonation] = useState(true);
   const [fullName, setFullName] = useState(user?.name || 'Cliente');
   const [email, setEmail] = useState(user?.email || 'cliente@email.com');
   const [whatsapp, setWhatsapp] = useState(user?.phone || '(48) 99842-1082');
   const [loading, setLoading] = useState(false);
+
+  const scrollViewRef = useRef(null);
+  const summaryYRef = useRef(0);
+  const pendingScrollRef = useRef(false);
+
+  const scrollToSummary = () => {
+    scrollViewRef.current?.scrollTo({
+      y: Math.max(0, summaryYRef.current - 12),
+      animated: true,
+    });
+  };
+
+  useEffect(() => {
+    if (!scrollToSummaryTrigger) return;
+
+    if (summaryYRef.current > 0) {
+      const timer = setTimeout(scrollToSummary, 80);
+      return () => clearTimeout(timer);
+    }
+
+    pendingScrollRef.current = true;
+    const fallbackTimer = setTimeout(() => {
+      if (pendingScrollRef.current) {
+        pendingScrollRef.current = false;
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }
+    }, 300);
+
+    return () => clearTimeout(fallbackTimer);
+  }, [scrollToSummaryTrigger]);
 
   const getItemById = (id) => CHECKOUT_CATALOG.find((p) => p.id === id);
 
@@ -190,6 +222,7 @@ export default function CatalogCheckoutScreen({
 
   return (
     <ScrollView
+      ref={scrollViewRef}
       style={styles.container}
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
@@ -393,7 +426,16 @@ export default function CatalogCheckoutScreen({
       </View>
 
       {/* 5. Resumo do pedido */}
-      <View style={styles.summaryCard}>
+      <View
+        style={styles.summaryCard}
+        onLayout={(event) => {
+          summaryYRef.current = event.nativeEvent.layout.y;
+          if (pendingScrollRef.current) {
+            pendingScrollRef.current = false;
+            setTimeout(scrollToSummary, 50);
+          }
+        }}
+      >
         <View style={styles.summaryHeader}>
           <Text style={styles.sectionTitle}>Resumo do pedido</Text>
           <View style={styles.pavilionBadge}>
@@ -455,7 +497,10 @@ export default function CatalogCheckoutScreen({
           <Text style={styles.pickupCardTitle}>
             Centro Comunitário ABADEUS • Bairro Cristo Redentor, Criciúma/SC
           </Text>
-          <Text style={styles.pickupCardTime}>🕒 Sábado, das 11h30 às 14h30</Text>
+          <View style={styles.pickupTimeRow}>
+            <Feather name="clock" size={12} color={COLORS.cinzaTexto} />
+            <Text style={styles.pickupCardTime}>Sábado, das 11h30 às 14h30</Text>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -491,7 +536,7 @@ const styles = StyleSheet.create({
   },
   subHeaderBadgeText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.tomate,
   },
   titleRow: {
@@ -501,9 +546,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   mainTitle: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 25,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 30,
   },
   editionBadge: {
     backgroundColor: COLORS.acafrao,
@@ -513,11 +559,12 @@ const styles = StyleSheet.create({
   },
   editionBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   subtitle: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginBottom: 16,
     lineHeight: 17,
@@ -533,13 +580,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#EADBC0',
   },
   catalogSectionTitle: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
   },
   catalogSectionCount: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
   },
   groupCard: {
@@ -572,7 +619,7 @@ const styles = StyleSheet.create({
   },
   groupBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   groupHeader: {
     paddingHorizontal: 14,
@@ -580,12 +627,13 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   groupTitle: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
   },
   groupDesc: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
     lineHeight: 16,
@@ -624,7 +672,7 @@ const styles = StyleSheet.create({
   },
   optionLabel: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   weightPill: {
@@ -635,17 +683,18 @@ const styles = StyleSheet.create({
   },
   weightPillText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: '#7A5410',
   },
   optionSub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
   },
   optionPrice: {
     fontSize: 13,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
     marginRight: 10,
   },
@@ -671,12 +720,12 @@ const styles = StyleSheet.create({
   },
   stepBtnText: {
     fontSize: 15,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   qtyText: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     minWidth: 14,
     textAlign: 'center',
@@ -691,7 +740,7 @@ const styles = StyleSheet.create({
   },
   stepBtnPlusText: {
     fontSize: 15,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.branco,
   },
   donationCard: {
@@ -718,11 +767,12 @@ const styles = StyleSheet.create({
   },
   donationTitle: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   donationSub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
   },
@@ -740,7 +790,7 @@ const styles = StyleSheet.create({
   },
   donationPillText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.branco,
   },
   sectionCard: {
@@ -758,13 +808,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '800',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
   },
   inputLabel: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
     marginBottom: 4,
     marginTop: 8,
@@ -775,7 +825,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.preto,
     borderWidth: 1,
     borderColor: '#EADBC0',
@@ -804,12 +854,13 @@ const styles = StyleSheet.create({
   },
   pixMethodTitle: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     marginTop: 6,
   },
   pixMethodSub: {
     fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
     lineHeight: 14,
@@ -836,7 +887,7 @@ const styles = StyleSheet.create({
   },
   pavilionBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#8B5E08',
   },
   summaryLine: {
@@ -847,12 +898,14 @@ const styles = StyleSheet.create({
   summaryItemText: {
     fontSize: 13,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
+    flex: 1,
+    marginRight: 8,
   },
   summaryItemValue: {
     fontSize: 13,
     color: COLORS.preto,
-    fontWeight: '700',
+    fontFamily: FONTS.bodyBold,
   },
   divider: {
     height: 1,
@@ -866,7 +919,7 @@ const styles = StyleSheet.create({
   },
   totalLabel: {
     fontSize: 12,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   hundredDonationBadge: {
@@ -879,12 +932,12 @@ const styles = StyleSheet.create({
   },
   hundredDonationText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   totalValue: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 24,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
   },
   pickupLocationCard: {
@@ -907,18 +960,24 @@ const styles = StyleSheet.create({
   },
   pickupCardOverline: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   pickupCardTitle: {
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     marginVertical: 2,
+  },
+  pickupTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginTop: 2,
   },
   pickupCardTime: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodySemiBold,
   },
-}); 
+});

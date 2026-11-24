@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import ValidatedTicketCard from '../components/ValidatedTicketCard';
 
 const DEFAULT_TICKET = {
@@ -43,7 +44,7 @@ export default function AdminCheckinScreen({ user }) {
   const [deliveredCount, setDeliveredCount] = useState(84);
   const [cameraFlash, setCameraFlash] = useState(false);
 
-  const volunteerShortName = user?.name ? user.name.split(' ')[0] : 'Carlos M.';
+  const volunteerShortName = user?.name ? user.name.split(' ')[0] : 'Voluntário';
 
   const handleManualValidate = () => {
     const formatted = manualQuery.trim().toUpperCase();
@@ -87,7 +88,7 @@ export default function AdminCheckinScreen({ user }) {
           <View style={styles.stationIconBox}>
             <Ionicons name="navigate-circle-outline" size={22} color={COLORS.mediterraneo} />
           </View>
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.stationOverline}>POSTO DE ATENDIMENTO</Text>
             <Text style={styles.stationTitle}>Posto 01: Drive-Thru pista A</Text>
           </View>
@@ -170,7 +171,7 @@ export default function AdminCheckinScreen({ user }) {
         <View style={{ flex: 1 }}>
           <Text style={styles.statsTitle}>{deliveredCount} pedidos entregues</Text>
           <Text style={styles.statsSub}>
-            Pista A liderando a solidariedade hoje. Obrigado pelo seu carinho, Carlos!
+            Pista A liderando a solidariedade hoje. Obrigado pelo seu carinho, {volunteerShortName}!
           </Text>
         </View>
       </View>
@@ -185,6 +186,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 10,
     backgroundColor: COLORS.branco,
     borderRadius: 16,
     padding: 12,
@@ -193,6 +195,7 @@ const styles = StyleSheet.create({
     borderColor: '#EADBC0',
   },
   stationLeft: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -207,13 +210,13 @@ const styles = StyleSheet.create({
   },
   stationOverline: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.cinzaTexto,
     letterSpacing: 0.5,
   },
   stationTitle: {
     fontSize: 13,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     marginTop: 1,
   },
@@ -230,7 +233,7 @@ const styles = StyleSheet.create({
   },
   operatorName: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   scannerWrapper: {
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
   cameraActiveText: {
     color: COLORS.branco,
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   flashBtn: {
     width: 32,
@@ -319,7 +322,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: 'center',
     marginTop: 8,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   manualCard: {
     backgroundColor: COLORS.branco,
@@ -330,14 +333,14 @@ const styles = StyleSheet.create({
     borderColor: '#EADBC0',
   },
   manualTitle: {
-    fontSize: 13,
-    fontWeight: '800',
+    fontSize: 14,
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     marginBottom: 6,
   },
   manualLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
     marginBottom: 6,
   },
@@ -352,7 +355,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 13,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.preto,
     borderWidth: 1,
     borderColor: '#EADBC0',
@@ -369,7 +372,7 @@ const styles = StyleSheet.create({
   validateBtnText: {
     color: COLORS.branco,
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   statsFooterCard: {
     flexDirection: 'row',
@@ -390,14 +393,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   statsTitle: {
-    fontSize: 14,
-    fontWeight: '900',
+    fontSize: 15,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
   },
   statsSub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
-    lineHeight: 15,
+    lineHeight: 16,
   },
 });

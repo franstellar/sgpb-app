@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import TopBar from '../components/TopBar';
 import CampaignHero from '../components/CampaignHero';
 import ProductCard from '../components/ProductCard';
@@ -141,8 +142,19 @@ export default function BuyerScreen({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('HOME');
   const [quantities, setQuantities] = useState({ 1: 1, 10: 1 });
   const [orders, setOrders] = useState(INITIAL_ORDERS);
+  const [scrollToSummaryTrigger, setScrollToSummaryTrigger] = useState(0);
 
   const totalCartItems = Object.values(quantities).reduce((sum, q) => sum + q, 0);
+
+  const handleChangeTab = (tab) => {
+    setScrollToSummaryTrigger(0);
+    setActiveTab(tab);
+  };
+
+  const handleOpenCart = () => {
+    setActiveTab('MENU');
+    setScrollToSummaryTrigger((prev) => prev + 1);
+  };
 
   const handleUpdateQty = (productId, newQty) => {
     setQuantities((prev) => ({ ...prev, [productId]: newQty }));
@@ -153,12 +165,12 @@ export default function BuyerScreen({ user, onLogout }) {
       ...prev,
       [product.id]: (prev[product.id] || 0) + 1,
     }));
-    setActiveTab('MENU');
+    handleChangeTab('MENU');
   };
 
   const handleOrderCreated = (newOrder) => {
     setOrders((prev) => [newOrder, ...prev]);
-    setActiveTab('ORDERS');
+    handleChangeTab('ORDERS');
   };
 
   const handleSimulatePay = (orderId) => {
@@ -178,7 +190,7 @@ export default function BuyerScreen({ user, onLogout }) {
 
       <TopBar
         cartCount={totalCartItems}
-        onOpenCart={() => setActiveTab('MENU')}
+        onOpenCart={handleOpenCart}
         onLogout={onLogout}
       />
 
@@ -187,20 +199,21 @@ export default function BuyerScreen({ user, onLogout }) {
           user={user}
           quantities={quantities}
           onUpdateQty={handleUpdateQty}
-          onBack={() => setActiveTab('HOME')}
+          onBack={() => handleChangeTab('HOME')}
           onOrderCreated={handleOrderCreated}
+          scrollToSummaryTrigger={scrollToSummaryTrigger}
         />
       ) : activeTab === 'ORDERS' ? (
         <MyOrdersScreen orders={orders} onSimulatePay={handleSimulatePay} />
       ) : activeTab === 'EVENT' ? (
-        <EventInfoScreen onOrderNow={() => setActiveTab('MENU')} />
+        <EventInfoScreen onOrderNow={() => handleChangeTab('MENU')} />
       ) : (
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <CampaignHero onOrderPress={() => setActiveTab('MENU')} />
+          <CampaignHero onOrderPress={() => handleChangeTab('MENU')} />
 
           <View style={styles.menuHeaderWrap}>
             <View>
@@ -240,7 +253,7 @@ export default function BuyerScreen({ user, onLogout }) {
         </ScrollView>
       )}
 
-      <BottomTabBar activeTab={activeTab} onChangeTab={setActiveTab} />
+      <BottomTabBar activeTab={activeTab} onChangeTab={handleChangeTab} />
     </SafeAreaView>
   );
 }
@@ -256,9 +269,9 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 12,
   },
-  menuOverline: { fontSize: 10, fontWeight: '800', color: COLORS.tomate },
-  sectionTitle: { fontSize: 18, fontWeight: '800', color: COLORS.preto },
-  readyDeliveryText: { fontSize: 11, color: COLORS.cinzaTexto, fontWeight: '600' },
+  menuOverline: { fontSize: 10, fontFamily: FONTS.bodyBold, color: COLORS.tomate },
+  sectionTitle: { fontSize: 19, fontFamily: FONTS.headingExtraBold, color: COLORS.preto },
+  readyDeliveryText: { fontSize: 11, color: COLORS.cinzaTexto, fontFamily: FONTS.bodySemiBold },
   filtersScroll: { marginBottom: 14 },
   filterPill: {
     backgroundColor: COLORS.branco,
@@ -270,6 +283,6 @@ const styles = StyleSheet.create({
     borderColor: '#EADBC0',
   },
   filterPillActive: { backgroundColor: COLORS.tomate, borderColor: COLORS.tomate },
-  filterPillText: { fontSize: 12, fontWeight: '600', color: COLORS.preto },
+  filterPillText: { fontSize: 12, fontFamily: FONTS.bodySemiBold, color: COLORS.preto },
   filterPillTextActive: { color: COLORS.branco },
 });

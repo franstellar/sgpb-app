@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 
 const ADMIN_TABS = [
   { key: 'DASHBOARD', label: 'Início', icon: 'grid-outline' },
@@ -37,7 +38,7 @@ export default function AdminBottomTabBar({ activeTab, onChangeTab }) {
             <Text
               style={[
                 styles.tabLabel,
-                isFocused && { color: COLORS.tomate, fontWeight: '800' },
+                isFocused && styles.tabLabelActive,
               ]}
             >
               {tab.label}
@@ -73,6 +74,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: COLORS.cinzaTexto,
     marginTop: 3,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
+  },
+  tabLabelActive: {
+    color: COLORS.tomate,
+    fontFamily: FONTS.bodyBold,
   },
 });

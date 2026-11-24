@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import PanOperationCard from '../components/PanOperationCard';
 
 const INITIAL_PANS = [
@@ -414,9 +415,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   pageTitle: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 23,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 28,
   },
   kitchenActiveRow: {
     flexDirection: 'row',
@@ -433,7 +435,7 @@ const styles = StyleSheet.create({
   kitchenActiveText: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   refreshBtn: {
     flexDirection: 'row',
@@ -448,7 +450,7 @@ const styles = StyleSheet.create({
   },
   refreshBtnText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   capacityCard: {
@@ -465,7 +467,7 @@ const styles = StyleSheet.create({
   },
   capacityOverline: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#D0D7DE',
     letterSpacing: 0.5,
   },
@@ -478,12 +480,13 @@ const styles = StyleSheet.create({
   soldPercentText: {
     color: COLORS.branco,
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   capacityBigText: {
-    fontSize: 26,
-    fontWeight: '900',
+    fontSize: 28,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.branco,
+    lineHeight: 34,
     marginBottom: 8,
   },
   capacityBarBg: {
@@ -500,7 +503,7 @@ const styles = StyleSheet.create({
   capacitySubText: {
     fontSize: 11,
     color: COLORS.acafrao,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
   },
   lotAlertCard: {
     backgroundColor: '#FFF3D1',
@@ -517,12 +520,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   lotAlertTitle: {
-    fontSize: 14,
-    fontWeight: '900',
+    fontSize: 15,
+    fontFamily: FONTS.headingExtraBold,
     color: '#7A4F08',
   },
   lotAlertDesc: {
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: '#7A4F08',
     lineHeight: 17,
     marginBottom: 12,
@@ -540,7 +544,7 @@ const styles = StyleSheet.create({
   },
   laterBtnText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   releaseLotBtn: {
@@ -552,7 +556,7 @@ const styles = StyleSheet.create({
   },
   releaseLotBtnText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.branco,
   },
   quickControlsRow: {
@@ -578,7 +582,7 @@ const styles = StyleSheet.create({
   },
   pauseSalesText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   newItemBtn: {
@@ -593,7 +597,7 @@ const styles = StyleSheet.create({
   },
   newItemText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.branco,
   },
   sectionHeaderRow: {
@@ -604,13 +608,13 @@ const styles = StyleSheet.create({
   },
   overline: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
     letterSpacing: 0.5,
   },
   sectionTitle: {
-    fontSize: 17,
-    fontWeight: '900',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
   },
   pansCountPill: {
@@ -621,7 +625,7 @@ const styles = StyleSheet.create({
   },
   pansCountPillText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   productStockList: {
@@ -643,7 +647,7 @@ const styles = StyleSheet.create({
   },
   prodName: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     flex: 1,
     marginRight: 8,
@@ -655,12 +659,12 @@ const styles = StyleSheet.create({
   },
   prodTagText: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   prodMetricsLine: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
     marginBottom: 6,
   },
   prodProgressBg: {
@@ -680,11 +684,11 @@ const styles = StyleSheet.create({
   prodConsumptionText: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
   },
   prodRemainingText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   solidaryPill: {
     backgroundColor: '#E8F5E9',
@@ -694,7 +698,7 @@ const styles = StyleSheet.create({
   },
   solidaryPillText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   inputsGrid: {
@@ -712,18 +716,19 @@ const styles = StyleSheet.create({
     borderColor: '#EADBC0',
   },
   inputBigVal: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 20,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
     marginBottom: 2,
   },
   inputTitle: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   inputSub: {
     fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
     lineHeight: 14,

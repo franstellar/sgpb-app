@@ -1,20 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
+
+const LOGO_HORIZONTAL = require('../../assets/images/logo-horizontal.png');
+const ABADEUS_LOGO = require('../../assets/images/logo-abadeus.png');
 
 export default function AdminTopBar({ user, onLogout }) {
   return (
     <View style={styles.container}>
-      {/* Linha Superior: Marca + Badge Ao Vivo + Sair */}
+      {/* Linha Superior: Logos + Badge Ao Vivo + Sair */}
       <View style={styles.topRow}>
         <View style={styles.brandGroup}>
-          <View style={styles.logoBadge}>
-            <Text style={{ fontSize: 15 }}>🥘</Text>
-          </View>
-          <Text style={styles.brandTitle}>Paelito</Text>
+          <Image source={LOGO_HORIZONTAL} style={styles.brandLogo} resizeMode="contain" />
           <View style={styles.abadeusTag}>
-            <Text style={styles.abadeusTagText}>ABADEUS</Text>
+            <Image source={ABADEUS_LOGO} style={styles.abadeusLogo} resizeMode="contain" />
           </View>
         </View>
 
@@ -33,7 +34,7 @@ export default function AdminTopBar({ user, onLogout }) {
       {/* Linha de Saudação + Botão Relatório */}
       <View style={styles.greetingRow}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.greetingTitle}>
+          <Text style={styles.greetingTitle} numberOfLines={1}>
             Olá, {user?.name || 'Coordenação ABADEUS'}
           </Text>
           <View style={styles.subStatusRow}>
@@ -77,31 +78,23 @@ const styles = StyleSheet.create({
   brandGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
   },
-  logoBadge: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#FFE4B5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brandTitle: {
-    fontSize: 19,
-    fontWeight: '900',
-    color: COLORS.tomate,
+  brandLogo: {
+    width: 112,
+    height: 32,
   },
   abadeusTag: {
     backgroundColor: '#FDE8B2',
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  abadeusTagText: {
-    fontSize: 9,
-    fontWeight: '900',
-    color: '#8B5E08',
+  abadeusLogo: {
+    width: 56,
+    height: 15,
   },
   rightActions: {
     flexDirection: 'row',
@@ -125,7 +118,7 @@ const styles = StyleSheet.create({
   },
   liveText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   logoutBtn: {
@@ -146,20 +139,21 @@ const styles = StyleSheet.create({
   },
   greetingTitle: {
     fontSize: 20,
-    fontWeight: '900',
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 26,
   },
   subStatusRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: 8,
-    marginTop: 3,
+    marginTop: 2,
   },
   editionSub: {
     fontSize: 11,
+    fontFamily: FONTS.bodyMedium,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
   },
   activeOpWrap: {
     flexDirection: 'row',
@@ -174,7 +168,7 @@ const styles = StyleSheet.create({
   },
   activeOpText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: '#2E7D32',
   },
   reportBtn: {
@@ -190,7 +184,7 @@ const styles = StyleSheet.create({
   },
   reportBtnText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
 });

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import AdminOrderCard from '../components/AdminOrderCard';
 
 const INITIAL_ADMIN_ORDERS = [
@@ -193,14 +194,12 @@ export default function AdminOrdersScreen() {
             <Text style={styles.statSmallValue}>712</Text>
           </View>
 
-          <View style={styles.statSmallBox}>
-            <View style={styles.statSmallHeader}>
-              <Text style={styles.statSmallLabel}>Ticket médio</Text>
-              <Text style={styles.statSmallGain}>+14% vs meta</Text>
-            </View>
+         <View style={styles.statSmallBox}>
+            <Text style={styles.statSmallLabel}>Ticket médio</Text>
             <Text style={[styles.statSmallValue, { color: COLORS.mediterraneo }]}>
               R$ 68,30
             </Text>
+            <Text style={styles.statSmallGain}>+14% vs meta</Text>
           </View>
         </View>
       </View>
@@ -318,13 +317,16 @@ export default function AdminOrdersScreen() {
         {/* Pílulas dos projetos */}
         <View style={styles.projectsRow}>
           <View style={styles.projectPill}>
-            <Text style={styles.projectPillText}>🤖 Oficinas de robótica</Text>
+            <Ionicons name="hardware-chip-outline" size={12} color={COLORS.mediterraneo} />
+            <Text style={styles.projectPillText}>Oficinas de robótica</Text>
           </View>
           <View style={styles.projectPill}>
-            <Text style={styles.projectPillText}>🎻 Música juvenil</Text>
+            <Ionicons name="musical-notes-outline" size={12} color="#8B5E08" />
+            <Text style={styles.projectPillText}>Música juvenil</Text>
           </View>
           <View style={styles.projectPill}>
-            <Text style={styles.projectPillText}>❤️ Assistência às famílias</Text>
+            <Ionicons name="heart" size={12} color={COLORS.tomate} />
+            <Text style={styles.projectPillText}>Assistência às famílias</Text>
           </View>
         </View>
 
@@ -347,14 +349,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   pageTitle: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 23,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
+    lineHeight: 28,
   },
   pageSub: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   pixDirectBadge: {
     flexDirection: 'row',
@@ -367,7 +370,7 @@ const styles = StyleSheet.create({
   },
   pixDirectText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
   topStatsRow: {
@@ -387,18 +390,19 @@ const styles = StyleSheet.create({
   },
   statOverlineLight: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#FFE4E1',
   },
   statBigValueLight: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 23,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.branco,
+    lineHeight: 28,
     marginVertical: 4,
   },
   statFootLight: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.acafrao,
   },
   statSideCol: {
@@ -419,22 +423,22 @@ const styles = StyleSheet.create({
   },
   statSmallLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
   },
   statSmallDate: {
     fontSize: 9,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
   },
   statSmallGain: {
     fontSize: 9,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   statSmallValue: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
     marginTop: 2,
   },
@@ -457,7 +461,7 @@ const styles = StyleSheet.create({
   },
   csvBtnText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   liveDayPill: {
@@ -477,7 +481,7 @@ const styles = StyleSheet.create({
   },
   liveDayText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   searchWrap: {
@@ -495,6 +499,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.preto,
   },
   filtersScroll: {
@@ -514,7 +519,7 @@ const styles = StyleSheet.create({
   },
   filterPillText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   filterPillTextActive: {
@@ -534,7 +539,7 @@ const styles = StyleSheet.create({
   },
   syncStatusText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.mediterraneo,
   },
   loadMoreBtn: {
@@ -551,7 +556,7 @@ const styles = StyleSheet.create({
   },
   loadMoreText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   balanceCard: {
@@ -568,14 +573,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   balanceTitle: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 17,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
   },
   balanceSub: {
     fontSize: 11,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   auditedBadge: {
     flexDirection: 'row',
@@ -588,23 +593,31 @@ const styles = StyleSheet.create({
   },
   auditedBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   balanceLine: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    alignItems: 'flex-start',
+    gap: 12,
+    marginBottom: 8,
   },
   balanceLabel: {
+    flex: 1,
     fontSize: 12,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
+    lineHeight: 17,
   },
   balanceValue: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
+    textAlign: 'right',
+    flexShrink: 1,
+    maxWidth: '48%',
+    lineHeight: 17,
   },
   balanceDivider: {
     height: 1,
@@ -612,49 +625,32 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   balanceNetLabel: {
+    flex: 1,
     fontSize: 13,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   balanceNetValue: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
-  },
-  projectsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 10,
-    marginBottom: 12,
-  },
-  projectPill: {
-    backgroundColor: COLORS.branco,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  projectPillText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: COLORS.preto,
+    textAlign: 'right',
   },
   pixInstitutionFooter: {
     backgroundColor: COLORS.branco,
     borderRadius: 10,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 2,
   },
   pixInstitutionLabel: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
   },
   pixInstitutionKey: {
-    fontSize: 11,
-    fontWeight: '900',
+    fontSize: 12,
+    fontFamily: FONTS.bodyBold,
     color: COLORS.mediterraneo,
   },
-});  
+});

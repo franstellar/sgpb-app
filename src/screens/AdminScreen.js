@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { FONTS } from '../theme/fonts';
 import AdminTopBar from '../components/AdminTopBar';
 import AdminBottomTabBar from '../components/AdminBottomTabBar';
 import AdminCheckinScreen from './AdminCheckinScreen';
@@ -198,7 +199,10 @@ export default function AdminScreen({ user, onLogout }) {
               <Text style={styles.flowNumber}>520</Text>
               <Text style={styles.flowUnitLabel}>porções entregues</Text>
               <View style={styles.flowDivider} />
-              <Text style={styles.flowMetricBold}>⏱️ 1 min 45s / carro</Text>
+              <View style={styles.flowMetricRow}>
+                <Feather name="clock" size={12} color={COLORS.tomate} />
+                <Text style={styles.flowMetricBold}>1 min 45s / carro</Text>
+              </View>
               <Text style={styles.flowStatusNote}>Fila rápida fluindo</Text>
             </View>
 
@@ -212,7 +216,10 @@ export default function AdminScreen({ user, onLogout }) {
               <Text style={[styles.flowNumber, { color: COLORS.mediterraneo }]}>222</Text>
               <Text style={styles.flowUnitLabel}>porções servidas</Text>
               <View style={styles.flowDivider} />
-              <Text style={styles.flowMetricBold}>🍽️ Mesas cheias</Text>
+              <View style={styles.flowMetricRow}>
+                <Ionicons name="restaurant-outline" size={12} color={COLORS.mediterraneo} />
+                <Text style={styles.flowMetricBold}>Mesas cheias</Text>
+              </View>
               <Text style={styles.flowStatusNote}>Confraternização ativa</Text>
             </View>
           </View>
@@ -328,7 +335,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: COLORS.branco,
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   secondaryQuickAction: {
     flexDirection: 'row',
@@ -343,7 +350,7 @@ const styles = StyleSheet.create({
   secondaryQuickActionText: {
     color: COLORS.preto,
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   revenueCard: {
     backgroundColor: COLORS.mediterraneo,
@@ -360,7 +367,7 @@ const styles = StyleSheet.create({
   },
   revenueOverline: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#CFE6F2',
     letterSpacing: 0.6,
   },
@@ -372,13 +379,14 @@ const styles = StyleSheet.create({
   },
   goalBeatText: {
     fontSize: 10,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   revenueAmount: {
-    fontSize: 30,
-    fontWeight: '900',
+    fontSize: 32,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.branco,
+    lineHeight: 38,
     marginBottom: 10,
   },
   revenueProgressBg: {
@@ -399,12 +407,12 @@ const styles = StyleSheet.create({
   revenueMetaText: {
     fontSize: 11,
     color: '#E0F0F8',
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   revenueExtraText: {
     fontSize: 11,
     color: COLORS.acafrao,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   kpiRow: {
     flexDirection: 'row',
@@ -427,19 +435,20 @@ const styles = StyleSheet.create({
   },
   kpiTitle: {
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
   },
   kpiBigValue: {
-    fontSize: 20,
-    fontWeight: '900',
+    fontSize: 21,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
+    lineHeight: 26,
     marginBottom: 2,
   },
   kpiSubText: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   avgTicketCard: {
     flexDirection: 'row',
@@ -468,12 +477,12 @@ const styles = StyleSheet.create({
   },
   avgTicketLabel: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   avgTicketValue: {
     fontSize: 13,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   sectionHeaderRow: {
@@ -484,14 +493,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 18,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.preto,
     marginBottom: 8,
   },
   seeAllLink: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   flowCard: {
@@ -510,7 +519,7 @@ const styles = StyleSheet.create({
   },
   flowChannelTitle: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   highAdhesionBadge: {
@@ -521,7 +530,7 @@ const styles = StyleSheet.create({
   },
   highAdhesionText: {
     fontSize: 8,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#2E7D32',
   },
   liveSmallBadge: {
@@ -532,31 +541,38 @@ const styles = StyleSheet.create({
   },
   liveSmallText: {
     fontSize: 8,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: '#B87D14',
   },
   flowNumber: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 26,
+    fontFamily: FONTS.headingExtraBold,
     color: COLORS.tomate,
+    lineHeight: 30,
   },
   flowUnitLabel: {
     fontSize: 10,
     color: COLORS.cinzaTexto,
-    fontWeight: '600',
+    fontFamily: FONTS.bodyMedium,
   },
   flowDivider: {
     height: 1,
     backgroundColor: '#F2E4C9',
     marginVertical: 8,
   },
+  flowMetricRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
   flowMetricBold: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   flowStatusNote: {
     fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
   },
@@ -568,7 +584,7 @@ const styles = StyleSheet.create({
   },
   pansCountText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   pansContainer: {
@@ -590,7 +606,7 @@ const styles = StyleSheet.create({
   },
   panTitle: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     flex: 1,
     marginRight: 8,
@@ -602,10 +618,11 @@ const styles = StyleSheet.create({
   },
   panBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   panDesc: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginBottom: 8,
   },
@@ -644,7 +661,7 @@ const styles = StyleSheet.create({
   },
   seqText: {
     fontSize: 12,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.tomate,
   },
   recentTopLine: {
@@ -654,16 +671,17 @@ const styles = StyleSheet.create({
   },
   recentName: {
     fontSize: 13,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   recentCode: {
     fontSize: 11,
-    fontWeight: '800',
+    fontFamily: FONTS.bodySemiBold,
     color: COLORS.cinzaTexto,
   },
   recentSummary: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
   },
@@ -674,7 +692,7 @@ const styles = StyleSheet.create({
   },
   channelPillText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
   },
   footerBanner: {
     flexDirection: 'row',
@@ -688,13 +706,14 @@ const styles = StyleSheet.create({
   },
   footerBannerTitle: {
     fontSize: 12,
-    fontWeight: '800',
+    fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
   },
   footerBannerDesc: {
     fontSize: 11,
+    fontFamily: FONTS.bodyRegular,
     color: COLORS.cinzaTexto,
     marginTop: 2,
-    lineHeight: 15,
+    lineHeight: 16,
   },
 });
