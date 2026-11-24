@@ -14,7 +14,8 @@
         "backgroundColor": "#FFF8E7",
         "foregroundImage": "./assets/images/icon-paelito.png"
       },
-      "package": "com.franboisesteam.sgpbapp"
+      "package": "com.franboisesteam.sgpbapp",
+      "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
       "favicon": "./assets/images/icon-paelito.png"

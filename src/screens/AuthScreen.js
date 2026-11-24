@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   StatusBar,
   Alert,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Feather } from '@expo/vector-icons';
@@ -23,12 +25,12 @@ const DEMO_USERS = {
     id: 4,
     name: 'Cliente',
     email: 'cliente@email.com',
-    phone: '(48) 99842-1082',
+    phone: '(48) 99999-9999',
     role: 'BUYER',
   },
   ADMIN: {
     id: 1,
-    name: 'Coordenação ABADEUS',
+    name: 'Coordenação',
     email: 'admin@abadeus.com.br',
     phone: '(48) 99999-0000',
     role: 'ADMIN',
@@ -63,6 +65,17 @@ export default function AuthScreen({ onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
 
+  const scrollViewRef = useRef(null);
+  const buyerEmailRef = useRef(null);
+  const buyerPhoneRef = useRef(null);
+  const staffPasswordRef = useRef(null);
+
+  const scrollToForm = () => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 120);
+  };
+
   const handleBuyerSubmit = () => {
     if (!buyerName.trim() || !buyerEmail.trim()) {
       Alert.alert('Campos obrigatórios', 'Preencha seu nome e e-mail para continuar');
@@ -73,7 +86,7 @@ export default function AuthScreen({ onLoginSuccess }) {
       id: 4,
       name: buyerName.trim(),
       email: buyerEmail.trim(),
-      phone: buyerPhone.trim() || '(48) 99842-1082',
+      phone: buyerPhone.trim() || '(48) 99999-9999',
       role: 'BUYER',
     });
   };
@@ -128,195 +141,224 @@ export default function AuthScreen({ onLoginSuccess }) {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.creme} />
 
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* 1. Cabeçalho da marca Paelito */}
-        <View style={styles.headerCenter}>
-          <View style={styles.topBadgesRow}>
-            <View style={styles.editionPill}>
-              <View style={styles.redDot} />
-              <Text style={styles.editionPillText}>12ª edição solidária</Text>
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* 1. Cabeçalho da marca Paelito */}
+          <View style={styles.headerCenter}>
+            <View style={styles.topBadgesRow}>
+              <View style={styles.editionPill}>
+                <View style={styles.redDot} />
+                <Text style={styles.editionPillText}>12ª edição solidária</Text>
+              </View>
+              <View style={styles.abadeusPill}>
+                <Image source={ABADEUS_LOGO} style={styles.abadeusLogo} resizeMode="contain" />
+              </View>
             </View>
-            <View style={styles.abadeusPill}>
-              <Image source={ABADEUS_LOGO} style={styles.abadeusLogo} resizeMode="contain" />
-            </View>
+
+            <Image source={LOGO_PAELITO} style={styles.loginLogo} resizeMode="contain" />
+
+            <Text style={styles.heroSubtitle}>
+              Mais que uma paella, uma boa causa para aquecer corações!
+            </Text>
           </View>
 
-          <Image source={LOGO_PAELITO} style={styles.loginLogo} resizeMode="contain" />
+          {/* 2. Seletor de perfil: apoiador vs equipe ABADEUS */}
+          <View style={styles.modeSwitchContainer}>
+            <TouchableOpacity
+              style={[styles.modeTab, mode === 'BUYER' && styles.modeTabActive]}
+              onPress={() => setMode('BUYER')}
+            >
+              <Ionicons
+                name="heart-outline"
+                size={16}
+                color={mode === 'BUYER' ? COLORS.branco : COLORS.preto}
+              />
+              <Text style={[styles.modeTabText, mode === 'BUYER' && styles.modeTabTextActive]}>
+                Sou apoiador
+              </Text>
+            </TouchableOpacity>
 
-          <Text style={styles.heroSubtitle}>
-            Mais que uma paella, uma boa causa para aquecer corações!
-          </Text>
-        </View>
-
-        {/* 2. Seletor de perfil: apoiador vs equipe ABADEUS */}
-        <View style={styles.modeSwitchContainer}>
-          <TouchableOpacity
-            style={[styles.modeTab, mode === 'BUYER' && styles.modeTabActive]}
-            onPress={() => setMode('BUYER')}
-          >
-            <Ionicons
-              name="heart-outline"
-              size={16}
-              color={mode === 'BUYER' ? COLORS.branco : COLORS.preto}
-            />
-            <Text style={[styles.modeTabText, mode === 'BUYER' && styles.modeTabTextActive]}>
-              Sou apoiador
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.modeTab, mode === 'STAFF' && styles.modeTabActiveStaff]}
-            onPress={() => setMode('STAFF')}
-          >
-            <Feather
-              name="shield"
-              size={15}
-              color={mode === 'STAFF' ? COLORS.branco : COLORS.preto}
-            />
-            <Text style={[styles.modeTabText, mode === 'STAFF' && styles.modeTabTextActive]}>
-              Sou da equipe
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* 3A. Visão do apoiador / comprador */}
-        {mode === 'BUYER' ? (
-          <View style={styles.formCard}>
-            <View style={styles.cardHeaderRow}>
-              <View style={{ flex: 1, marginRight: 8 }}>
-                <Text style={styles.cardOverline}>Acesso rápido do cliente</Text>
-                <Text style={styles.cardTitle}>Garanta sua paella</Text>
-              </View>
-              <View style={styles.pixFastBadge}>
-                <Ionicons name="flash" size={12} color={COLORS.mediterraneo} />
-                <Text style={styles.pixFastText}>Pix + QR Code</Text>
-              </View>
-            </View>
-
-            <Text style={styles.cardDesc}>
-              Identifique-se rapidamente para escolher suas porções e receber seu voucher digital de
-              retirada no drive-thru ou salão
-            </Text>
-
-            <Text style={styles.inputLabel}>Nome completo</Text>
-            <TextInput
-              style={styles.input}
-              value={buyerName}
-              onChangeText={setBuyerName}
-              placeholder="Digite seu nome completo"
-              placeholderTextColor={COLORS.cinzaTexto}
-            />
-
-            <Text style={styles.inputLabel}>E-mail para recibo e QR Code</Text>
-            <TextInput
-              style={styles.input}
-              value={buyerEmail}
-              onChangeText={setBuyerEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholder="seu@email.com"
-              placeholderTextColor={COLORS.cinzaTexto}
-            />
-
-            <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
-            <TextInput
-              style={styles.input}
-              value={buyerPhone}
-              onChangeText={setBuyerPhone}
-              keyboardType="phone-pad"
-              placeholder="(48) 99999-9999"
-              placeholderTextColor={COLORS.cinzaTexto}
-            />
-
-            <TouchableOpacity style={styles.primaryBuyerBtn} onPress={handleBuyerSubmit}>
-              <Text style={styles.primaryBuyerBtnText}>Entrar e ver cardápio solidário</Text>
-              <Feather name="arrow-right" size={18} color={COLORS.branco} />
+            <TouchableOpacity
+              style={[styles.modeTab, mode === 'STAFF' && styles.modeTabActiveStaff]}
+              onPress={() => setMode('STAFF')}
+            >
+              <Feather
+                name="shield"
+                size={15}
+                color={mode === 'STAFF' ? COLORS.branco : COLORS.preto}
+              />
+              <Text style={[styles.modeTabText, mode === 'STAFF' && styles.modeTabTextActive]}>
+                Sou da equipe
+              </Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          /* 3B. Visão da equipe (admin, voluntário, parceiro) */
-          <View style={styles.formCard}>
-            <View style={styles.cardHeaderRow}>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.cardOverline, { color: COLORS.mediterraneo }]}>
-                  Acesso restrito
-                </Text>
-                <Text style={styles.cardTitle}>Portal da equipe ABADEUS</Text>
+
+          {/* 3A. Visão do apoiador / comprador */}
+          {mode === 'BUYER' ? (
+            <View style={styles.formCard}>
+              <View style={styles.cardHeaderRow}>
+                <View style={{ flex: 1, marginRight: 8 }}>
+                  <Text style={styles.cardOverline}>Acesso rápido do cliente</Text>
+                  <Text style={styles.cardTitle}>Garanta sua paella</Text>
+                </View>
+                <View style={styles.pixFastBadge}>
+                  <Ionicons name="flash" size={12} color={COLORS.mediterraneo} />
+                  <Text style={styles.pixFastText}>Pix + QR Code</Text>
+                </View>
               </View>
-            </View>
 
-            <Text style={styles.cardDesc}>
-              Exclusivo para coordenação, voluntários do check-in expresso e parceiros cadastrados
-              pela organização
-            </Text>
+              <Text style={styles.cardDesc}>
+                Identifique-se rapidamente para escolher suas porções e receber seu voucher digital
+                de retirada no drive-thru ou salão
+              </Text>
 
-            <Text style={styles.inputLabel}>E-mail institucional/operador</Text>
-            <TextInput
-              style={styles.input}
-              value={staffEmail}
-              onChangeText={setStaffEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholder="admin@abadeus.com.br"
-              placeholderTextColor={COLORS.cinzaTexto}
-            />
-
-            <Text style={styles.inputLabel}>Código/senha de acesso</Text>
-            <View style={styles.passwordInputWrap}>
+              <Text style={styles.inputLabel}>Nome completo</Text>
               <TextInput
-                style={styles.passwordInput}
-                value={staffPassword}
-                onChangeText={setStaffPassword}
-                secureTextEntry={!showPassword}
-                autoCapitalize="none"
-                placeholder="Digite sua senha"
+                style={styles.input}
+                value={buyerName}
+                onChangeText={setBuyerName}
+                placeholder="Digite seu nome completo"
                 placeholderTextColor={COLORS.cinzaTexto}
+                onFocus={scrollToForm}
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onSubmitEditing={() => buyerEmailRef.current?.focus()}
               />
-              <TouchableOpacity
-                style={styles.eyeBtn}
-                onPress={() => setShowPassword((prev) => !prev)}
-              >
-                <Feather
-                  name={showPassword ? 'eye-off' : 'eye'}
-                  size={18}
-                  color={COLORS.cinzaTexto}
-                />
+
+              <Text style={styles.inputLabel}>E-mail para recibo e QR Code</Text>
+              <TextInput
+                ref={buyerEmailRef}
+                style={styles.input}
+                value={buyerEmail}
+                onChangeText={setBuyerEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                placeholder="seu@email.com"
+                placeholderTextColor={COLORS.cinzaTexto}
+                onFocus={scrollToForm}
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onSubmitEditing={() => buyerPhoneRef.current?.focus()}
+              />
+
+              <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
+              <TextInput
+                ref={buyerPhoneRef}
+                style={styles.input}
+                value={buyerPhone}
+                onChangeText={setBuyerPhone}
+                keyboardType="phone-pad"
+                placeholder="(48) 99999-9999"
+                placeholderTextColor={COLORS.cinzaTexto}
+                onFocus={scrollToForm}
+                returnKeyType="done"
+                onSubmitEditing={handleBuyerSubmit}
+              />
+
+              <TouchableOpacity style={styles.primaryBuyerBtn} onPress={handleBuyerSubmit}>
+                <Text style={styles.primaryBuyerBtnText}>Entrar e ver cardápio solidário</Text>
+                <Feather name="arrow-right" size={18} color={COLORS.branco} />
               </TouchableOpacity>
             </View>
-
-            {failedAttempts > 0 && (
-              <View style={styles.lockoutWarningBox}>
-                <Feather name="alert-circle" size={14} color={COLORS.tomate} />
-                <Text style={styles.lockoutWarningText}>
-                  Atenção: {failedAttempts}/5 tentativas utilizadas (bloqueio de 5 min após 5 erros)
-                </Text>
+          ) : (
+            /* 3B. Visão da equipe (admin, voluntário, parceiro) */
+            <View style={styles.formCard}>
+              <View style={styles.cardHeaderRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.cardOverline, { color: COLORS.mediterraneo }]}>
+                    Acesso restrito
+                  </Text>
+                  <Text style={styles.cardTitle}>Portal da equipe ABADEUS</Text>
+                </View>
               </View>
-            )}
 
-            <TouchableOpacity style={styles.primaryStaffBtn} onPress={handleStaffLogin}>
-              <Feather name="log-in" size={17} color={COLORS.branco} />
-              <Text style={styles.primaryBuyerBtnText}>Acessar painel operacional</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+              <Text style={styles.cardDesc}>
+                Exclusivo para coordenação, voluntários do check-in expresso e parceiros cadastrados
+                pela organização
+              </Text>
 
-        {/* 4. Rodapé informativo do evento */}
-        <View style={styles.eventFooterCard}>
-          <View style={styles.footerIconBox}>
-            <Feather name="calendar" size={18} color={COLORS.tomate} />
+              <Text style={styles.inputLabel}>E-mail institucional/operador</Text>
+              <TextInput
+                style={styles.input}
+                value={staffEmail}
+                onChangeText={setStaffEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                placeholder="admin@abadeus.com.br"
+                placeholderTextColor={COLORS.cinzaTexto}
+                onFocus={scrollToForm}
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onSubmitEditing={() => staffPasswordRef.current?.focus()}
+              />
+
+              <Text style={styles.inputLabel}>Código/senha de acesso</Text>
+              <View style={styles.passwordInputWrap}>
+                <TextInput
+                  ref={staffPasswordRef}
+                  style={styles.passwordInput}
+                  value={staffPassword}
+                  onChangeText={setStaffPassword}
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                  placeholder="Digite sua senha"
+                  placeholderTextColor={COLORS.cinzaTexto}
+                  onFocus={scrollToForm}
+                  returnKeyType="done"
+                  onSubmitEditing={handleStaffLogin}
+                />
+                <TouchableOpacity
+                  style={styles.eyeBtn}
+                  onPress={() => setShowPassword((prev) => !prev)}
+                >
+                  <Feather
+                    name={showPassword ? 'eye-off' : 'eye'}
+                    size={18}
+                    color={COLORS.cinzaTexto}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {failedAttempts > 0 && (
+                <View style={styles.lockoutWarningBox}>
+                  <Feather name="alert-circle" size={14} color={COLORS.tomate} />
+                  <Text style={styles.lockoutWarningText}>
+                    Atenção: {failedAttempts}/5 tentativas utilizadas (bloqueio de 5 min após 5
+                    erros)
+                  </Text>
+                </View>
+              )}
+
+              <TouchableOpacity style={styles.primaryStaffBtn} onPress={handleStaffLogin}>
+                <Feather name="log-in" size={17} color={COLORS.branco} />
+                <Text style={styles.primaryBuyerBtnText}>Acessar painel operacional</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* 4. Rodapé informativo do evento */}
+          <View style={styles.eventFooterCard}>
+            <View style={styles.footerIconBox}>
+              <Feather name="calendar" size={18} color={COLORS.tomate} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.footerEventTitle}>Sábado, 28 de novembro • 11h30 às 14h30</Text>
+              <Text style={styles.footerEventSub}>
+                Drive-thru expresso e salão • Sede ABADEUS (Cristo Redentor, Criciúma/SC)
+              </Text>
+            </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.footerEventTitle}>Sábado, 28 de novembro • 11h30 às 14h30</Text>
-            <Text style={styles.footerEventSub}>
-              Drive-thru expresso e salão • Sede ABADEUS (Cristo Redentor, Criciúma/SC)
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -324,7 +366,7 @@ export default function AuthScreen({ onLoginSuccess }) {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.creme },
   container: { flex: 1, backgroundColor: COLORS.creme },
-  scrollContent: { paddingHorizontal: 18, paddingTop: 18, paddingBottom: 40 },
+  scrollContent: { flexGrow: 1, paddingHorizontal: 18, paddingTop: 18, paddingBottom: 60 },
   headerCenter: {
     alignItems: 'center',
     marginBottom: 18,

@@ -636,6 +636,27 @@ const styles = StyleSheet.create({
     color: COLORS.tomate,
     textAlign: 'right',
   },
+  projectsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 10,
+    marginBottom: 12,
+  },
+  projectPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: COLORS.branco,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  projectPillText: {
+    fontSize: 10,
+    fontFamily: FONTS.bodyBold,
+    color: COLORS.preto,
+  },
   pixInstitutionFooter: {
     backgroundColor: COLORS.branco,
     borderRadius: 10,

@@ -22,7 +22,7 @@ export default function AdminTopBar({ user, onLogout }) {
         <View style={styles.rightActions}>
           <View style={styles.livePill}>
             <View style={styles.liveDot} />
-            <Text style={styles.liveText}>Ao Vivo</Text>
+            <Text style={styles.liveText}>Ao vivo</Text>
           </View>
 
           <TouchableOpacity style={styles.logoutBtn} onPress={onLogout}>
@@ -35,7 +35,7 @@ export default function AdminTopBar({ user, onLogout }) {
       <View style={styles.greetingRow}>
         <View style={{ flex: 1 }}>
           <Text style={styles.greetingTitle} numberOfLines={1}>
-            Olá, {user?.name || 'Coordenação ABADEUS'}
+            Olá, {user?.name || 'Coordenação'}
           </Text>
           <View style={styles.subStatusRow}>
             <Text style={styles.editionSub}>12ª Edição Paelito • Sábado, 28/Nov</Text>
