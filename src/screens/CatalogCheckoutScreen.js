@@ -12,30 +12,22 @@ import {
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/fonts';
+import { api } from '../services/api';
 import PixPaymentBox from '../components/PixPaymentBox';
 
 export const CHECKOUT_CATALOG = [
-  // Paellas de frutos do mar
   { id: 1, name: 'Paella de frutos do mar (individual)', label: 'Individual', weight: '450g', price: 50.0 },
   { id: 2, name: 'Paella de frutos do mar (2 pessoas)', label: 'Para 2 pessoas', weight: '900g', price: 95.0 },
   { id: 3, name: 'Paella de frutos do mar (4 pessoas)', label: 'Para 4 pessoas', weight: '1,8kg', price: 180.0 },
-
-  // Paellas de carnes
   { id: 4, name: 'Paella de carnes (individual)', label: 'Individual', weight: '450g', price: 45.0 },
   { id: 5, name: 'Paella de carnes (2 pessoas)', label: 'Para 2 pessoas', weight: '900g', price: 85.0 },
   { id: 6, name: 'Paella de carnes (4 pessoas)', label: 'Para 4 pessoas', weight: '1,8kg', price: 160.0 },
-
-  // Paellas veggie
   { id: 7, name: 'Paella veggie (individual)', label: 'Individual', weight: '450g', price: 40.0 },
   { id: 8, name: 'Paella veggie (2 pessoas)', label: 'Para 2 pessoas', weight: '900g', price: 75.0 },
   { id: 9, name: 'Paella veggie (4 pessoas)', label: 'Para 4 pessoas', weight: '1,8kg', price: 140.0 },
-
-  // Combos Paelito
   { id: 10, name: 'Combo Paelito frutos do mar', label: 'Frutos do mar', weight: '', price: 65.0 },
   { id: 11, name: 'Combo Paelito carnes', label: 'Carnes', weight: '', price: 60.0 },
   { id: 12, name: 'Combo Paelito veggie', label: 'Veggie', weight: '', price: 55.0 },
-
-  // Bebidas
   { id: 13, name: 'Refrigerante lata (350mL)', label: 'Refrigerante lata (350mL)', sub: 'Coca-Cola, Pepsi ou Guaraná', price: 6.0 },
   { id: 14, name: 'Refrigerante 600mL', label: 'Refrigerante 600mL', sub: 'Coca-Cola, Pepsi ou Guaraná', price: 9.0 },
   { id: 15, name: 'Refrigerante 2L', label: 'Refrigerante 2L', sub: 'Coca-Cola, Pepsi ou Guaraná', price: 14.0 },
@@ -82,21 +74,53 @@ const DRINK_IDS = [13, 14, 15, 16, 17];
 
 export default function CatalogCheckoutScreen({
   user,
+  apiProducts = [],
   quantities,
   onUpdateQty,
+  onClearCart,
   onBack,
-  onOrderCreated,
+  onOrderFinished,
   scrollToSummaryTrigger,
 }) {
   const [includeDonation, setIncludeDonation] = useState(true);
   const [fullName, setFullName] = useState(user?.name || 'Cliente');
   const [email, setEmail] = useState(user?.email || 'cliente@email.com');
   const [whatsapp, setWhatsapp] = useState(user?.phone || '(48) 99842-1082');
+  const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pendingOrder, setPendingOrder] = useState(null);
 
   const scrollViewRef = useRef(null);
   const summaryYRef = useRef(0);
   const pendingScrollRef = useRef(false);
+
+  // Mescla os dados reais da API (preço, estoque, ativo) com os labels visuais do catálogo
+  const mergedCatalog = CHECKOUT_CATALOG.map((base) => {
+    const fromApi = apiProducts.find((p) => Number(p.id) === base.id);
+    if (!fromApi) return { ...base, stockLimit: 100, isActive: true };
+    return {
+      ...base,
+      name: fromApi.name || base.name,
+      price: Number(fromApi.price),
+      stockLimit: fromApi.stockLimit ?? 100,
+      isActive: fromApi.isActive !== false,
+    };
+  });
+
+  // Produtos extras criados pelo Admin via painel
+  const extraProducts = apiProducts
+    .filter((p) => Number(p.id) > 17)
+    .map((p) => ({
+      id: Number(p.id),
+      name: p.name,
+      label: p.name,
+      sub: p.description,
+      price: Number(p.price),
+      stockLimit: p.stockLimit ?? 50,
+      isActive: p.isActive !== false,
+    }));
+
+  const allItems = [...mergedCatalog, ...extraProducts];
 
   const scrollToSummary = () => {
     scrollViewRef.current?.scrollTo({
@@ -107,12 +131,10 @@ export default function CatalogCheckoutScreen({
 
   useEffect(() => {
     if (!scrollToSummaryTrigger) return;
-
     if (summaryYRef.current > 0) {
       const timer = setTimeout(scrollToSummary, 80);
       return () => clearTimeout(timer);
     }
-
     pendingScrollRef.current = true;
     const fallbackTimer = setTimeout(() => {
       if (pendingScrollRef.current) {
@@ -120,14 +142,12 @@ export default function CatalogCheckoutScreen({
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }
     }, 300);
-
     return () => clearTimeout(fallbackTimer);
   }, [scrollToSummaryTrigger]);
 
-  const getItemById = (id) => CHECKOUT_CATALOG.find((p) => p.id === id);
+  const getItemById = (id) => allItems.find((p) => p.id === id);
 
-  const selectedItems = CHECKOUT_CATALOG.filter((p) => (quantities[p.id] || 0) > 0);
-
+  const selectedItems = allItems.filter((p) => (quantities[p.id] || 0) > 0);
   const productsTotal = selectedItems.reduce(
     (acc, item) => acc + item.price * (quantities[item.id] || 0),
     0
@@ -135,44 +155,80 @@ export default function CatalogCheckoutScreen({
   const donationAmount = includeDonation ? 5.0 : 0.0;
   const grandTotal = productsTotal + donationAmount;
 
-  const handleConfirmOrder = () => {
+  // Passo A: Cria o pedido na API como PENDING (reserva estoque por 15 min)
+  const handleCreatePendingOrder = async () => {
     if (selectedItems.length === 0) {
-      Alert.alert('Sacola vazia', 'Selecione pelo menos 1 item para continuar');
+      Alert.alert('Sacola vazia', 'Selecione pelo menos 1 item para continuar.');
       return;
     }
     if (!fullName.trim() || !whatsapp.trim()) {
-      Alert.alert('Dados incompletos', 'Preencha seu nome e WhatsApp para retirada');
+      Alert.alert('Dados incompletos', 'Preencha seu nome e WhatsApp para retirada.');
       return;
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      const newOrder = {
-        id: Math.floor(1000 + Math.random() * 9000),
-        orderNumber: `PAEL-${Math.floor(100000 + Math.random() * 900000)}`,
-        status: 'PAID',
-        totalAmount: grandTotal,
-        customerName: fullName,
-        items: selectedItems.map((i) => ({
-          name: i.name,
-          quantity: quantities[i.id],
-          subtotal: i.price * quantities[i.id],
+    try {
+      const created = await api.createOrder({
+        eventId: 1,
+        userId: user?.id || 4,
+        origin: couponCode.trim() ? `CAMPANHA:${couponCode.trim().toUpperCase()}` : 'APP',
+        donationAmount,
+        items: selectedItems.map((item) => ({
+          productId: item.id,
+          quantity: quantities[item.id],
         })),
-        donation: includeDonation ? 5.0 : 0,
-        createdAt: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-      };
+      });
+
+      setPendingOrder(created);
+      Alert.alert(
+        'Pedido reservado!',
+        `Pedido #${created.orderNumber} criado com reserva de 15 minutos. Conclua o Pix abaixo para liberar seu QR Code de retirada.`
+      );
+    } catch (err) {
+      Alert.alert('Não foi possível criar o pedido', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Passo B: Confirma pagamento na API (idempotente) -> libera status PAID + QR Code
+  const handleConfirmPayment = async () => {
+    if (!pendingOrder) return;
+    setLoading(true);
+    try {
+      await api.confirmPayment(pendingOrder.id, {
+        externalId: `PIX-${pendingOrder.orderNumber}`,
+        method: 'PIX',
+        provider: 'PIX_BANCO',
+      });
+
+      const orderNum = pendingOrder.orderNumber;
+      setPendingOrder(null);
+      if (onClearCart) onClearCart();
 
       Alert.alert(
-        'Pedido confirmado',
-        `Código de retirada: ${newOrder.orderNumber}\nSeu QR Code já está disponível na aba "Pedidos"`,
-        [{ text: 'Ver meu QR Code', onPress: () => onOrderCreated && onOrderCreated(newOrder) }]
+        'Pagamento confirmado!',
+        `Seu QR Code de retirada (#${orderNum}) já está liberado na aba "Pedidos".`,
+        [{ text: 'Ver meu QR Code', onPress: () => onOrderFinished && onOrderFinished() }]
       );
-    }, 600);
+    } catch (err) {
+      Alert.alert('Erro ao confirmar pagamento', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePayLater = () => {
+    setPendingOrder(null);
+    if (onClearCart) onClearCart();
+    if (onOrderFinished) onOrderFinished();
   };
 
   const renderOptionRow = (item, isLast) => {
+    if (!item) return null;
     const qty = quantities[item.id] || 0;
+    const unavailable = !item.isActive || item.stockLimit <= 0;
+
     return (
       <View
         key={item.id}
@@ -180,6 +236,7 @@ export default function CatalogCheckoutScreen({
           styles.optionRow,
           !isLast && styles.optionRowBorder,
           qty > 0 && styles.optionRowSelected,
+          unavailable && { opacity: 0.5 },
         ]}
       >
         <View style={{ flex: 1, marginRight: 10 }}>
@@ -190,8 +247,18 @@ export default function CatalogCheckoutScreen({
                 <Text style={styles.weightPillText}>{item.weight}</Text>
               </View>
             )}
+            {unavailable && (
+              <View style={styles.pausedPill}>
+                <Text style={styles.pausedPillText}>
+                  {!item.isActive ? 'Pausado' : 'Esgotado'}
+                </Text>
+              </View>
+            )}
           </View>
           {!!item.sub && <Text style={styles.optionSub}>{item.sub}</Text>}
+          {!unavailable && item.stockLimit <= 15 && (
+            <Text style={styles.lowStockText}>Restam apenas {item.stockLimit} un</Text>
+          )}
         </View>
 
         <Text style={styles.optionPrice}>
@@ -202,7 +269,7 @@ export default function CatalogCheckoutScreen({
           <TouchableOpacity
             style={[styles.stepBtn, qty === 0 && styles.stepBtnDisabled]}
             onPress={() => onUpdateQty(item.id, Math.max(0, qty - 1))}
-            disabled={qty === 0}
+            disabled={qty === 0 || !!pendingOrder}
           >
             <Text style={styles.stepBtnText}>-</Text>
           </TouchableOpacity>
@@ -210,8 +277,9 @@ export default function CatalogCheckoutScreen({
           <Text style={styles.qtyText}>{qty}</Text>
 
           <TouchableOpacity
-            style={styles.stepBtnPlus}
-            onPress={() => onUpdateQty(item.id, qty + 1)}
+            style={[styles.stepBtnPlus, (unavailable || !!pendingOrder) && { opacity: 0.4 }]}
+            onPress={() => onUpdateQty(item.id, Math.min(item.stockLimit, qty + 1))}
+            disabled={unavailable || !!pendingOrder}
           >
             <Text style={styles.stepBtnPlusText}>+</Text>
           </TouchableOpacity>
@@ -227,7 +295,6 @@ export default function CatalogCheckoutScreen({
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* Sub-header da tela de catálogo e checkout */}
       <View style={styles.subHeader}>
         <TouchableOpacity style={styles.backBtn} onPress={onBack}>
           <Feather name="chevron-left" size={20} color={COLORS.preto} />
@@ -238,7 +305,6 @@ export default function CatalogCheckoutScreen({
         </View>
       </View>
 
-      {/* 1. Escolha sua paella */}
       <View style={styles.titleRow}>
         <Text style={styles.mainTitle}>Escolha sua paella</Text>
         <View style={styles.editionBadge}>
@@ -249,7 +315,7 @@ export default function CatalogCheckoutScreen({
         Ingredientes frescos preparados pelos voluntários da cozinha solidária
       </Text>
 
-      {/* Seção Paellas (3 cards agrupados por sabor) */}
+      {/* Paellas */}
       <View style={styles.catalogSectionHeader}>
         <Text style={styles.catalogSectionTitle}>Paellas</Text>
         <Text style={styles.catalogSectionCount}>3 sabores</Text>
@@ -263,10 +329,7 @@ export default function CatalogCheckoutScreen({
             style={[styles.groupCard, hasSelected && styles.groupCardSelected]}
           >
             <View style={styles.groupImageWrap}>
-              <Image
-                source={typeof group.image === 'string' ? { uri: group.image } : group.image}
-                style={styles.groupImage}
-              />
+              <Image source={group.image} style={styles.groupImage} />
               <View style={[styles.groupBadge, { backgroundColor: group.badge.bg }]}>
                 <Text style={[styles.groupBadgeText, { color: group.badge.color }]}>
                   {group.badge.text}
@@ -288,7 +351,7 @@ export default function CatalogCheckoutScreen({
         );
       })}
 
-      {/* Seção Combos Paelito (1 card agrupado) */}
+      {/* Combos */}
       <View style={styles.catalogSectionHeader}>
         <Text style={styles.catalogSectionTitle}>Combos Paelito</Text>
         <Text style={styles.catalogSectionCount}>Refri ou água grátis</Text>
@@ -301,10 +364,7 @@ export default function CatalogCheckoutScreen({
         ]}
       >
         <View style={styles.groupImageWrap}>
-          <Image
-            source={typeof COMBO_GROUP.image === 'string' ? { uri: COMBO_GROUP.image } : COMBO_GROUP.image}
-            style={styles.groupImage}
-          />
+          <Image source={{ uri: COMBO_GROUP.image }} style={styles.groupImage} />
           <View style={[styles.groupBadge, { backgroundColor: COMBO_GROUP.badge.bg }]}>
             <Text style={[styles.groupBadgeText, { color: COMBO_GROUP.badge.color }]}>
               {COMBO_GROUP.badge.text}
@@ -324,7 +384,7 @@ export default function CatalogCheckoutScreen({
         </View>
       </View>
 
-      {/* Seção Bebidas (lista compacta sem repetição de fotos) */}
+      {/* Bebidas */}
       <View style={styles.catalogSectionHeader}>
         <Text style={styles.catalogSectionTitle}>Bebidas</Text>
         <Text style={styles.catalogSectionCount}>Retirada gelada no local</Text>
@@ -341,10 +401,25 @@ export default function CatalogCheckoutScreen({
         )}
       </View>
 
-      {/* 2. Doação pedagógica ABADEUS */}
+      {/* Itens adicionais cadastrados pelo Admin */}
+      {extraProducts.length > 0 && (
+        <>
+          <View style={styles.catalogSectionHeader}>
+            <Text style={styles.catalogSectionTitle}>Especiais do evento</Text>
+            <Text style={styles.catalogSectionCount}>{extraProducts.length} itens</Text>
+          </View>
+          <View style={styles.drinksCard}>
+            {extraProducts.map((item, idx) =>
+              renderOptionRow(item, idx === extraProducts.length - 1)
+            )}
+          </View>
+        </>
+      )}
+
+      {/* Doação pedagógica ABADEUS */}
       <TouchableOpacity
         style={[styles.donationCard, includeDonation && styles.donationCardActive]}
-        onPress={() => setIncludeDonation(!includeDonation)}
+        onPress={() => !pendingOrder && setIncludeDonation(!includeDonation)}
         activeOpacity={0.85}
       >
         <View style={styles.donationIconCircle}>
@@ -371,7 +446,7 @@ export default function CatalogCheckoutScreen({
         </View>
       </TouchableOpacity>
 
-      {/* 3. Dados para retirada */}
+      {/* Dados para retirada + Cupom/Campanha */}
       <View style={styles.sectionCard}>
         <View style={styles.sectionTitleRow}>
           <Feather name="user-check" size={18} color={COLORS.tomate} />
@@ -404,28 +479,19 @@ export default function CatalogCheckoutScreen({
           keyboardType="phone-pad"
           placeholder="(48) 99999-9999"
         />
+
+        <Text style={styles.inputLabel}>Código de parceiro ou campanha (opcional)</Text>
+        <TextInput
+          style={styles.input}
+          value={couponCode}
+          onChangeText={setCouponCode}
+          autoCapitalize="characters"
+          placeholder="Ex: UNESC2026 ou PARCEIRO01"
+          placeholderTextColor={COLORS.cinzaTexto}
+        />
       </View>
 
-      {/* 4. Forma de pagamento */}
-      <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Forma de pagamento</Text>
-
-        <View style={styles.pixMethodRow}>
-          <View style={styles.pixMethodCardActive}>
-            <Ionicons name="flash" size={18} color={COLORS.mediterraneo} />
-            <Text style={styles.pixMethodTitle}>Pix instantâneo</Text>
-            <Text style={styles.pixMethodSub}>Sem taxas extras</Text>
-          </View>
-
-          <View style={styles.pixMethodCardInfo}>
-            <Feather name="zap" size={18} color="#2E7D32" />
-            <Text style={styles.pixMethodTitle}>Aprovação imediata</Text>
-            <Text style={styles.pixMethodSub}>Liberação do ticket em menos de 10 segundos</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* 5. Resumo do pedido */}
+      {/* Resumo do pedido */}
       <View
         style={styles.summaryCard}
         onLayout={(event) => {
@@ -443,20 +509,24 @@ export default function CatalogCheckoutScreen({
           </View>
         </View>
 
-        {selectedItems.map((item) => {
-          const qty = quantities[item.id] || 0;
-          const sub = item.price * qty;
-          return (
-            <View key={item.id} style={styles.summaryLine}>
-              <Text style={styles.summaryItemText}>
-                {item.name} (x{qty})
-              </Text>
-              <Text style={styles.summaryItemValue}>
-                R$ {sub.toFixed(2).replace('.', ',')}
-              </Text>
-            </View>
-          );
-        })}
+        {selectedItems.length === 0 ? (
+          <Text style={styles.emptySummaryText}>Nenhum item selecionado ainda.</Text>
+        ) : (
+          selectedItems.map((item) => {
+            const qty = quantities[item.id] || 0;
+            const sub = item.price * qty;
+            return (
+              <View key={item.id} style={styles.summaryLine}>
+                <Text style={styles.summaryItemText}>
+                  {item.name} (x{qty})
+                </Text>
+                <Text style={styles.summaryItemValue}>
+                  R$ {sub.toFixed(2).replace('.', ',')}
+                </Text>
+              </View>
+            );
+          })
+        )}
 
         {includeDonation && (
           <View style={styles.summaryLine}>
@@ -480,14 +550,17 @@ export default function CatalogCheckoutScreen({
         </View>
       </View>
 
-      {/* 6. Bloco Pix e QR Code */}
+      {/* Bloco Pix e QR Code */}
       <PixPaymentBox
         totalAmount={grandTotal}
-        onConfirmOrder={handleConfirmOrder}
+        pendingOrder={pendingOrder}
+        onCreatePendingOrder={handleCreatePendingOrder}
+        onConfirmPayment={handleConfirmPayment}
+        onPayLater={handlePayLater}
         loading={loading}
       />
 
-      {/* 7. Card final de local de retirada */}
+      {/* Local de retirada */}
       <View style={styles.pickupLocationCard}>
         <View style={styles.pickupIconBox}>
           <Feather name="map-pin" size={20} color={COLORS.tomate} />
@@ -686,6 +759,23 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bodySemiBold,
     color: '#7A5410',
   },
+  pausedPill: {
+    backgroundColor: '#FDE8E6',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  pausedPillText: {
+    fontSize: 9,
+    fontFamily: FONTS.bodyBold,
+    color: COLORS.tomate,
+  },
+  lowStockText: {
+    fontSize: 10,
+    fontFamily: FONTS.bodySemiBold,
+    color: COLORS.tomate,
+    marginTop: 2,
+  },
   optionSub: {
     fontSize: 11,
     fontFamily: FONTS.bodyRegular,
@@ -830,41 +920,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#EADBC0',
   },
-  pixMethodRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-    gap: 10,
-  },
-  pixMethodCardActive: {
-    flex: 1,
-    backgroundColor: '#F0F7FA',
-    borderRadius: 14,
-    padding: 12,
-    borderWidth: 1.5,
-    borderColor: COLORS.mediterraneo,
-  },
-  pixMethodCardInfo: {
-    flex: 1,
-    backgroundColor: COLORS.creme,
-    borderRadius: 14,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#EADBC0',
-  },
-  pixMethodTitle: {
-    fontSize: 12,
-    fontFamily: FONTS.bodyBold,
-    color: COLORS.preto,
-    marginTop: 6,
-  },
-  pixMethodSub: {
-    fontSize: 10,
-    fontFamily: FONTS.bodyRegular,
-    color: COLORS.cinzaTexto,
-    marginTop: 2,
-    lineHeight: 14,
-  },
   summaryCard: {
     backgroundColor: COLORS.branco,
     borderRadius: 18,
@@ -889,6 +944,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: FONTS.bodyBold,
     color: '#8B5E08',
+  },
+  emptySummaryText: {
+    fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    marginBottom: 8,
   },
   summaryLine: {
     flexDirection: 'row',

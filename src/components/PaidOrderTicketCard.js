@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Share } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import QRCode from 'react-native-qrcode-svg';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/fonts';
 
@@ -13,12 +14,50 @@ export default function PaidOrderTicketCard({ order }) {
     .join('')
     .toUpperCase();
 
+  const isPickedUp = order.status === 'PICKED_UP';
+  const isCancelledOrRefunded =
+    order.status === 'CANCELLED' || order.status === 'REFUNDED' || order.status === 'EXPIRED';
+
+  const bannerBg = isPickedUp
+    ? '#2E7D32'
+    : isCancelledOrRefunded
+    ? COLORS.tomate
+    : COLORS.mediterraneo;
+
+  const bannerText = isPickedUp
+    ? 'Pedido já retirado com sucesso'
+    : order.status === 'REFUNDED'
+    ? 'Pedido reembolsado'
+    : order.status === 'CANCELLED'
+    ? 'Pedido cancelado'
+    : order.status === 'EXPIRED'
+    ? 'Reserva expirada (15 min)'
+    : 'Pago e liberado para retirada';
+
+  const handleShareVoucher = async () => {
+    try {
+      await Share.share({
+        message: `Voucher Paelito ABADEUS\nPedido: #${order.orderNumber}\nCliente: ${displayName}\nTotal: R$ ${Number(
+          order.totalAmount
+        )
+          .toFixed(2)
+          .replace('.', ',')}\nRetirada: Sábado, 28/11 das 11h30 às 14h30 na Sede ABADEUS.`,
+      });
+    } catch {
+      Alert.alert('Voucher', `Código do pedido: #${order.orderNumber}`);
+    }
+  };
+
   return (
-    <View style={styles.card}>
-      {/* Banner topo: pago e liberado */}
-      <View style={styles.statusBanner}>
-        <Ionicons name="checkmark-circle" size={16} color={COLORS.branco} />
-        <Text style={styles.statusBannerText}>Pago e liberado para retirada</Text>
+    <View style={[styles.card, { borderColor: bannerBg }]}>
+      {/* Banner topo */}
+      <View style={[styles.statusBanner, { backgroundColor: bannerBg }]}>
+        <Ionicons
+          name={isCancelledOrRefunded ? 'close-circle' : 'checkmark-circle'}
+          size={16}
+          color={COLORS.branco}
+        />
+        <Text style={styles.statusBannerText}>{bannerText}</Text>
       </View>
 
       <View style={styles.body}>
@@ -28,12 +67,12 @@ export default function PaidOrderTicketCard({ order }) {
             <Text style={styles.metaLabel}>Identificador</Text>
             <View style={styles.idRow}>
               <Text style={styles.orderIdText}>#{order.orderNumber}</Text>
-              <Text style={styles.timeText}>{order.createdAt || 'Hoje, 14:32'}</Text>
+              <Text style={styles.timeText}>{order.createdAt || 'Hoje'}</Text>
             </View>
           </View>
 
           <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.metaLabel}>Total pago</Text>
+            <Text style={styles.metaLabel}>Total</Text>
             <Text style={styles.totalPaidText}>
               R$ {Number(order.totalAmount).toFixed(2).replace('.', ',')}
             </Text>
@@ -44,7 +83,7 @@ export default function PaidOrderTicketCard({ order }) {
         <View style={styles.itemsBox}>
           <View style={styles.itemsTitleRow}>
             <Ionicons name="restaurant-outline" size={13} color={COLORS.tomate} />
-            <Text style={styles.itemsTitle}>Itens confirmados no cardápio</Text>
+            <Text style={styles.itemsTitle}>Itens do pedido</Text>
           </View>
 
           {order.items?.map((item, idx) => (
@@ -61,7 +100,7 @@ export default function PaidOrderTicketCard({ order }) {
             </View>
           ))}
 
-          {order.donation > 0 && (
+          {Number(order.donation) > 0 && (
             <View style={styles.itemLine}>
               <Ionicons
                 name="heart"
@@ -80,9 +119,9 @@ export default function PaidOrderTicketCard({ order }) {
 
           <View style={styles.receiptFooter}>
             <Text style={styles.receiptMeta}>
-              Pix processado às {order.paidAt || '14:35'}
+              Origem: {order.origin || 'APP'}
             </Text>
-            <Text style={styles.receiptMeta}>Recibo #{order.receiptNumber || '92813'}</Text>
+            <Text style={styles.receiptMeta}>Recibo #{order.receiptNumber || order.orderNumber}</Text>
           </View>
         </View>
 
@@ -102,50 +141,38 @@ export default function PaidOrderTicketCard({ order }) {
           </View>
         </View>
 
-        {/* Voucher digital oficial de retirada */}
-        <View style={styles.voucherBox}>
-          <View style={styles.voucherTopTag}>
-            <Text style={styles.voucherTopTagText}>ABADEUS</Text>
-          </View>
-          <Text style={styles.voucherOverline}>Voucher digital oficial de retirada</Text>
-
-          <View style={styles.qrContainer}>
-            <Ionicons name="qr-code" size={145} color={COLORS.preto} />
-          </View>
-
-          <View style={styles.validationCodePill}>
-            <Text style={styles.validationCodeText}>
-              {order.validationCode ||
-                `VAL-${order.orderNumber.replace('PAE-', '').replace('PAEL-', '')}-CRICIUMA-OK`}
+        {/* Voucher digital oficial com QR Code real (só para pedidos pagos/retirados) */}
+        {!isCancelledOrRefunded && (
+          <View style={styles.voucherBox}>
+            <View style={styles.voucherTopTag}>
+              <Text style={styles.voucherTopTagText}>ABADEUS</Text>
+            </View>
+            <Text style={styles.voucherOverline}>
+              {isPickedUp ? 'Voucher já validado na entrega' : 'Voucher digital oficial de retirada'}
             </Text>
+
+            <View style={[styles.qrContainer, isPickedUp && { opacity: 0.45 }]}>
+              <QRCode value={order.orderNumber} size={150} color={COLORS.preto} backgroundColor={COLORS.branco} />
+            </View>
+
+            <View style={styles.validationCodePill}>
+              <Text style={styles.validationCodeText}>{order.orderNumber}</Text>
+            </View>
+
+            <Text style={styles.voucherHint}>
+              {isPickedUp
+                ? 'Este código já foi utilizado e não pode ser retirado novamente.'
+                : 'Apresente este QR Code para o voluntário escanear no dia do evento'}
+            </Text>
+
+            <View style={styles.voucherActionsRow}>
+              <TouchableOpacity style={styles.whatsBtn} onPress={handleShareVoucher}>
+                <Ionicons name="share-social-outline" size={16} color={COLORS.branco} />
+                <Text style={styles.whatsBtnText}>Compartilhar voucher</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <Text style={styles.voucherHint}>
-            Apresente este código para o voluntário escanear no dia do evento
-          </Text>
-
-          <View style={styles.voucherActionsRow}>
-            <TouchableOpacity
-              style={styles.whatsBtn}
-              onPress={() =>
-                Alert.alert('WhatsApp', 'Voucher enviado para o seu WhatsApp cadastrado')
-              }
-            >
-              <Ionicons name="logo-whatsapp" size={16} color={COLORS.branco} />
-              <Text style={styles.whatsBtnText}>Enviar no Whats</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.pdfBtn}
-              onPress={() =>
-                Alert.alert('PDF salvo', 'O comprovante em PDF foi salvo no seu aparelho')
-              }
-            >
-              <Feather name="download" size={15} color={COLORS.preto} />
-              <Text style={styles.pdfBtnText}>Baixar PDF</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        )}
 
         {/* Informações de horário e local */}
         <View style={styles.eventFootInfo}>
@@ -157,12 +184,6 @@ export default function PaidOrderTicketCard({ order }) {
             <Feather name="map-pin" size={14} color={COLORS.mediterraneo} />
             <Text style={styles.footInfoText}>
               Sede ABADEUS • Bairro Cristo Redentor, Criciúma/SC
-            </Text>
-          </View>
-          <View style={styles.priorityBadge}>
-            <Ionicons name="car-sport-outline" size={14} color="#8B5E08" />
-            <Text style={styles.priorityBadgeText}>
-              Entrada prioritária pela via expressa de veículos
             </Text>
           </View>
         </View>
@@ -178,11 +199,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 18,
     borderWidth: 1.5,
-    borderColor: COLORS.mediterraneo,
     elevation: 3,
   },
   statusBanner: {
-    backgroundColor: COLORS.mediterraneo,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -385,7 +404,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   validationCodeText: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
     letterSpacing: 0.8,
@@ -406,7 +425,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#25D366',
-    paddingVertical: 10,
+    paddingVertical: 11,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -414,23 +433,6 @@ const styles = StyleSheet.create({
   },
   whatsBtnText: {
     color: COLORS.branco,
-    fontSize: 12,
-    fontFamily: FONTS.bodyBold,
-  },
-  pdfBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: COLORS.creme,
-    paddingVertical: 10,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    borderWidth: 1,
-    borderColor: '#EADBC0',
-  },
-  pdfBtnText: {
-    color: COLORS.preto,
     fontSize: 12,
     fontFamily: FONTS.bodyBold,
   },
@@ -451,22 +453,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: COLORS.cinzaTexto,
     fontFamily: FONTS.bodyMedium,
-    flex: 1,
-  },
-  priorityBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF3D1',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    gap: 6,
-    marginTop: 4,
-  },
-  priorityBadgeText: {
-    fontSize: 11,
-    fontFamily: FONTS.bodySemiBold,
-    color: '#8B5E08',
     flex: 1,
   },
 });

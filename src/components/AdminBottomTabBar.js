@@ -5,15 +5,22 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/fonts';
 
-const ADMIN_TABS = [
-  { key: 'DASHBOARD', label: 'Início', icon: 'grid-outline' },
-  { key: 'CHECKIN', label: 'Check-in', icon: 'qr-code-outline' },
-  { key: 'ORDERS', label: 'Pedidos', icon: 'receipt-outline' },
-  { key: 'STOCK', label: 'Estoque', icon: 'cube-outline' },
+const ALL_TABS = [
+  { key: 'DASHBOARD', label: 'Início', icon: 'grid-outline', roles: ['ADMIN'] },
+  { key: 'CHECKIN', label: 'Check-in', icon: 'qr-code-outline', roles: ['ADMIN', 'VOLUNTEER'] },
+  { key: 'ORDERS', label: 'Pedidos', icon: 'receipt-outline', roles: ['ADMIN', 'VOLUNTEER'] },
+  { key: 'STOCK', label: 'Estoque', icon: 'cube-outline', roles: ['ADMIN'] },
+  { key: 'PARTNER_SALES', label: 'Vendas', icon: 'bag-add-outline', roles: ['PARTNER'] },
 ];
 
-export default function AdminBottomTabBar({ activeTab, onChangeTab }) {
+export default function AdminBottomTabBar({ activeTab, onChangeTab, role = 'ADMIN' }) {
   const insets = useSafeAreaInsets();
+  const normalizedRole = role ? role.toUpperCase() : 'ADMIN';
+  const visibleTabs = ALL_TABS.filter((tab) => tab.roles.includes(normalizedRole));
+
+  if (visibleTabs.length <= 1) {
+    return null;
+  }
 
   return (
     <View
@@ -22,7 +29,7 @@ export default function AdminBottomTabBar({ activeTab, onChangeTab }) {
         { paddingBottom: Math.max(insets.bottom, 10) },
       ]}
     >
-      {ADMIN_TABS.map((tab) => {
+      {visibleTabs.map((tab) => {
         const isFocused = activeTab === tab.key;
         return (
           <TouchableOpacity
@@ -35,12 +42,7 @@ export default function AdminBottomTabBar({ activeTab, onChangeTab }) {
               size={22}
               color={isFocused ? COLORS.tomate : COLORS.cinzaTexto}
             />
-            <Text
-              style={[
-                styles.tabLabel,
-                isFocused && styles.tabLabelActive,
-              ]}
-            >
+            <Text style={[styles.tabLabel, isFocused && styles.tabLabelActive]}>
               {tab.label}
             </Text>
           </TouchableOpacity>

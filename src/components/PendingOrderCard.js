@@ -1,30 +1,30 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/fonts';
 
 export default function PendingOrderCard({ order, onSimulatePay }) {
-  const handleCopyPix = () => {
+  const handleCopyPix = async () => {
+    const code =
+      order.pixCopyPaste ||
+      `00020126580014BR.GOV.BCB.PIX0136abadeus-paelito@pix.org.br5406${Number(
+        order.totalAmount
+      ).toFixed(2)}`;
+    await Clipboard.setStringAsync(code);
     Alert.alert(
       'Código Pix copiado',
-      'Cole no aplicativo do seu banco para liberar seu QR Code de retirada',
-      [
-        { text: 'OK' },
-        ...(onSimulatePay
-          ? [{ text: 'Simular pagamento agora', onPress: () => onSimulatePay(order.id) }]
-          : []),
-      ]
+      'Cole no aplicativo do seu banco para liberar seu QR Code de retirada'
     );
   };
 
   return (
     <View style={styles.card}>
-      {/* Banner amarelo: aguardando pagamento Pix */}
       <View style={styles.pendingBanner}>
         <Feather name="clock" size={14} color="#7A4F08" />
         <Text style={styles.pendingBannerText}>
-          Aguardando pagamento Pix ({order.expiresIn || 'Expira em 12:40'})
+          Aguardando pagamento Pix (reserva de 15 min)
         </Text>
       </View>
 
@@ -34,7 +34,7 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
             <Text style={styles.metaLabel}>Pedido</Text>
             <View style={styles.idRow}>
               <Text style={styles.orderIdText}>#{order.orderNumber}</Text>
-              <Text style={styles.timeText}>{order.createdAt || 'Hoje, 14:48'}</Text>
+              <Text style={styles.timeText}>{order.createdAt || 'Hoje'}</Text>
             </View>
           </View>
 
@@ -52,7 +52,6 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
               <Text style={styles.itemTitle}>
                 {item.quantity}x {item.name}
               </Text>
-              {item.subtitle && <Text style={styles.itemSub}>{item.subtitle}</Text>}
             </View>
             <Text style={styles.itemPrice}>
               R$ {Number(item.subtotal).toFixed(2).replace('.', ',')}
@@ -60,18 +59,39 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
           </View>
         ))}
 
+        {Number(order.donation) > 0 && (
+          <View style={styles.itemBox}>
+            <Text style={[styles.itemTitle, { color: COLORS.tomate }]}>
+              Doação pedagógica ABADEUS
+            </Text>
+            <Text style={[styles.itemPrice, { color: COLORS.tomate }]}>
+              + R$ {Number(order.donation).toFixed(2).replace('.', ',')}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.noticeRow}>
           <Ionicons name="information-circle-outline" size={16} color="#8B5E08" />
           <Text style={styles.noticeText}>
             O QR Code de retirada será liberado automaticamente após a confirmação do pagamento via
-            Pix
+            Pix.
           </Text>
         </View>
 
         <TouchableOpacity style={styles.copyPixBtn} onPress={handleCopyPix}>
-          <Feather name="copy" size={16} color={COLORS.branco} />
-          <Text style={styles.copyPixBtnText}>Copiar código Pix (copia e cola)</Text>
+          <Feather name="copy" size={15} color={COLORS.tomate} />
+          <Text style={styles.copyPixBtnText}>Copiar código Pix</Text>
         </TouchableOpacity>
+
+        {onSimulatePay && (
+          <TouchableOpacity
+            style={styles.confirmPayBtn}
+            onPress={() => onSimulatePay(order)}
+          >
+            <Feather name="check-circle" size={16} color={COLORS.branco} />
+            <Text style={styles.confirmPayBtnText}>Confirmar pagamento Pix</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -144,18 +164,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.creme,
     padding: 12,
     borderRadius: 12,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   itemTitle: {
     fontSize: 13,
     fontFamily: FONTS.bodyBold,
     color: COLORS.preto,
-  },
-  itemSub: {
-    fontSize: 11,
-    fontFamily: FONTS.bodyRegular,
-    color: COLORS.cinzaTexto,
-    marginTop: 2,
   },
   itemPrice: {
     fontSize: 13,
@@ -180,14 +194,31 @@ const styles = StyleSheet.create({
   },
   copyPixBtn: {
     flexDirection: 'row',
-    backgroundColor: COLORS.tomate,
+    backgroundColor: COLORS.branco,
+    paddingVertical: 11,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1.5,
+    borderColor: COLORS.tomate,
+    marginBottom: 8,
+  },
+  copyPixBtnText: {
+    color: COLORS.tomate,
+    fontSize: 13,
+    fontFamily: FONTS.bodyBold,
+  },
+  confirmPayBtn: {
+    flexDirection: 'row',
+    backgroundColor: '#2E7D32',
     paddingVertical: 13,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
   },
-  copyPixBtnText: {
+  confirmPayBtnText: {
     color: COLORS.branco,
     fontSize: 13,
     fontFamily: FONTS.bodyBold,

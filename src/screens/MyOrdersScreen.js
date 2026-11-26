@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
@@ -14,9 +15,14 @@ import { FONTS } from '../theme/fonts';
 import PaidOrderTicketCard from '../components/PaidOrderTicketCard';
 import PendingOrderCard from '../components/PendingOrderCard';
 
-export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
+export default function MyOrdersScreen({
+  orders = [],
+  onSimulatePay,
+  refreshing = false,
+  onRefresh,
+}) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL'); // ALL | PAID | PENDING
+  const [statusFilter, setStatusFilter] = useState('ALL');
 
   const paidCount = orders.filter((o) => o.status === 'PAID' || o.status === 'PICKED_UP').length;
   const pendingCount = orders.filter((o) => o.status === 'PENDING').length;
@@ -41,31 +47,30 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
       style={styles.container}
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.tomate]} />
+        ) : undefined
+      }
     >
-      {/* Título e subtítulo */}
       <Text style={styles.pageTitle}>Meus ingressos e pedidos</Text>
       <Text style={styles.pageSubtitle}>
         Apresente o QR Code no drive-thru ou salão no dia 28 de novembro
       </Text>
 
-      {/* Barra de busca */}
       <View style={styles.searchRow}>
         <View style={styles.searchInputWrap}>
           <Feather name="search" size={16} color={COLORS.cinzaTexto} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Nº do pedido (#PAE-8429) ou celular"
+            placeholder="Nº do pedido (PAEL-...) ou celular"
             placeholderTextColor={COLORS.cinzaTexto}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
         </View>
-        <TouchableOpacity style={styles.searchBtn}>
-          <Text style={styles.searchBtnText}>Buscar</Text>
-        </TouchableOpacity>
       </View>
 
-      {/* Pílulas de filtro de status */}
       <View style={styles.tabsRow}>
         <TouchableOpacity
           style={[styles.tabPill, statusFilter === 'ALL' && styles.tabPillActive]}
@@ -97,28 +102,36 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
         </TouchableOpacity>
       </View>
 
-      {/* Lista de pedidos */}
-      {filteredOrders.map((order) =>
-        order.status === 'PENDING' ? (
-          <PendingOrderCard key={order.id} order={order} onSimulatePay={onSimulatePay} />
-        ) : (
-          <PaidOrderTicketCard key={order.id} order={order} />
+      {filteredOrders.length === 0 ? (
+        <View style={styles.emptyBox}>
+          <Ionicons name="receipt-outline" size={34} color={COLORS.cinzaTexto} />
+          <Text style={styles.emptyTitle}>Nenhum pedido encontrado</Text>
+          <Text style={styles.emptySub}>
+            Faça seu pedido na aba Cardápio para gerar seu voucher com QR Code.
+          </Text>
+        </View>
+      ) : (
+        filteredOrders.map((order) =>
+          order.status === 'PENDING' ? (
+            <PendingOrderCard key={order.id} order={order} onSimulatePay={onSimulatePay} />
+          ) : (
+            <PaidOrderTicketCard key={order.id} order={order} />
+          )
         )
       )}
 
-      {/* Bloco de ajuda / atendimento ABADEUS */}
       <View style={styles.helpCard}>
         <View style={styles.helpIconCircle}>
           <Ionicons name="chatbubbles-outline" size={22} color={COLORS.mediterraneo} />
         </View>
         <Text style={styles.helpTitle}>Não encontrou seu pedido?</Text>
         <Text style={styles.helpDesc}>
-          Digite o WhatsApp utilizado na compra ou fale com nossa equipe de voluntários da ABADEUS
+          Puxe a tela para baixo para sincronizar ou fale com nossa equipe de voluntários da ABADEUS
         </Text>
         <TouchableOpacity
           style={styles.helpBtn}
           onPress={() =>
-            Alert.alert('Suporte ABADEUS', 'Redirecionando para o WhatsApp da equipe')
+            Alert.alert('Suporte ABADEUS', 'WhatsApp do evento: (48) 99123-4567')
           }
         >
           <Ionicons name="logo-whatsapp" size={16} color={COLORS.mediterraneo} />
@@ -126,7 +139,6 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
         </TouchableOpacity>
       </View>
 
-      {/* Rodapé solidário */}
       <View style={styles.solidaryFooter}>
         <View style={styles.solidaryTitleRow}>
           <Ionicons name="heart" size={14} color={COLORS.tomate} />
@@ -134,9 +146,7 @@ export default function MyOrdersScreen({ orders = [], onSimulatePay }) {
             100% da renda revertida para as oficinas da ABADEUS
           </Text>
         </View>
-        <Text style={styles.solidarySub}>
-          Obrigado por apoiar esta causa solidária!
-        </Text>
+        <Text style={styles.solidarySub}>Obrigado por apoiar esta causa solidária!</Text>
       </View>
     </ScrollView>
   );
@@ -182,18 +192,6 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bodyRegular,
     color: COLORS.preto,
   },
-  searchBtn: {
-    backgroundColor: COLORS.tomate,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  searchBtnText: {
-    color: COLORS.branco,
-    fontSize: 12,
-    fontFamily: FONTS.bodyBold,
-  },
   tabsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -220,6 +218,28 @@ const styles = StyleSheet.create({
   tabPillTextActive: {
     color: COLORS.branco,
     fontFamily: FONTS.bodyBold,
+  },
+  emptyBox: {
+    backgroundColor: COLORS.branco,
+    borderRadius: 18,
+    padding: 26,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EADBC0',
+    marginBottom: 18,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontFamily: FONTS.headingExtraBold,
+    color: COLORS.preto,
+    marginTop: 8,
+  },
+  emptySub: {
+    fontSize: 12,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    textAlign: 'center',
+    marginTop: 4,
   },
   helpCard: {
     backgroundColor: COLORS.branco,

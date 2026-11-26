@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import QRCode from 'react-native-qrcode-svg';
+import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/fonts';
 
-export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, loading }) {
-  const [secondsLeft, setSecondsLeft] = useState(14 * 60 + 59); // 14:59
+export default function PixPaymentBox({
+  totalAmount,
+  pendingOrder,
+  onCreatePendingOrder,
+  onConfirmPayment,
+  onPayLater,
+  loading,
+}) {
+  const [secondsLeft, setSecondsLeft] = useState(14 * 60 + 59);
 
   useEffect(() => {
+    if (!pendingOrder) {
+      setSecondsLeft(14 * 60 + 59);
+      return;
+    }
     const timer = setInterval(() => {
       setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [pendingOrder]);
 
   const formatTime = (secs) => {
     const m = String(Math.floor(secs / 60)).padStart(2, '0');
@@ -20,46 +33,71 @@ export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, lo
     return `${m}:${s}`;
   };
 
-  const defaultPixPayload =
-    pixCode ||
-    `00020126580014br.gov.bcb.pix0136abadeus-paelito-beneficente-20265204000053039865405${Number(
+  const pixPayload =
+    pendingOrder?.pixCopyPaste ||
+    `00020126580014BR.GOV.BCB.PIX0136abadeus-paelito@pix.org.br5204000053039865406${Number(
       totalAmount
-    ).toFixed(2)}5802BR5925PAELITO BENEFICENTE ABADE6009CRICIUMA62070503***6304E8A2`;
+    ).toFixed(2)}5802BR5915ABADEUS PAELITO6008CRICIUMA62070503***6304ABCD`;
 
-  const handleCopyPix = () => {
+  const handleCopyPix = async () => {
+    await Clipboard.setStringAsync(pixPayload);
     Alert.alert('Código Pix copiado', 'Cole no aplicativo do seu banco na opção Pix copia e cola');
   };
 
+  // Antes de gerar o pedido: botão para reservar estoque por 15 min
+  if (!pendingOrder) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.autoNoticeRow}>
+          <Ionicons name="shield-checkmark-outline" size={18} color={COLORS.mediterraneo} />
+          <Text style={styles.autoNoticeText}>
+            Ao gerar o Pix, suas porções ficam reservadas no estoque por 15 minutos aguardando a
+            confirmação do pagamento.
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={[styles.confirmBtn, loading && { opacity: 0.7 }]}
+          onPress={onCreatePendingOrder}
+          disabled={loading}
+        >
+          <Text style={styles.confirmBtnText}>
+            {loading ? 'Reservando estoque...' : 'Gerar pedido e código Pix'}
+          </Text>
+          <Feather name="arrow-right" size={18} color={COLORS.branco} />
+        </TouchableOpacity>
+
+        <View style={styles.secureRow}>
+          <Feather name="lock" size={12} color={COLORS.cinzaTexto} />
+          <Text style={styles.secureText}>Ambiente seguro de arrecadação ABADEUS</Text>
+        </View>
+      </View>
+    );
+  }
+
+  // PENDING: QR Code real + timer + confirmação
   return (
     <View style={styles.container}>
-      {/* Timer de 15 minutos */}
       <View style={styles.timerBanner}>
         <Feather name="clock" size={15} color="#8B5E08" />
         <Text style={styles.timerText}>
-          Você tem <Text style={styles.timerBold}>{formatTime(secondsLeft)} minutos</Text> para
-          concluir o Pix
+          Pedido <Text style={styles.timerBold}>#{pendingOrder.orderNumber}</Text> reservado por{' '}
+          <Text style={styles.timerBold}>{formatTime(secondsLeft)}</Text>
         </Text>
       </View>
 
-      {/* Moldura do QR Code */}
       <View style={styles.qrOuterFrame}>
-        <View style={styles.qrInnerBox}>
-          <Ionicons name="qr-code" size={150} color={COLORS.preto} />
-          <View style={styles.qrCenterBadge}>
-            <View style={styles.qrCenterDot} />
-          </View>
-        </View>
+        <QRCode value={pixPayload} size={160} color={COLORS.preto} backgroundColor={COLORS.branco} />
       </View>
 
       <Text style={styles.instructions}>
         Abra o app do seu banco, escolha <Text style={styles.instructionsBold}>Pagar via Pix</Text>{' '}
-        e aponte a câmera para o QR Code acima
+        e escaneie o QR Code ou copie o código abaixo
       </Text>
 
-      {/* Caixa do Pix copia e cola */}
       <View style={styles.copyPasteBox}>
         <Text style={styles.copyPasteCode} numberOfLines={3}>
-          {defaultPixPayload}
+          {pixPayload}
         </Text>
       </View>
 
@@ -68,30 +106,20 @@ export default function PixPaymentBox({ totalAmount, pixCode, onConfirmOrder, lo
         <Text style={styles.copyBtnText}>Copiar código Pix copia e cola</Text>
       </TouchableOpacity>
 
-      <View style={styles.autoNoticeRow}>
-        <Ionicons name="checkmark-circle-outline" size={16} color={COLORS.mediterraneo} />
-        <Text style={styles.autoNoticeText}>
-          Assim que confirmado pelo banco, seu QR Code de retirada será emitido automaticamente e
-          enviado por WhatsApp e e-mail
-        </Text>
-      </View>
-
-      {/* Botão principal concluir pedido com Pix */}
       <TouchableOpacity
-        style={[styles.confirmBtn, loading && { opacity: 0.7 }]}
-        onPress={onConfirmOrder}
+        style={[styles.confirmBtn, { backgroundColor: '#2E7D32' }, loading && { opacity: 0.7 }]}
+        onPress={onConfirmPayment}
         disabled={loading}
       >
-        <Text style={styles.confirmBtnText}>
-          {loading ? 'Processando pedido...' : 'Concluir pedido com Pix'}
-        </Text>
         <Feather name="check-circle" size={18} color={COLORS.branco} />
+        <Text style={styles.confirmBtnText}>
+          {loading ? 'Confirmando pagamento...' : 'Confirmar pagamento Pix'}
+        </Text>
       </TouchableOpacity>
 
-      <View style={styles.secureRow}>
-        <Feather name="lock" size={12} color={COLORS.cinzaTexto} />
-        <Text style={styles.secureText}>Ambiente seguro de arrecadação ABADEUS</Text>
-      </View>
+      <TouchableOpacity style={styles.payLaterBtn} onPress={onPayLater} disabled={loading}>
+        <Text style={styles.payLaterText}>Pagar depois (ver em Meus Pedidos)</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -134,28 +162,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.branco,
     marginBottom: 12,
   },
-  qrInnerBox: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  qrCenterBadge: {
-    position: 'absolute',
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: COLORS.acafrao,
-    borderWidth: 3,
-    borderColor: COLORS.tomate,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  qrCenterDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: COLORS.tomate,
-  },
   instructions: {
     fontSize: 12,
     fontFamily: FONTS.bodyRegular,
@@ -191,7 +197,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1.5,
     borderColor: COLORS.tomate,
-    marginBottom: 14,
+    marginBottom: 12,
   },
   copyBtnText: {
     color: COLORS.tomate,
@@ -203,8 +209,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 8,
     backgroundColor: '#F0F7FA',
-    padding: 10,
-    borderRadius: 10,
+    padding: 12,
+    borderRadius: 12,
     marginBottom: 14,
   },
   autoNoticeText: {
@@ -212,7 +218,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: FONTS.bodyRegular,
     color: COLORS.mediterraneo,
-    lineHeight: 15,
+    lineHeight: 16,
   },
   confirmBtn: {
     flexDirection: 'row',
@@ -226,8 +232,18 @@ const styles = StyleSheet.create({
   },
   confirmBtnText: {
     color: COLORS.branco,
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: FONTS.bodyBold,
+  },
+  payLaterBtn: {
+    alignItems: 'center',
+    paddingVertical: 12,
+    marginTop: 6,
+  },
+  payLaterText: {
+    fontSize: 12,
+    fontFamily: FONTS.bodySemiBold,
+    color: COLORS.mediterraneo,
   },
   secureRow: {
     flexDirection: 'row',

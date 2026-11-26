@@ -11,63 +11,40 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/fonts';
+import { api } from '../services/api';
+import { loginUser, registerBuyer } from '../db';
 
 const LOGO_PAELITO = require('../../assets/images/logo-paelito.png');
 const ABADEUS_LOGO = require('../../assets/images/logo-abadeus.png');
 
-const DEMO_USERS = {
-  BUYER: {
-    id: 4,
-    name: 'Cliente',
-    email: 'cliente@email.com',
-    phone: '(48) 99999-9999',
-    role: 'BUYER',
-  },
-  ADMIN: {
-    id: 1,
-    name: 'Coordenação',
-    email: 'admin@abadeus.com.br',
-    phone: '(48) 99999-0000',
-    role: 'ADMIN',
-  },
-  VOLUNTEER: {
-    id: 2,
-    name: 'Voluntário',
-    email: 'voluntario@abadeus.com.br',
-    phone: '(48) 99999-1111',
-    role: 'VOLUNTEER',
-  },
-  PARTNER: {
-    id: 3,
-    name: 'Parceiro',
-    email: 'parceiro@abadeus.com.br',
-    phone: '(48) 99999-2222',
-    role: 'PARTNER',
-  },
-};
-
 export default function AuthScreen({ onLoginSuccess }) {
   const [mode, setMode] = useState('BUYER'); // BUYER | STAFF
+  const [buyerAuthMode, setBuyerAuthMode] = useState('LOGIN'); // LOGIN | REGISTER
+  const [loading, setLoading] = useState(false);
 
   // Campos apoiador / comprador
-  const [buyerName, setBuyerName] = useState('Cliente');
+  const [buyerName, setBuyerName] = useState('');
   const [buyerEmail, setBuyerEmail] = useState('cliente@email.com');
-  const [buyerPhone, setBuyerPhone] = useState('(48) 99999-9999');
+  const [buyerPhone, setBuyerPhone] = useState('(48) 99842-1082');
+  const [buyerPassword, setBuyerPassword] = useState('123456');
+  const [showBuyerPassword, setShowBuyerPassword] = useState(false);
 
   // Campos equipe (admin / voluntário / parceiro)
   const [staffEmail, setStaffEmail] = useState('admin@abadeus.com.br');
   const [staffPassword, setStaffPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [staffErrorMsg, setStaffErrorMsg] = useState('');
 
   const scrollViewRef = useRef(null);
   const buyerEmailRef = useRef(null);
   const buyerPhoneRef = useRef(null);
+  const buyerPasswordRef = useRef(null);
   const staffPasswordRef = useRef(null);
 
   const scrollToForm = () => {
@@ -76,64 +53,109 @@ export default function AuthScreen({ onLoginSuccess }) {
     }, 120);
   };
 
-  const handleBuyerSubmit = () => {
-    if (!buyerName.trim() || !buyerEmail.trim()) {
-      Alert.alert('Campos obrigatórios', 'Preencha seu nome e e-mail para continuar');
+  const handleBuyerSubmit = async () => {
+    const cleanEmail = buyerEmail.trim().toLowerCase();
+    const cleanPassword = buyerPassword.trim();
+
+    if (buyerAuthMode === 'REGISTER') {
+      if (!buyerName.trim() || !cleanEmail || !cleanPassword) {
+        Alert.alert('Campos obrigatórios', 'Preencha nome, e-mail e senha para se cadastrar.');
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const user = await api.registerBuyer({
+          name: buyerName.trim(),
+          email: cleanEmail,
+          phone: buyerPhone.trim(),
+          password: cleanPassword,
+        });
+        onLoginSuccess(user);
+      } catch (err) {
+        if (err.isNetworkError) {
+          try {
+            const localUser = registerBuyer(buyerName, cleanEmail, cleanPassword);
+            Alert.alert('Modo offline', 'Cadastro salvo no banco local do aparelho.');
+            onLoginSuccess({
+              ...localUser,
+              phone: buyerPhone.trim() || '(48) 99999-9999',
+            });
+          } catch (dbErr) {
+            Alert.alert('Erro no cadastro', 'E-mail já cadastrado no banco local.');
+          }
+        } else {
+          Alert.alert('Erro no cadastro', err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
-    onLoginSuccess({
-      id: 4,
-      name: buyerName.trim(),
-      email: buyerEmail.trim(),
-      phone: buyerPhone.trim() || '(48) 99999-9999',
-      role: 'BUYER',
-    });
+    // Login do comprador
+    if (!cleanEmail || !cleanPassword) {
+      Alert.alert('Campos obrigatórios', 'Informe seu e-mail e senha para entrar.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const user = await api.login(cleanEmail, cleanPassword);
+      onLoginSuccess(user);
+    } catch (err) {
+      if (err.isNetworkError) {
+        const localUser = loginUser(cleanEmail, cleanPassword);
+        if (localUser) {
+          Alert.alert('Modo offline', 'Conectado via banco local SQLite.');
+          onLoginSuccess({
+            ...localUser,
+            phone: localUser.phone || '(48) 99842-1082',
+          });
+        } else {
+          Alert.alert('Sem conexão', 'Servidor indisponível e credenciais não encontradas localmente.');
+        }
+      } else {
+        Alert.alert('Acesso negado', err.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleStaffLogin = () => {
-    if (failedAttempts >= 5) {
-      Alert.alert(
-        'Acesso bloqueado',
-        'Limite de 5 tentativas excedido! Sua conta está temporariamente bloqueada por 5 minutos'
-      );
-      return;
-    }
-
+  const handleStaffLogin = async () => {
     const emailClean = staffEmail.trim().toLowerCase();
     const passClean = staffPassword.trim();
 
-    if (emailClean === 'admin@abadeus.com.br' && passClean === 'ADM123') {
-      setFailedAttempts(0);
-      onLoginSuccess(DEMO_USERS.ADMIN);
+    if (!emailClean || !passClean) {
+      Alert.alert('Campos obrigatórios', 'Informe o e-mail institucional e a senha.');
       return;
     }
 
-    if (emailClean === 'voluntario@abadeus.com.br' && passClean === 'VOL123') {
-      setFailedAttempts(0);
-      onLoginSuccess(DEMO_USERS.VOLUNTEER);
-      return;
-    }
-
-    if (emailClean === 'parceiro@abadeus.com.br' && passClean === 'PAR123') {
-      setFailedAttempts(0);
-      onLoginSuccess(DEMO_USERS.PARTNER);
-      return;
-    }
-
-    const nextAttempts = failedAttempts + 1;
-    setFailedAttempts(nextAttempts);
-
-    if (nextAttempts >= 5) {
-      Alert.alert(
-        'Acesso bloqueado',
-        '5 tentativas inválidas registradas. O acesso foi bloqueado por 5 minutos'
-      );
-    } else {
-      Alert.alert(
-        'Credenciais inválidas',
-        `Senha ou e-mail incorretos. Tentativa ${nextAttempts} de 5`
-      );
+    setStaffErrorMsg('');
+    setLoading(true);
+    try {
+      const user = await api.login(emailClean, passClean);
+      if (user.role === 'BUYER') {
+        Alert.alert('Perfil inválido', 'Esta conta é de comprador. Use a aba "Sou apoiador".');
+        return;
+      }
+      onLoginSuccess(user);
+    } catch (err) {
+      if (err.isNetworkError) {
+        const localUser = loginUser(emailClean, passClean);
+        if (localUser && localUser.role !== 'BUYER') {
+          Alert.alert('Modo contingência offline', 'Acesso liberado pelo banco local SQLite.');
+          onLoginSuccess(localUser);
+        } else {
+          setStaffErrorMsg('Servidor offline e credenciais não validadas localmente.');
+        }
+      } else {
+        setStaffErrorMsg(err.message);
+        Alert.alert(err.status === 429 ? 'Acesso bloqueado' : 'Credenciais inválidas', err.message);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -207,8 +229,12 @@ export default function AuthScreen({ onLoginSuccess }) {
             <View style={styles.formCard}>
               <View style={styles.cardHeaderRow}>
                 <View style={{ flex: 1, marginRight: 8 }}>
-                  <Text style={styles.cardOverline}>Acesso rápido do cliente</Text>
-                  <Text style={styles.cardTitle}>Garanta sua paella</Text>
+                  <Text style={styles.cardOverline}>
+                    {buyerAuthMode === 'LOGIN' ? 'Acesso do apoiador' : 'Novo cadastro solidário'}
+                  </Text>
+                  <Text style={styles.cardTitle}>
+                    {buyerAuthMode === 'LOGIN' ? 'Garanta sua paella' : 'Criar minha conta'}
+                  </Text>
                 </View>
                 <View style={styles.pixFastBadge}>
                   <Ionicons name="flash" size={12} color={COLORS.mediterraneo} />
@@ -216,23 +242,58 @@ export default function AuthScreen({ onLoginSuccess }) {
                 </View>
               </View>
 
-              <Text style={styles.cardDesc}>
-                Identifique-se rapidamente para escolher suas porções e receber seu voucher digital
-                de retirada no drive-thru ou salão
-              </Text>
+              {/* Alternância Entrar / Registrar */}
+              <View style={styles.subToggleRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.subToggleBtn,
+                    buyerAuthMode === 'LOGIN' && styles.subToggleBtnActive,
+                  ]}
+                  onPress={() => setBuyerAuthMode('LOGIN')}
+                >
+                  <Text
+                    style={[
+                      styles.subToggleText,
+                      buyerAuthMode === 'LOGIN' && styles.subToggleTextActive,
+                    ]}
+                  >
+                    Entrar
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.subToggleBtn,
+                    buyerAuthMode === 'REGISTER' && styles.subToggleBtnActive,
+                  ]}
+                  onPress={() => setBuyerAuthMode('REGISTER')}
+                >
+                  <Text
+                    style={[
+                      styles.subToggleText,
+                      buyerAuthMode === 'REGISTER' && styles.subToggleTextActive,
+                    ]}
+                  >
+                    Registrar
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-              <Text style={styles.inputLabel}>Nome completo</Text>
-              <TextInput
-                style={styles.input}
-                value={buyerName}
-                onChangeText={setBuyerName}
-                placeholder="Digite seu nome completo"
-                placeholderTextColor={COLORS.cinzaTexto}
-                onFocus={scrollToForm}
-                returnKeyType="next"
-                blurOnSubmit={false}
-                onSubmitEditing={() => buyerEmailRef.current?.focus()}
-              />
+              {buyerAuthMode === 'REGISTER' && (
+                <>
+                  <Text style={styles.inputLabel}>Nome completo</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={buyerName}
+                    onChangeText={setBuyerName}
+                    placeholder="Digite seu nome completo"
+                    placeholderTextColor={COLORS.cinzaTexto}
+                    onFocus={scrollToForm}
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => buyerEmailRef.current?.focus()}
+                  />
+                </>
+              )}
 
               <Text style={styles.inputLabel}>E-mail para recibo e QR Code</Text>
               <TextInput
@@ -247,27 +308,84 @@ export default function AuthScreen({ onLoginSuccess }) {
                 onFocus={scrollToForm}
                 returnKeyType="next"
                 blurOnSubmit={false}
-                onSubmitEditing={() => buyerPhoneRef.current?.focus()}
+                onSubmitEditing={() =>
+                  buyerAuthMode === 'REGISTER'
+                    ? buyerPhoneRef.current?.focus()
+                    : buyerPasswordRef.current?.focus()
+                }
               />
 
-              <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
-              <TextInput
-                ref={buyerPhoneRef}
-                style={styles.input}
-                value={buyerPhone}
-                onChangeText={setBuyerPhone}
-                keyboardType="phone-pad"
-                placeholder="(48) 99999-9999"
-                placeholderTextColor={COLORS.cinzaTexto}
-                onFocus={scrollToForm}
-                returnKeyType="done"
-                onSubmitEditing={handleBuyerSubmit}
-              />
+              {buyerAuthMode === 'REGISTER' && (
+                <>
+                  <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
+                  <TextInput
+                    ref={buyerPhoneRef}
+                    style={styles.input}
+                    value={buyerPhone}
+                    onChangeText={setBuyerPhone}
+                    keyboardType="phone-pad"
+                    placeholder="(48) 99999-9999"
+                    placeholderTextColor={COLORS.cinzaTexto}
+                    onFocus={scrollToForm}
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => buyerPasswordRef.current?.focus()}
+                  />
+                </>
+              )}
 
-              <TouchableOpacity style={styles.primaryBuyerBtn} onPress={handleBuyerSubmit}>
-                <Text style={styles.primaryBuyerBtnText}>Entrar e ver cardápio solidário</Text>
-                <Feather name="arrow-right" size={18} color={COLORS.branco} />
+              <Text style={styles.inputLabel}>Senha</Text>
+              <View style={styles.passwordInputWrap}>
+                <TextInput
+                  ref={buyerPasswordRef}
+                  style={styles.passwordInput}
+                  value={buyerPassword}
+                  onChangeText={setBuyerPassword}
+                  secureTextEntry={!showBuyerPassword}
+                  autoCapitalize="none"
+                  placeholder="Digite sua senha"
+                  placeholderTextColor={COLORS.cinzaTexto}
+                  onFocus={scrollToForm}
+                  returnKeyType="done"
+                  onSubmitEditing={handleBuyerSubmit}
+                />
+                <TouchableOpacity
+                  style={styles.eyeBtn}
+                  onPress={() => setShowBuyerPassword((prev) => !prev)}
+                >
+                  <Feather
+                    name={showBuyerPassword ? 'eye-off' : 'eye'}
+                    size={18}
+                    color={COLORS.cinzaTexto}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.primaryBuyerBtn, loading && { opacity: 0.7 }]}
+                onPress={handleBuyerSubmit}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color={COLORS.branco} />
+                ) : (
+                  <>
+                    <Text style={styles.primaryBuyerBtnText}>
+                      {buyerAuthMode === 'LOGIN'
+                        ? 'Entrar e ver cardápio solidário'
+                        : 'Cadastrar e continuar'}
+                    </Text>
+                    <Feather name="arrow-right" size={18} color={COLORS.branco} />
+                  </>
+                )}
               </TouchableOpacity>
+
+              <View style={styles.lgpdRow}>
+                <Feather name="lock" size={11} color={COLORS.cinzaTexto} />
+                <Text style={styles.lgpdText}>
+                  LGPD: seus dados são usados apenas para emissão do comprovante e retirada.
+                </Text>
+              </View>
             </View>
           ) : (
             /* 3B. Visão da equipe (admin, voluntário, parceiro) */
@@ -328,19 +446,26 @@ export default function AuthScreen({ onLoginSuccess }) {
                 </TouchableOpacity>
               </View>
 
-              {failedAttempts > 0 && (
+              {!!staffErrorMsg && (
                 <View style={styles.lockoutWarningBox}>
                   <Feather name="alert-circle" size={14} color={COLORS.tomate} />
-                  <Text style={styles.lockoutWarningText}>
-                    Atenção: {failedAttempts}/5 tentativas utilizadas (bloqueio de 5 min após 5
-                    erros)
-                  </Text>
+                  <Text style={styles.lockoutWarningText}>{staffErrorMsg}</Text>
                 </View>
               )}
 
-              <TouchableOpacity style={styles.primaryStaffBtn} onPress={handleStaffLogin}>
-                <Feather name="log-in" size={17} color={COLORS.branco} />
-                <Text style={styles.primaryBuyerBtnText}>Acessar painel operacional</Text>
+              <TouchableOpacity
+                style={[styles.primaryStaffBtn, loading && { opacity: 0.7 }]}
+                onPress={handleStaffLogin}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color={COLORS.branco} />
+                ) : (
+                  <>
+                    <Feather name="log-in" size={17} color={COLORS.branco} />
+                    <Text style={styles.primaryBuyerBtnText}>Acessar painel operacional</Text>
+                  </>
+                )}
               </TouchableOpacity>
             </View>
           )}
@@ -468,7 +593,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   cardOverline: {
     fontSize: 10,
@@ -495,6 +620,34 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: FONTS.bodySemiBold,
     color: COLORS.mediterraneo,
+  },
+  subToggleRow: {
+    flexDirection: 'row',
+    backgroundColor: COLORS.creme,
+    borderRadius: 12,
+    padding: 3,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#EADBC0',
+  },
+  subToggleBtn: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 9,
+    alignItems: 'center',
+  },
+  subToggleBtnActive: {
+    backgroundColor: COLORS.branco,
+    elevation: 1,
+  },
+  subToggleText: {
+    fontSize: 12,
+    fontFamily: FONTS.bodyMedium,
+    color: COLORS.cinzaTexto,
+  },
+  subToggleTextActive: {
+    fontFamily: FONTS.bodyBold,
+    color: COLORS.tomate,
   },
   cardDesc: {
     fontSize: 12,
@@ -582,6 +735,19 @@ const styles = StyleSheet.create({
     color: COLORS.branco,
     fontSize: 14,
     fontFamily: FONTS.bodyBold,
+  },
+  lgpdRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 12,
+  },
+  lgpdText: {
+    flex: 1,
+    fontSize: 10,
+    fontFamily: FONTS.bodyRegular,
+    color: COLORS.cinzaTexto,
+    lineHeight: 14,
   },
   eventFooterCard: {
     flexDirection: 'row',

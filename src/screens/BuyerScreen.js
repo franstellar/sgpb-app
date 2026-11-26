@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
@@ -18,6 +19,7 @@ import BottomTabBar from '../components/BottomTabBar';
 import CatalogCheckoutScreen from './CatalogCheckoutScreen';
 import MyOrdersScreen from './MyOrdersScreen';
 import EventInfoScreen from './EventInfoScreen';
+import { api } from '../services/api';
 
 const INITIAL_PRODUCTS = [
   {
@@ -40,11 +42,7 @@ const INITIAL_PRODUCTS = [
     description: 'Frango, lombo suíno e linguiça (1,8kg)',
     image: require('../../assets/images/paella-valenciana.png'),
     topLeftBadge: { text: '☆ Mais pedido', bg: COLORS.tomate, color: COLORS.branco },
-    bottomRightBadge: {
-      text: 'Serve 4 pessoas (1,8kg)',
-      bg: COLORS.branco,
-      color: COLORS.preto,
-    },
+    bottomRightBadge: { text: 'Serve 4 pessoas (1,8kg)', bg: COLORS.branco, color: COLORS.preto },
     footerInfo: 'Economia de R$ 20',
     footerIcon: 'pricetag-outline',
   },
@@ -96,59 +94,77 @@ const INITIAL_PRODUCTS = [
   },
 ];
 
-const INITIAL_ORDERS = [
-  {
-    id: 8429,
-    orderNumber: 'PAE-8429',
-    status: 'PAID',
-    totalAmount: 115.0,
-    createdAt: 'Hoje, 14:32',
-    paidAt: '14:35',
-    receiptNumber: '92813',
-    customerName: 'Cliente',
-    customerPhone: '(48) 99842-1082',
-    validationCode: 'VAL-8429-CRICIUMA-OK',
-    items: [
-      { name: 'Paella de carnes (individual)', quantity: 1, subtotal: 45.0 },
-      { name: 'Combo Paelito frutos do mar', quantity: 1, subtotal: 65.0 },
-    ],
-    donation: 5.0,
-  },
-  {
-    id: 8435,
-    orderNumber: 'PAE-8435',
-    status: 'PENDING',
-    totalAmount: 160.0,
-    createdAt: 'Hoje, 14:48',
-    expiresIn: 'Expira em 12:40',
-    customerName: 'Cliente',
-    customerPhone: '(48) 99842-1082',
-    items: [
-      {
-        name: 'Paella de carnes (4 pessoas)',
-        subtitle: 'Serve 4 pessoas',
-        quantity: 1,
-        subtotal: 160.0,
-      },
-    ],
-    donation: 0,
-  },
-];
-
 const FILTERS = ['Todos', 'Paellas', 'Combos', 'Bebidas'];
 
 export default function BuyerScreen({ user, onLogout }) {
   const [selectedFilter, setSelectedFilter] = useState('Todos');
   const [activeTab, setActiveTab] = useState('HOME');
-  const [quantities, setQuantities] = useState({ 1: 1, 10: 1 });
-  const [orders, setOrders] = useState(INITIAL_ORDERS);
+  const [quantities, setQuantities] = useState({ 1: 1 });
+  const [apiProducts, setApiProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [scrollToSummaryTrigger, setScrollToSummaryTrigger] = useState(0);
+
+  const loadBuyerData = useCallback(async () => {
+    try {
+      const [prods, userOrders] = await Promise.all([
+        api.listProducts(1),
+        user?.id ? api.listOrders(user.id) : Promise.resolve([]),
+      ]);
+
+      setApiProducts(prods || []);
+
+      const enrichedOrders = await Promise.all(
+        (userOrders || []).map(async (o) => {
+          let items = [];
+          try {
+            const rawItems = await api.getOrderItems(o.id);
+            items = (rawItems || []).map((i) => ({
+              name: i.product?.name || 'Item Paelito',
+              quantity: i.quantity,
+              subtotal: Number(i.subtotal),
+            }));
+          } catch {
+            items = [];
+          }
+
+          return {
+            id: o.id,
+            orderNumber: o.orderNumber,
+            status: o.status,
+            totalAmount: Number(o.totalAmount),
+            donation: Number(o.donationAmount || 0),
+            pixCopyPaste: o.pixCopyPaste,
+            customerName: o.user?.name || user?.name || 'Cliente',
+            customerPhone: o.user?.phone || user?.phone || '(48) 99842-1082',
+            createdAt: o.createdAt
+              ? new Date(o.createdAt).toLocaleTimeString('pt-BR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : 'Hoje',
+            items,
+          };
+        })
+      );
+
+      setOrders(enrichedOrders.reverse());
+    } catch {
+      // Mantém visualização local se o servidor estiver temporariamente inacessível
+    }
+  }, [user]);
+
+  useEffect(() => {
+    loadBuyerData();
+  }, [loadBuyerData]);
 
   const totalCartItems = Object.values(quantities).reduce((sum, q) => sum + q, 0);
 
   const handleChangeTab = (tab) => {
     setScrollToSummaryTrigger(0);
     setActiveTab(tab);
+    if (tab === 'ORDERS' || tab === 'MENU') {
+      loadBuyerData();
+    }
   };
 
   const handleOpenCart = () => {
@@ -170,33 +186,47 @@ export default function BuyerScreen({ user, onLogout }) {
 
   const handleOrderCreated = (newOrder) => {
     setOrders((prev) => [newOrder, ...prev]);
+    setQuantities({});
     handleChangeTab('ORDERS');
   };
 
-  const handleSimulatePay = (orderId) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: 'PAID', paidAt: 'Agora' } : o))
-    );
+  const handleSimulatePay = async (orderId) => {
+    try {
+      await api.confirmPayment(orderId, {
+        externalId: `PIX-${orderId}-${Date.now()}`,
+        method: 'PIX',
+        provider: 'PIX_PROVIDER',
+      });
+      Alert.alert(
+        'Pagamento confirmado!',
+        'Seu QR Code de retirada já foi liberado na aba "Pedidos".'
+      );
+      loadBuyerData();
+    } catch (err) {
+      Alert.alert('Erro ao confirmar pagamento', err.message);
+    }
   };
+
+  const mergedHighlightProducts = INITIAL_PRODUCTS.map((p) => {
+    const fromApi = apiProducts.find((ap) => ap.id === p.id);
+    return fromApi ? { ...p, price: Number(fromApi.price) } : p;
+  });
 
   const filteredProducts =
     selectedFilter === 'Todos'
-      ? INITIAL_PRODUCTS
-      : INITIAL_PRODUCTS.filter((p) => p.category === selectedFilter);
+      ? mergedHighlightProducts
+      : mergedHighlightProducts.filter((p) => p.category === selectedFilter);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.creme} />
 
-      <TopBar
-        cartCount={totalCartItems}
-        onOpenCart={handleOpenCart}
-        onLogout={onLogout}
-      />
+      <TopBar cartCount={totalCartItems} onOpenCart={handleOpenCart} onLogout={onLogout} />
 
       {activeTab === 'MENU' ? (
         <CatalogCheckoutScreen
           user={user}
+          apiProducts={apiProducts}
           quantities={quantities}
           onUpdateQty={handleUpdateQty}
           onBack={() => handleChangeTab('HOME')}
