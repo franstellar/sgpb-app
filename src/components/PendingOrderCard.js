@@ -86,7 +86,7 @@ export default function PendingOrderCard({ order, onSimulatePay }) {
         {onSimulatePay && (
           <TouchableOpacity
             style={styles.confirmPayBtn}
-            onPress={() => onSimulatePay(order)}
+            onPress={() => onSimulatePay(order.id)}
           >
             <Feather name="check-circle" size={16} color={COLORS.branco} />
             <Text style={styles.confirmPayBtnText}>Confirmar pagamento Pix</Text>

@@ -23,6 +23,25 @@ import { loginUser, registerBuyer } from '../db';
 const LOGO_PAELITO = require('../../assets/images/logo-paelito.png');
 const ABADEUS_LOGO = require('../../assets/images/logo-abadeus.png');
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const formatPhone = (value) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length === 0) return '';
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+};
+
+const notifyAlert = (title, message) => {
+  if (Platform.OS !== 'web') {
+    Alert.alert(title, message);
+  }
+};
+
 export default function AuthScreen({ onLoginSuccess }) {
   const [mode, setMode] = useState('BUYER'); // BUYER | STAFF
   const [buyerAuthMode, setBuyerAuthMode] = useState('LOGIN'); // LOGIN | REGISTER
@@ -30,13 +49,14 @@ export default function AuthScreen({ onLoginSuccess }) {
 
   // Campos apoiador / comprador
   const [buyerName, setBuyerName] = useState('');
-  const [buyerEmail, setBuyerEmail] = useState('cliente@email.com');
-  const [buyerPhone, setBuyerPhone] = useState('(48) 99842-1082');
-  const [buyerPassword, setBuyerPassword] = useState('123456');
+  const [buyerEmail, setBuyerEmail] = useState('');
+  const [buyerPhone, setBuyerPhone] = useState('');
+  const [buyerPassword, setBuyerPassword] = useState('');
   const [showBuyerPassword, setShowBuyerPassword] = useState(false);
+  const [buyerErrorMsg, setBuyerErrorMsg] = useState('');
 
   // Campos equipe (admin / voluntário / parceiro)
-  const [staffEmail, setStaffEmail] = useState('admin@abadeus.com.br');
+  const [staffEmail, setStaffEmail] = useState('');
   const [staffPassword, setStaffPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [staffErrorMsg, setStaffErrorMsg] = useState('');
@@ -47,6 +67,35 @@ export default function AuthScreen({ onLoginSuccess }) {
   const buyerPasswordRef = useRef(null);
   const staffPasswordRef = useRef(null);
 
+  const resetBuyerFields = () => {
+    setBuyerName('');
+    setBuyerEmail('');
+    setBuyerPhone('');
+    setBuyerPassword('');
+    setShowBuyerPassword(false);
+    setBuyerErrorMsg('');
+  };
+
+  const resetStaffFields = () => {
+    setStaffEmail('');
+    setStaffPassword('');
+    setShowPassword(false);
+    setStaffErrorMsg('');
+  };
+
+  const handleSwitchMode = (nextMode) => {
+    if (nextMode === mode) return;
+    setMode(nextMode);
+    resetBuyerFields();
+    resetStaffFields();
+  };
+
+  const handleSwitchBuyerAuthMode = (nextAuthMode) => {
+    if (nextAuthMode === buyerAuthMode) return;
+    setBuyerAuthMode(nextAuthMode);
+    resetBuyerFields();
+  };
+
   const scrollToForm = () => {
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -54,38 +103,67 @@ export default function AuthScreen({ onLoginSuccess }) {
   };
 
   const handleBuyerSubmit = async () => {
+    const cleanName = buyerName.trim().replace(/\s+/g, ' ');
     const cleanEmail = buyerEmail.trim().toLowerCase();
+    const phoneDigits = buyerPhone.replace(/\D/g, '');
     const cleanPassword = buyerPassword.trim();
+    setBuyerErrorMsg('');
 
     if (buyerAuthMode === 'REGISTER') {
-      if (!buyerName.trim() || !cleanEmail || !cleanPassword) {
-        Alert.alert('Campos obrigatórios', 'Preencha nome, e-mail e senha para se cadastrar.');
+      if (cleanName.length < 3) {
+        const msg = 'Informe seu nome completo (mínimo de 3 caracteres)';
+        setBuyerErrorMsg(msg);
+        notifyAlert('Nome inválido', msg);
+        return;
+      }
+
+      if (!EMAIL_REGEX.test(cleanEmail)) {
+        const msg = 'Informe um e-mail válido (ex.: nome@email.com)';
+        setBuyerErrorMsg(msg);
+        notifyAlert('E-mail inválido', msg);
+        return;
+      }
+
+      if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+        const msg = 'Informe um WhatsApp válido com DDD (10 ou 11 dígitos)';
+        setBuyerErrorMsg(msg);
+        notifyAlert('WhatsApp inválido', msg);
+        return;
+      }
+
+      if (cleanPassword.length < 6) {
+        const msg = 'A senha deve ter pelo menos 6 caracteres';
+        setBuyerErrorMsg(msg);
+        notifyAlert('Senha muito curta', msg);
         return;
       }
 
       setLoading(true);
       try {
         const user = await api.registerBuyer({
-          name: buyerName.trim(),
+          name: cleanName,
           email: cleanEmail,
-          phone: buyerPhone.trim(),
+          phone: phoneDigits,
           password: cleanPassword,
         });
         onLoginSuccess(user);
       } catch (err) {
         if (err.isNetworkError) {
           try {
-            const localUser = registerBuyer(buyerName, cleanEmail, cleanPassword);
-            Alert.alert('Modo offline', 'Cadastro salvo no banco local do aparelho.');
+            const localUser = registerBuyer(cleanName, cleanEmail, cleanPassword);
+            notifyAlert('Modo offline', 'Cadastro salvo no banco local do aparelho');
             onLoginSuccess({
               ...localUser,
-              phone: buyerPhone.trim() || '(48) 99999-9999',
+              phone: phoneDigits,
             });
           } catch (dbErr) {
-            Alert.alert('Erro no cadastro', 'E-mail já cadastrado no banco local.');
+            const msg = 'E-mail já cadastrado no banco local';
+            setBuyerErrorMsg(msg);
+            notifyAlert('Erro no cadastro', msg);
           }
         } else {
-          Alert.alert('Erro no cadastro', err.message);
+          setBuyerErrorMsg(err.message);
+          notifyAlert('Erro no cadastro', err.message);
         }
       } finally {
         setLoading(false);
@@ -94,8 +172,17 @@ export default function AuthScreen({ onLoginSuccess }) {
     }
 
     // Login do comprador
-    if (!cleanEmail || !cleanPassword) {
-      Alert.alert('Campos obrigatórios', 'Informe seu e-mail e senha para entrar.');
+    if (!EMAIL_REGEX.test(cleanEmail)) {
+      const msg = 'Informe um e-mail válido para entrar';
+      setBuyerErrorMsg(msg);
+      notifyAlert('E-mail inválido', msg);
+      return;
+    }
+
+    if (!cleanPassword) {
+      const msg = 'Informe sua senha para entrar';
+      setBuyerErrorMsg(msg);
+      notifyAlert('Campo obrigatório', msg);
       return;
     }
 
@@ -107,16 +194,19 @@ export default function AuthScreen({ onLoginSuccess }) {
       if (err.isNetworkError) {
         const localUser = loginUser(cleanEmail, cleanPassword);
         if (localUser) {
-          Alert.alert('Modo offline', 'Conectado via banco local SQLite.');
+          notifyAlert('Modo offline', 'Conectado via banco local SQLite');
           onLoginSuccess({
             ...localUser,
-            phone: localUser.phone || '(48) 99842-1082',
+            phone: localUser.phone || '',
           });
         } else {
-          Alert.alert('Sem conexão', 'Servidor indisponível e credenciais não encontradas localmente.');
+          const msg = 'Servidor indisponível e credenciais não encontradas localmente';
+          setBuyerErrorMsg(msg);
+          notifyAlert('Sem conexão', msg);
         }
       } else {
-        Alert.alert('Acesso negado', err.message);
+        setBuyerErrorMsg(err.message);
+        notifyAlert('Acesso negado', err.message);
       }
     } finally {
       setLoading(false);
@@ -126,18 +216,29 @@ export default function AuthScreen({ onLoginSuccess }) {
   const handleStaffLogin = async () => {
     const emailClean = staffEmail.trim().toLowerCase();
     const passClean = staffPassword.trim();
+    setStaffErrorMsg('');
 
-    if (!emailClean || !passClean) {
-      Alert.alert('Campos obrigatórios', 'Informe o e-mail institucional e a senha.');
+    if (!EMAIL_REGEX.test(emailClean)) {
+      const msg = 'Informe um e-mail institucional válido';
+      setStaffErrorMsg(msg);
+      notifyAlert('E-mail inválido', msg);
       return;
     }
 
-    setStaffErrorMsg('');
+    if (!passClean) {
+      const msg = 'Informe o código ou senha de acesso';
+      setStaffErrorMsg(msg);
+      notifyAlert('Campo obrigatório', msg);
+      return;
+    }
+
     setLoading(true);
     try {
       const user = await api.login(emailClean, passClean);
       if (user.role === 'BUYER') {
-        Alert.alert('Perfil inválido', 'Esta conta é de comprador. Use a aba "Sou apoiador".');
+        const msg = 'Esta conta é de comprador. Use a aba "Sou apoiador" ';
+        setStaffErrorMsg(msg);
+        notifyAlert('Perfil inválido', msg);
         return;
       }
       onLoginSuccess(user);
@@ -145,14 +246,14 @@ export default function AuthScreen({ onLoginSuccess }) {
       if (err.isNetworkError) {
         const localUser = loginUser(emailClean, passClean);
         if (localUser && localUser.role !== 'BUYER') {
-          Alert.alert('Modo contingência offline', 'Acesso liberado pelo banco local SQLite.');
+          notifyAlert('Modo contingência offline', 'Acesso liberado pelo banco local SQLite');
           onLoginSuccess(localUser);
         } else {
           setStaffErrorMsg('Servidor offline e credenciais não validadas localmente.');
         }
       } else {
         setStaffErrorMsg(err.message);
-        Alert.alert(err.status === 429 ? 'Acesso bloqueado' : 'Credenciais inválidas', err.message);
+        notifyAlert(err.status === 429 ? 'Acesso bloqueado' : 'Credenciais inválidas', err.message);
       }
     } finally {
       setLoading(false);
@@ -174,312 +275,352 @@ export default function AuthScreen({ onLoginSuccess }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* 1. Cabeçalho da marca Paelito */}
-          <View style={styles.headerCenter}>
-            <View style={styles.topBadgesRow}>
-              <View style={styles.editionPill}>
-                <View style={styles.redDot} />
-                <Text style={styles.editionPillText}>12ª edição solidária</Text>
+          <View style={styles.contentWrapper}>
+            {/* 1. Cabeçalho da marca Paelito */}
+            <View style={styles.headerCenter}>
+              <View style={styles.topBadgesRow}>
+                <View style={styles.editionPill}>
+                  <View style={styles.redDot} />
+                  <Text style={styles.editionPillText}>12ª edição solidária</Text>
+                </View>
+                <View style={styles.abadeusPill}>
+                  <Image source={ABADEUS_LOGO} style={styles.abadeusLogo} resizeMode="contain" />
+                </View>
               </View>
-              <View style={styles.abadeusPill}>
-                <Image source={ABADEUS_LOGO} style={styles.abadeusLogo} resizeMode="contain" />
-              </View>
+
+              <Image source={LOGO_PAELITO} style={styles.loginLogo} resizeMode="contain" />
+
+              <Text style={styles.heroSubtitle}>
+                Mais que uma paella, uma boa causa para aquecer corações!
+              </Text>
             </View>
 
-            <Image source={LOGO_PAELITO} style={styles.loginLogo} resizeMode="contain" />
-
-            <Text style={styles.heroSubtitle}>
-              Mais que uma paella, uma boa causa para aquecer corações!
-            </Text>
-          </View>
-
-          {/* 2. Seletor de perfil: apoiador vs equipe ABADEUS */}
-          <View style={styles.modeSwitchContainer}>
-            <TouchableOpacity
-              style={[styles.modeTab, mode === 'BUYER' && styles.modeTabActive]}
-              onPress={() => setMode('BUYER')}
-            >
-              <Ionicons
-                name="heart-outline"
-                size={16}
-                color={mode === 'BUYER' ? COLORS.branco : COLORS.preto}
-              />
-              <Text style={[styles.modeTabText, mode === 'BUYER' && styles.modeTabTextActive]}>
-                Sou apoiador
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.modeTab, mode === 'STAFF' && styles.modeTabActiveStaff]}
-              onPress={() => setMode('STAFF')}
-            >
-              <Feather
-                name="shield"
-                size={15}
-                color={mode === 'STAFF' ? COLORS.branco : COLORS.preto}
-              />
-              <Text style={[styles.modeTabText, mode === 'STAFF' && styles.modeTabTextActive]}>
-                Sou da equipe
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* 3A. Visão do apoiador / comprador */}
-          {mode === 'BUYER' ? (
-            <View style={styles.formCard}>
-              <View style={styles.cardHeaderRow}>
-                <View style={{ flex: 1, marginRight: 8 }}>
-                  <Text style={styles.cardOverline}>
-                    {buyerAuthMode === 'LOGIN' ? 'Acesso do apoiador' : 'Novo cadastro solidário'}
-                  </Text>
-                  <Text style={styles.cardTitle}>
-                    {buyerAuthMode === 'LOGIN' ? 'Garanta sua paella' : 'Criar minha conta'}
-                  </Text>
-                </View>
-                <View style={styles.pixFastBadge}>
-                  <Ionicons name="flash" size={12} color={COLORS.mediterraneo} />
-                  <Text style={styles.pixFastText}>Pix + QR Code</Text>
-                </View>
-              </View>
-
-              {/* Alternância Entrar / Registrar */}
-              <View style={styles.subToggleRow}>
-                <TouchableOpacity
-                  style={[
-                    styles.subToggleBtn,
-                    buyerAuthMode === 'LOGIN' && styles.subToggleBtnActive,
-                  ]}
-                  onPress={() => setBuyerAuthMode('LOGIN')}
-                >
-                  <Text
-                    style={[
-                      styles.subToggleText,
-                      buyerAuthMode === 'LOGIN' && styles.subToggleTextActive,
-                    ]}
-                  >
-                    Entrar
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.subToggleBtn,
-                    buyerAuthMode === 'REGISTER' && styles.subToggleBtnActive,
-                  ]}
-                  onPress={() => setBuyerAuthMode('REGISTER')}
-                >
-                  <Text
-                    style={[
-                      styles.subToggleText,
-                      buyerAuthMode === 'REGISTER' && styles.subToggleTextActive,
-                    ]}
-                  >
-                    Registrar
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              {buyerAuthMode === 'REGISTER' && (
-                <>
-                  <Text style={styles.inputLabel}>Nome completo</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={buyerName}
-                    onChangeText={setBuyerName}
-                    placeholder="Digite seu nome completo"
-                    placeholderTextColor={COLORS.cinzaTexto}
-                    onFocus={scrollToForm}
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    onSubmitEditing={() => buyerEmailRef.current?.focus()}
-                  />
-                </>
-              )}
-
-              <Text style={styles.inputLabel}>E-mail para recibo e QR Code</Text>
-              <TextInput
-                ref={buyerEmailRef}
-                style={styles.input}
-                value={buyerEmail}
-                onChangeText={setBuyerEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholder="seu@email.com"
-                placeholderTextColor={COLORS.cinzaTexto}
-                onFocus={scrollToForm}
-                returnKeyType="next"
-                blurOnSubmit={false}
-                onSubmitEditing={() =>
-                  buyerAuthMode === 'REGISTER'
-                    ? buyerPhoneRef.current?.focus()
-                    : buyerPasswordRef.current?.focus()
-                }
-              />
-
-              {buyerAuthMode === 'REGISTER' && (
-                <>
-                  <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
-                  <TextInput
-                    ref={buyerPhoneRef}
-                    style={styles.input}
-                    value={buyerPhone}
-                    onChangeText={setBuyerPhone}
-                    keyboardType="phone-pad"
-                    placeholder="(48) 99999-9999"
-                    placeholderTextColor={COLORS.cinzaTexto}
-                    onFocus={scrollToForm}
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    onSubmitEditing={() => buyerPasswordRef.current?.focus()}
-                  />
-                </>
-              )}
-
-              <Text style={styles.inputLabel}>Senha</Text>
-              <View style={styles.passwordInputWrap}>
-                <TextInput
-                  ref={buyerPasswordRef}
-                  style={styles.passwordInput}
-                  value={buyerPassword}
-                  onChangeText={setBuyerPassword}
-                  secureTextEntry={!showBuyerPassword}
-                  autoCapitalize="none"
-                  placeholder="Digite sua senha"
-                  placeholderTextColor={COLORS.cinzaTexto}
-                  onFocus={scrollToForm}
-                  returnKeyType="done"
-                  onSubmitEditing={handleBuyerSubmit}
-                />
-                <TouchableOpacity
-                  style={styles.eyeBtn}
-                  onPress={() => setShowBuyerPassword((prev) => !prev)}
-                >
-                  <Feather
-                    name={showBuyerPassword ? 'eye-off' : 'eye'}
-                    size={18}
-                    color={COLORS.cinzaTexto}
-                  />
-                </TouchableOpacity>
-              </View>
-
+            {/* 2. Seletor de perfil: apoiador vs equipe ABADEUS */}
+            <View style={styles.modeSwitchContainer}>
               <TouchableOpacity
-                style={[styles.primaryBuyerBtn, loading && { opacity: 0.7 }]}
-                onPress={handleBuyerSubmit}
-                disabled={loading}
+                style={[styles.modeTab, mode === 'BUYER' && styles.modeTabActive]}
+                onPress={() => handleSwitchMode('BUYER')}
               >
-                {loading ? (
-                  <ActivityIndicator color={COLORS.branco} />
-                ) : (
-                  <>
-                    <Text style={styles.primaryBuyerBtnText}>
-                      {buyerAuthMode === 'LOGIN'
-                        ? 'Entrar e ver cardápio solidário'
-                        : 'Cadastrar e continuar'}
-                    </Text>
-                    <Feather name="arrow-right" size={18} color={COLORS.branco} />
-                  </>
-                )}
+                <Ionicons
+                  name="heart-outline"
+                  size={16}
+                  color={mode === 'BUYER' ? COLORS.branco : COLORS.preto}
+                />
+                <Text style={[styles.modeTabText, mode === 'BUYER' && styles.modeTabTextActive]}>
+                  Sou apoiador
+                </Text>
               </TouchableOpacity>
 
-              <View style={styles.lgpdRow}>
-                <Feather name="lock" size={11} color={COLORS.cinzaTexto} />
-                <Text style={styles.lgpdText}>
-                  LGPD: seus dados são usados apenas para emissão do comprovante e retirada.
+              <TouchableOpacity
+                style={[styles.modeTab, mode === 'STAFF' && styles.modeTabActiveStaff]}
+                onPress={() => handleSwitchMode('STAFF')}
+              >
+                <Feather
+                  name="shield"
+                  size={15}
+                  color={mode === 'STAFF' ? COLORS.branco : COLORS.preto}
+                />
+                <Text style={[styles.modeTabText, mode === 'STAFF' && styles.modeTabTextActive]}>
+                  Sou da equipe
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* 3A. Visão do apoiador / comprador */}
+            {mode === 'BUYER' ? (
+              <View style={styles.formCard}>
+                <View style={styles.cardHeaderRow}>
+                  <View style={{ flex: 1, marginRight: 8 }}>
+                    <Text style={styles.cardOverline}>
+                      {buyerAuthMode === 'LOGIN' ? 'Acesso do apoiador' : 'Novo cadastro solidário'}
+                    </Text>
+                    <Text style={styles.cardTitle}>
+                      {buyerAuthMode === 'LOGIN' ? 'Garanta sua paella' : 'Criar minha conta'}
+                    </Text>
+                  </View>
+                  <View style={styles.pixFastBadge}>
+                    <Ionicons name="flash" size={12} color={COLORS.mediterraneo} />
+                    <Text style={styles.pixFastText}>Pix + QR Code</Text>
+                  </View>
+                </View>
+
+                {/* Alternância Entrar / Registrar */}
+                <View style={styles.subToggleRow}>
+                  <TouchableOpacity
+                    style={[
+                      styles.subToggleBtn,
+                      buyerAuthMode === 'LOGIN' && styles.subToggleBtnActive,
+                    ]}
+                    onPress={() => handleSwitchBuyerAuthMode('LOGIN')}
+                  >
+                    <Text
+                      style={[
+                        styles.subToggleText,
+                        buyerAuthMode === 'LOGIN' && styles.subToggleTextActive,
+                      ]}
+                    >
+                      Entrar
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.subToggleBtn,
+                      buyerAuthMode === 'REGISTER' && styles.subToggleBtnActive,
+                    ]}
+                    onPress={() => handleSwitchBuyerAuthMode('REGISTER')}
+                  >
+                    <Text
+                      style={[
+                        styles.subToggleText,
+                        buyerAuthMode === 'REGISTER' && styles.subToggleTextActive,
+                      ]}
+                    >
+                      Registrar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                {buyerAuthMode === 'REGISTER' && (
+                  <>
+                    <Text style={styles.inputLabel}>Nome completo</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={buyerName}
+                      onChangeText={(text) => {
+                        setBuyerName(text.replace(/[^a-zA-ZÀ-ÿ\s'.-]/g, ''));
+                        if (buyerErrorMsg) setBuyerErrorMsg('');
+                      }}
+                      maxLength={80}
+                      autoCapitalize="words"
+                      placeholder="Digite seu nome completo"
+                      placeholderTextColor={COLORS.cinzaTexto}
+                      onFocus={scrollToForm}
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => buyerEmailRef.current?.focus()}
+                    />
+                  </>
+                )}
+
+                <Text style={styles.inputLabel}>E-mail para recibo e QR Code</Text>
+                <TextInput
+                  ref={buyerEmailRef}
+                  style={styles.input}
+                  value={buyerEmail}
+                  onChangeText={(text) => {
+                    setBuyerEmail(text.replace(/\s/g, ''));
+                    if (buyerErrorMsg) setBuyerErrorMsg('');
+                  }}
+                  maxLength={100}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  placeholder="seu@email.com"
+                  placeholderTextColor={COLORS.cinzaTexto}
+                  onFocus={scrollToForm}
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                  onSubmitEditing={() =>
+                    buyerAuthMode === 'REGISTER'
+                      ? buyerPhoneRef.current?.focus()
+                      : buyerPasswordRef.current?.focus()
+                  }
+                />
+
+                {buyerAuthMode === 'REGISTER' && (
+                  <>
+                    <Text style={styles.inputLabel}>WhatsApp (aviso de pedido pronto)</Text>
+                    <TextInput
+                      ref={buyerPhoneRef}
+                      style={styles.input}
+                      value={buyerPhone}
+                      onChangeText={(text) => {
+                        setBuyerPhone(formatPhone(text));
+                        if (buyerErrorMsg) setBuyerErrorMsg('');
+                      }}
+                      maxLength={15}
+                      keyboardType="phone-pad"
+                      placeholder="(48) 99999-9999"
+                      placeholderTextColor={COLORS.cinzaTexto}
+                      onFocus={scrollToForm}
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                      onSubmitEditing={() => buyerPasswordRef.current?.focus()}
+                    />
+                  </>
+                )}
+
+                <Text style={styles.inputLabel}>Senha</Text>
+                <View style={styles.passwordInputWrap}>
+                  <TextInput
+                    ref={buyerPasswordRef}
+                    style={styles.passwordInput}
+                    value={buyerPassword}
+                    onChangeText={(text) => {
+                      setBuyerPassword(text);
+                      if (buyerErrorMsg) setBuyerErrorMsg('');
+                    }}
+                    maxLength={64}
+                    secureTextEntry={!showBuyerPassword}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder={
+                      buyerAuthMode === 'REGISTER' ? 'Mínimo de 6 caracteres' : 'Digite sua senha'
+                    }
+                    placeholderTextColor={COLORS.cinzaTexto}
+                    onFocus={scrollToForm}
+                    returnKeyType="done"
+                    onSubmitEditing={handleBuyerSubmit}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeBtn}
+                    onPress={() => setShowBuyerPassword((prev) => !prev)}
+                  >
+                    <Feather
+                      name={showBuyerPassword ? 'eye-off' : 'eye'}
+                      size={18}
+                      color={COLORS.cinzaTexto}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {!!buyerErrorMsg && (
+                  <View style={styles.lockoutWarningBox}>
+                    <Feather name="alert-circle" size={14} color={COLORS.tomate} />
+                    <Text style={styles.lockoutWarningText}>{buyerErrorMsg}</Text>
+                  </View>
+                )}
+
+                <TouchableOpacity
+                  style={[styles.primaryBuyerBtn, loading && { opacity: 0.7 }]}
+                  onPress={handleBuyerSubmit}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color={COLORS.branco} />
+                  ) : (
+                    <>
+                      <Text style={styles.primaryBuyerBtnText}>
+                        {buyerAuthMode === 'LOGIN'
+                          ? 'Entrar e ver cardápio solidário'
+                          : 'Cadastrar e continuar'}
+                      </Text>
+                      <Feather name="arrow-right" size={18} color={COLORS.branco} />
+                    </>
+                  )}
+                </TouchableOpacity>
+
+                <View style={styles.lgpdRow}>
+                  <Feather name="lock" size={11} color={COLORS.cinzaTexto} />
+                  <Text style={styles.lgpdText}>
+                    LGPD: seus dados são usados apenas para emissão do comprovante e retirada.
+                  </Text>
+                </View>
+              </View>
+            ) : (
+              /* 3B. Visão da equipe (admin, voluntário, parceiro) */
+              <View style={styles.formCard}>
+                <View style={styles.cardHeaderRow}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.cardOverline, { color: COLORS.mediterraneo }]}>
+                      Acesso restrito
+                    </Text>
+                    <Text style={styles.cardTitle}>Portal da equipe ABADEUS</Text>
+                  </View>
+                </View>
+
+                <Text style={styles.cardDesc}>
+                  Exclusivo para coordenação, voluntários do check-in expresso e parceiros cadastrados
+                  pela organização
+                </Text>
+
+                <Text style={styles.inputLabel}>E-mail institucional/operador</Text>
+                <TextInput
+                  style={styles.input}
+                  value={staffEmail}
+                  onChangeText={(text) => {
+                    setStaffEmail(text.replace(/\s/g, ''));
+                    if (staffErrorMsg) setStaffErrorMsg('');
+                  }}
+                  maxLength={100}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  placeholder="operador@abadeus.com.br"
+                  placeholderTextColor={COLORS.cinzaTexto}
+                  onFocus={scrollToForm}
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                  onSubmitEditing={() => staffPasswordRef.current?.focus()}
+                />
+
+                <Text style={styles.inputLabel}>Código/senha de acesso</Text>
+                <View style={styles.passwordInputWrap}>
+                  <TextInput
+                    ref={staffPasswordRef}
+                    style={styles.passwordInput}
+                    value={staffPassword}
+                    onChangeText={(text) => {
+                      setStaffPassword(text);
+                      if (staffErrorMsg) setStaffErrorMsg('');
+                    }}
+                    maxLength={64}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder="Digite sua senha"
+                    placeholderTextColor={COLORS.cinzaTexto}
+                    onFocus={scrollToForm}
+                    returnKeyType="done"
+                    onSubmitEditing={handleStaffLogin}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeBtn}
+                    onPress={() => setShowPassword((prev) => !prev)}
+                  >
+                    <Feather
+                      name={showPassword ? 'eye-off' : 'eye'}
+                      size={18}
+                      color={COLORS.cinzaTexto}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {!!staffErrorMsg && (
+                  <View style={styles.lockoutWarningBox}>
+                    <Feather name="alert-circle" size={14} color={COLORS.tomate} />
+                    <Text style={styles.lockoutWarningText}>{staffErrorMsg}</Text>
+                  </View>
+                )}
+
+                <TouchableOpacity
+                  style={[styles.primaryStaffBtn, loading && { opacity: 0.7 }]}
+                  onPress={handleStaffLogin}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color={COLORS.branco} />
+                  ) : (
+                    <>
+                      <Feather name="log-in" size={17} color={COLORS.branco} />
+                      <Text style={styles.primaryBuyerBtnText}>Acessar painel operacional</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* 4. Rodapé informativo do evento */}
+            <View style={styles.eventFooterCard}>
+              <View style={styles.footerIconBox}>
+                <Feather name="calendar" size={18} color={COLORS.tomate} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.footerEventTitle}>Sábado, 28 de novembro • 11h30 às 14h30</Text>
+                <Text style={styles.footerEventSub}>
+                  Drive-thru expresso e salão • Sede ABADEUS (Cristo Redentor, Criciúma/SC)
                 </Text>
               </View>
-            </View>
-          ) : (
-            /* 3B. Visão da equipe (admin, voluntário, parceiro) */
-            <View style={styles.formCard}>
-              <View style={styles.cardHeaderRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.cardOverline, { color: COLORS.mediterraneo }]}>
-                    Acesso restrito
-                  </Text>
-                  <Text style={styles.cardTitle}>Portal da equipe ABADEUS</Text>
-                </View>
-              </View>
-
-              <Text style={styles.cardDesc}>
-                Exclusivo para coordenação, voluntários do check-in expresso e parceiros cadastrados
-                pela organização
-              </Text>
-
-              <Text style={styles.inputLabel}>E-mail institucional/operador</Text>
-              <TextInput
-                style={styles.input}
-                value={staffEmail}
-                onChangeText={setStaffEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholder="admin@abadeus.com.br"
-                placeholderTextColor={COLORS.cinzaTexto}
-                onFocus={scrollToForm}
-                returnKeyType="next"
-                blurOnSubmit={false}
-                onSubmitEditing={() => staffPasswordRef.current?.focus()}
-              />
-
-              <Text style={styles.inputLabel}>Código/senha de acesso</Text>
-              <View style={styles.passwordInputWrap}>
-                <TextInput
-                  ref={staffPasswordRef}
-                  style={styles.passwordInput}
-                  value={staffPassword}
-                  onChangeText={setStaffPassword}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                  placeholder="Digite sua senha"
-                  placeholderTextColor={COLORS.cinzaTexto}
-                  onFocus={scrollToForm}
-                  returnKeyType="done"
-                  onSubmitEditing={handleStaffLogin}
-                />
-                <TouchableOpacity
-                  style={styles.eyeBtn}
-                  onPress={() => setShowPassword((prev) => !prev)}
-                >
-                  <Feather
-                    name={showPassword ? 'eye-off' : 'eye'}
-                    size={18}
-                    color={COLORS.cinzaTexto}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              {!!staffErrorMsg && (
-                <View style={styles.lockoutWarningBox}>
-                  <Feather name="alert-circle" size={14} color={COLORS.tomate} />
-                  <Text style={styles.lockoutWarningText}>{staffErrorMsg}</Text>
-                </View>
-              )}
-
-              <TouchableOpacity
-                style={[styles.primaryStaffBtn, loading && { opacity: 0.7 }]}
-                onPress={handleStaffLogin}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color={COLORS.branco} />
-                ) : (
-                  <>
-                    <Feather name="log-in" size={17} color={COLORS.branco} />
-                    <Text style={styles.primaryBuyerBtnText}>Acessar painel operacional</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {/* 4. Rodapé informativo do evento */}
-          <View style={styles.eventFooterCard}>
-            <View style={styles.footerIconBox}>
-              <Feather name="calendar" size={18} color={COLORS.tomate} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.footerEventTitle}>Sábado, 28 de novembro • 11h30 às 14h30</Text>
-              <Text style={styles.footerEventSub}>
-                Drive-thru expresso e salão • Sede ABADEUS (Cristo Redentor, Criciúma/SC)
-              </Text>
             </View>
           </View>
         </ScrollView>
@@ -492,6 +633,11 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.creme },
   container: { flex: 1, backgroundColor: COLORS.creme },
   scrollContent: { flexGrow: 1, paddingHorizontal: 18, paddingTop: 18, paddingBottom: 60 },
+  contentWrapper: {
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
+  },
   headerCenter: {
     alignItems: 'center',
     marginBottom: 18,
